@@ -32,5 +32,5 @@ A review should be exhaustive and should cover the following:
 - Is the code tested? (every major function should have a unit test)
 - Is the code efficient? (no unnecessary loops, no unnecessary memory allocations, etc.)
 
-Note that pointing these things out is just a way to help the author improve.  It is not a way to make the author feel bad.  If you are unsure about something, ask the author to explain it to you. Don't be afraid to ask questions or point out regions of the code that you don't understand.  If you don't understand it, chances are that someone else won't either.
+Note that pointing these things out is just a way to help the author improve the code quality.  It is not a way to make the author feel bad.
 

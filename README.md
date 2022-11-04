@@ -18,13 +18,15 @@ That is what this project is about.  For further reading on the subject, refer t
 ## Repository Structure
 The repository is structured as follows:
 ```bash
-|- docs/            # Internal documentation
-|  |- standards/    # Standards documents
-|  |- design/       # Design documents
-|  |- workflow/     # Workflow documents
-|  |- sota/         # State of the art documents
-|- src/             # Source code
-|- tests/           # Unit tests
-|- testing_example/ # Simple example on how to use pytest
-|- README.md        # This file
+|- docs/                    # Internal documentation
+|  |- standards/            # Standards documents
+|  |- design/               # Design documents
+|  |- workflow/             # Workflow documents
+|  |- sota/                 # State of the art documents
+|  |- ISSUE_TEMPLATE        # Issue template
+|  |- PULL_REQUEST_TEMPLATE # Pull request template
+|- src/                     # Source code
+|  |- tests/                # Unit tests
+|- testing_example/         # Simple example on how to use pytest
+|- README.md                # This file
 ```
