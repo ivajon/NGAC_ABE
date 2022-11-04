@@ -1,9 +1,9 @@
 on: [push]
-name: Garbage
+name: CI
 
 jobs:
   test:
-    name: GarbageTest
+    name: Test beds
     runs-on: ubuntu-latest
     # Runs pytest on the test directory, generated with github copilot
     steps:
@@ -19,4 +19,4 @@ jobs:
       - name: Run tests
         run: |
           cd ./src
-          pytest ./test.py
+          pytest ./test.py -o log_cli=true -o log_cli_level=INFO
