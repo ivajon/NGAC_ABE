@@ -1,4 +1,9 @@
+"""
+    Here we can test the entire application.
+"""
+
 from tests.tests import *
+
 
 class TestClass:
     def test_method(self):

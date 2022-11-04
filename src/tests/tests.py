@@ -1,4 +1,6 @@
-
+"""
+  Here we can test individual modules and methods.
+"""
 
 def test_garbage():
     """
