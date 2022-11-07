@@ -1,11 +1,11 @@
-on: [push]
-name: Garbage
+on: [pull_request]
+name: Unit Tests
 
 jobs:
   test:
-    name: GarbageTest
+    name: Test beds
     runs-on: ubuntu-latest
-    # Runs pytest on the test directory
+    # Runs pytest on the test directory, generated with github copilot
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.8
@@ -18,5 +18,5 @@ jobs:
           pip install pytest
       - name: Run tests
         run: |
-          cd ./testing_example/src
-          pytest ./test.py
+          cd ./src
+          pytest ./test.py -o log_cli=true -o log_cli_level=INFO

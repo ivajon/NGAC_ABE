@@ -27,6 +27,5 @@ The repository is structured as follows:
 |  |- PULL_REQUEST_TEMPLATE # Pull request template
 |- src/                     # Source code
 |  |- tests/                # Unit tests
-|- testing_example/         # Simple example on how to use pytest
 |- README.md                # This file
 ```
