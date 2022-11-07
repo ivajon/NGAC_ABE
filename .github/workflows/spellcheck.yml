@@ -1,27 +1,12 @@
 # Thanks to the Code Spell Checker team for the example workflow
 name: SpellCheck
 on: [push, pull_request]
-
 jobs:
-  build:
+  SpellCheck:
+    name: Check for spelling errors
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        emacs_version:
-          - 25.3
     steps:
-    - uses: purcell/setup-emacs@master
-      with:
-        version: ${{ matrix.emacs_version }}
-
-    - uses: actions/checkout@v2
-
-    - name: Print emacs version
-      run: emacs --version
-
-    - name: Install dependency
-      run: sudo apt install aspell aspell-en
-
-    - name: Run tests
-      run: make test
+      - uses: actions/checkout@v3
+      - uses: codespell-project/actions-codespell@master
+        with:
+          check_filenames: true
