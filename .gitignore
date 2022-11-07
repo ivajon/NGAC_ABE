@@ -3,3 +3,7 @@
 pytest_cache
 .__pycache__
 __pycache__
+tog-ngac-crosscpp
+tog-ngac-crosscpp/*
+.vscode
+.vscode/*
