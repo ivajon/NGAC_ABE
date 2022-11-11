@@ -28,7 +28,7 @@ class User(NgacObject):
     """
     User abstraction
 
-    it's possible to itterate over a user's attributes
+    it's possible to iterate over a user's attributes
 
     Example:
     ```python
@@ -40,7 +40,6 @@ class User(NgacObject):
     def __init__(self, attributes: List[UA], id: str = ""):
         self.id = id
         self.attributes = attributes
-        #super.__init__("User")
 
     def __iter__(self):
         return iter(self.attributes)

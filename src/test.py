@@ -6,7 +6,6 @@ from tests.tests import *
 
 
 class TestClass:
-
     def test_ngac_attribute(self):
         """
         Test attribute class
