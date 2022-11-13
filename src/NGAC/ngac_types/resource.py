@@ -124,3 +124,17 @@ def test_remove_resource():
     resource = Resource(attributes, id="resource1")
     resource.remove(ObjectAttribute("attr2"))
     assert len(resource.attributes) == 1
+
+
+def test_resource_cover_all():
+    """
+    Tests the coverage of the resource class
+    """
+    ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
+    attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
+    resource = Resource(attributes, id="resource1")
+    assert resource.get_resource() == "resource1"
+    assert resource.pop(0) == ObjectAttribute("attr1")
+    assert resource[0] == ObjectAttribute("attr2")
+    assert len(resource) == 1
+    assert str(resource) == repr(resource)

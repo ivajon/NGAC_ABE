@@ -139,6 +139,14 @@ def test_list_like_user():
 
     for attribute in user:
         assert attribute in attributes or attribute == UserAttribute("value4")
+    
+    user.remove(UserAttribute("value4"))
+    assert len(user) == 2
+    user.append(UserAttribute("value4"))
+    assert len(user) == 3
+
+
+
 
 
 if __name__ == "__main__":

@@ -83,3 +83,19 @@ def test_ngac_attribute():
     assert attr2.get_attribute() == "SomeAttribute"
 
     assert attr == attr2
+
+
+def test_attr_repr():
+    """
+    Test attribute class
+    """
+    attr = ObjectAttribute("SomeAttribute")
+    assert attr.__repr__() == "SomeAttribute"
+
+    attr2 = UserAttribute("SomeAttribute")
+    assert attr2.__repr__() == "SomeAttribute"
+
+    assert attr == attr2
+    assert attr.__hash__() == attr2.__hash__()
+    assert attr.__str__() == attr2.__str__()
+
