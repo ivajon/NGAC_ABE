@@ -21,6 +21,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Build coverage file
       run: |
-        pytest --cache-clear --cov=app src/ > pytest-coverage.txt
+        cd ./src
+        pytest --cache-clear --cov=. test.py > pytest-coverage.txt
     - name: Comment coverage
       uses: coroo/pytest-coverage-commentator@v1.0.2

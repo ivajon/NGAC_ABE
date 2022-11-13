@@ -9,11 +9,10 @@ tog-ngac-crosscpp/*
 .vscode/*
 *log*
 *tog*
-*test*
-*TEST*
 *EXAMPLES*
 *results*
 *Results*
 *RESULT*
 *Result*
 *result*
+pytest-coverage.txt
