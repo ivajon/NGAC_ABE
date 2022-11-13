@@ -30,8 +30,8 @@ class Resource(NgacObject):
 
     Example:
     ```python
-    for attr in resource:
-        print(attr)
+    for attribute in resource:
+        print(attribute)
     ```
 
     A resource is much more static than a `user`
@@ -48,29 +48,23 @@ class Resource(NgacObject):
         """
         return self.id
 
-    def append(self, attr: ObjectAttribute):
+    def append(self, attribute: ObjectAttribute):
         """
         Appends an attribute to the resource
         """
-        self.attributes.append(attr)
+        self.attributes.append(attribute)
 
-    def remove(self, attr: ObjectAttribute):
+    def remove(self, attribute: ObjectAttribute):
         """
         Removes an attribute from the resource
         """
-        self.attributes.remove(attr)
+        self.attributes.remove(attribute)
 
     def pop(self, index: int) -> ObjectAttribute:
         """
         Pops an attribute from the resource
         """
         return self.attributes.pop(index)
-
-    def append(self, attr: ObjectAttribute):
-        """
-        Appends an attribute to the resource
-        """
-        self.attributes.append(attr)
 
     def __iter__(self):
         return iter(self.attributes)
@@ -106,8 +100,8 @@ def test_iterate_over_resource():
     ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
-    for attr in resource:
-        assert attr in attributes
+    for attribute in resource:
+        assert attribute in attributes
 
 
 def test_append_resource():

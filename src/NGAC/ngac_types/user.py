@@ -30,8 +30,8 @@ class User(NgacObject):
 
     Example:
     ```python
-    for attr in user:
-        print(attr)
+    for attribute in user:
+        print(attribute)
     ```
     """
 
@@ -62,17 +62,17 @@ class User(NgacObject):
         """
         return iter(self.attributes)
 
-    def append(self, attr: UserAttribute):
+    def append(self, attribute: UserAttribute):
         """
         Appends an attribute to the user
         """
-        self.attributes.append(attr)
+        self.attributes.append(attribute)
 
-    def remove(self, attr: UserAttribute):
+    def remove(self, attribute: UserAttribute):
         """
         Removes an attribute from the user
         """
-        self.attributes.remove(attr)
+        self.attributes.remove(attribute)
 
     def pop(self, index: int) -> UserAttribute:
         """
@@ -80,11 +80,11 @@ class User(NgacObject):
         """
         return self.attributes.pop(index)
 
-    def push(self, attr: UserAttribute):
+    def push(self, attribute: UserAttribute):
         """
         Pushes an attribute to the user
         """
-        self.attributes.append(attr)
+        self.attributes.append(attribute)
 
     def __len__(self) -> int:
         return len(self.attributes)
@@ -137,8 +137,8 @@ def test_list_like_user():
     assert len(user) == 3
     assert user[2] == UserAttribute("value4")
 
-    for attr in user:
-        assert attr in attributes or attr == UserAttribute("value4")
+    for attribute in user:
+        assert attribute in attributes or attribute == UserAttribute("value4")
 
 
 if __name__ == "__main__":
