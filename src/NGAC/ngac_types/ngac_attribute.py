@@ -98,4 +98,3 @@ def test_attr_repr():
     assert attr == attr2
     assert attr.__hash__() == attr2.__hash__()
     assert attr.__str__() == attr2.__str__()
-
