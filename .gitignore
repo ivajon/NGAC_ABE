@@ -7,3 +7,12 @@ tog-ngac-crosscpp
 tog-ngac-crosscpp/*
 .vscode
 .vscode/*
+*log*
+*tog*
+*EXAMPLES*
+*results*
+*Results*
+*RESULT*
+*Result*
+*result*
+*pytest*
