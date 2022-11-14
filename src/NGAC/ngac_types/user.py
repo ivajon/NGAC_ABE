@@ -5,21 +5,8 @@ This class is used to implement users
 """
 from typing import List
 
-
-def relative_import(package, module):
-    """
-    Solves pythons relative import problem
-    """
-    import os
-
-    exec(
-        f"""from {"" if os.getcwd().endswith("ngac_types") else "ngac_types." if os.getcwd().endswith("NGAC") else "NGAC.ngac_types."}{package} import {module}"""
-    )
-    return locals()[module]
-
-
-UserAttribute = relative_import("ngac_attribute", "UserAttribute")
-NgacObject = relative_import("ngac_object", "NgacObject")
+from .ngac_object import NgacObject
+from .ngac_attribute import UserAttribute
 
 
 class User(NgacObject):

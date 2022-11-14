@@ -6,20 +6,8 @@ A resource can be a file or something else
 from typing import List
 
 
-def relative_import(package, module):
-    """
-    Solves pythons relative import problem
-    """
-    import os
-
-    exec(
-        f"""from {"" if os.getcwd().endswith("ngac_types") else "ngac_types." if os.getcwd().endswith("NGAC") else "NGAC.ngac_types."}{package} import {module}"""
-    )
-    return locals()[module]
-
-
-NgacObject = relative_import("ngac_object", "NgacObject")
-ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
+from .ngac_object import *
+from .ngac_attribute import ObjectAttribute
 
 
 class Resource(NgacObject):
@@ -86,7 +74,6 @@ def test_create_resource():
     """
     Tests the creation of a resource
     """
-    ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
     assert resource.id == "resource1"
@@ -97,7 +84,6 @@ def test_iterate_over_resource():
     """
     Tests the iteration over a resource
     """
-    ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
     for attribute in resource:
@@ -108,7 +94,6 @@ def test_append_resource():
     """
     Tests the appending of a resource
     """
-    ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
     resource.append(ObjectAttribute("attr3"))
@@ -119,7 +104,6 @@ def test_remove_resource():
     """
     Tests the removal of a resource
     """
-    ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
     resource.remove(ObjectAttribute("attr2"))
@@ -130,7 +114,6 @@ def test_resource_cover_all():
     """
     Tests the coverage of the resource class
     """
-    ObjectAttribute = relative_import("ngac_attribute", "ObjectAttribute")
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
     assert resource.get_resource() == "resource1"
