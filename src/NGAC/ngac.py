@@ -24,11 +24,11 @@ import sys
 
 import requests
 import os
+
 base_dir_changed = False
 if os.getcwd().endswith("src"):
     os.chdir("NGAC")
     base_dir_changed = True
-
 from api import *
 from info import *
 from ngac_types import *
@@ -40,6 +40,7 @@ from access_request import AccessRequest
 
 if base_dir_changed:
     os.chdir("..")
+
 
 def exception_hook(exctype, value, traceback) -> None:
     """
@@ -128,23 +129,28 @@ class NGAC:
     ##########################################################
     #                        Checkers                        #
     ##########################################################
-    def validate(self, access_request: AccessRequest) -> bool:
+    def validate(self, access_request: AccessRequest, token: str = "") -> bool:
         """
         Validate an access request
 
         :param access_request: The access request to validate
         :return: True if the access request is valid, False otherwise
         """
+
+        info(
+            InfoTypes(),
+            f"Validating {str(access_request[0])} =>{access_request[1]}=> {str(access_request[2])}",
+        )
         base_url = f"{self.policy_server_url}{Access()}"
         params = {
             "user": access_request[0].id,
             "object": access_request[2].id,
             "ar": access_request[1],
+            "token": token,
         }
         response = requests.get(base_url, params=params)
         print(response.text)
-        print(response.status_code)
-        return True
+        return "grant" in response.text
 
     ##########################################################
     #                        Getters                         #
@@ -254,19 +260,22 @@ class NGAC:
         base_url = f"{self.policy_server_url}{CombinePolicy()}"
         for index in range(1, len(policies)):
             intermediate_policy = Policy(f"intermediate_policy")
+            intermediate_policy = (
+                str(intermediate_policy)
+                if index < len(policies) - 1
+                else str(target_policy)
+            )
             params = {
                 "policy1": str(policies[index - 1])
                 if index == 1
                 else str(intermediate_policy),
                 "policy2": str(policies[index]),
-                "combined": str(intermediate_policy)
-                if index < len(policies) - 1
-                else str(target_policy),
+                "combined": intermediate_policy,
                 "token": f"{token}",
             }
             info(
                 InfoTypes(),
-                f"Combining: {str(policies[index-1])} and {str(policies[index])}",
+                f"Combining: {str(policies[index-1])} and {str(policies[index])} => {str(intermediate_policy)}",
             )
             res = requests.get(base_url, params=params)
         return res

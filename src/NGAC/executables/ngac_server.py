@@ -29,5 +29,6 @@ def test_ngac_server():
     ngac_server.stop()
     assert not ngac_server.is_running()
 
+
 if __name__ == "__main__":
     test_ngac_server()

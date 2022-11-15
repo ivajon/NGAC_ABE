@@ -79,6 +79,9 @@ class User(NgacObject):
     def __getitem__(self, index: int) -> UserAttribute:
         return self.attributes[index]
 
+    def __str__(self) -> str:
+        return f"User: {self.id}, Attributes: {self.attributes}"
+
 
 def test_create_user():
     """

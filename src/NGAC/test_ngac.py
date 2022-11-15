@@ -34,6 +34,16 @@ def test_combine_policies():
     """
     Test the combine policies method
     """
+    if os.getcwd().endswith("src"):
+        from NGAC.ngac import NGAC
+        from NGAC.ngac_types.ngac_policy import Policy
+        from NGAC.ngac_types.user import User
+        from NGAC.ngac_types.resource import Resource
+    else:
+        from ngac import NGAC
+        from ngac_types.ngac_policy import Policy
+        from ngac_types.user import User
+        from ngac_types.resource import Resource
     with NGAC() as ngac:
         import time
 
@@ -60,6 +70,16 @@ def test_load_policy():
     """
     Test loading a policy from file
     """
+    if os.getcwd().endswith("src"):
+        from NGAC.ngac import NGAC
+        from NGAC.ngac_types.ngac_policy import Policy
+        from NGAC.ngac_types.user import User
+        from NGAC.ngac_types.resource import Resource
+    else:
+        from ngac import NGAC
+        from ngac_types.ngac_policy import Policy
+        from ngac_types.user import User
+        from ngac_types.resource import Resource
     with NGAC() as ngac:
         import time
 
@@ -75,6 +95,17 @@ def test_set_get_policy():
     Test the ability to set and get policies
     """
     import time
+
+    if os.getcwd().endswith("src"):
+        from NGAC.ngac import NGAC
+        from NGAC.ngac_types.ngac_policy import Policy
+        from NGAC.ngac_types.user import User
+        from NGAC.ngac_types.resource import Resource
+    else:
+        from ngac import NGAC
+        from ngac_types.ngac_policy import Policy
+        from ngac_types.user import User
+        from ngac_types.resource import Resource
 
     with NGAC() as ngac:
         time.sleep(2)
@@ -225,7 +256,7 @@ def test_access():
         time.sleep(2)
         # Default policy is none
         SignalAccessPolicy = Policy(
-            name="Signal Access Policy", path="EXAMPLES/policy_signals_access.pl"
+            name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
         )
         VehicleOwnershipPolicy = Policy(
             name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
@@ -233,55 +264,62 @@ def test_access():
         CombinedPolicy = Policy(
             name="Combined Policy", path="EXAMPLES/policy_combined.pl"
         )
-        print(ngac.get(Policy, token="admin_token").text)
-        print(ngac.load(SignalAccessPolicy, token="admin_token").text)
-        print(ngac.load(VehicleOwnershipPolicy, token="admin_token").text)
-        print(
+        # Ensure that the default policy is none
+        ret = ngac.get(Policy, token="admin_token").text
+        assert "none" in ret
+        # Load the two policies
+        ret = ngac.load(SignalAccessPolicy, token="admin_token").status_code
+        assert ret == 200
+        ret = ngac.load(VehicleOwnershipPolicy, token="admin_token").status_code
+        assert ret == 200
+
+        # Combine the two policies
+        assert (
             ngac.combine_policies(
                 [SignalAccessPolicy, VehicleOwnershipPolicy],
                 CombinedPolicy,
                 token="admin_token",
-            ).text
+            ).status_code
+            == 200
         )
-        print(ngac.get(Policy, token="admin_token").text)
+
+        # Switch to the combined policy
+        assert ngac.switch_to(CombinedPolicy, token="admin_token").status_code == 200
+
+        # Check that the combined policy is the current policy
+        ret = ngac.get(Policy, token="admin_token").text
+        assert "Combined Policy" in ret
+
         access_request = (
-            User(id="Sebastian",attributes=[]),
+            User(id="Sebastian", attributes=[]),
             "r",
             Resource(id="VIN-1001 Door Signals"),
         )
-        print(ngac.access("Sebastian", "r", "VIN-1001 Door Signals").text)
 
-        print(ngac.switch_to(Policy(name="none"), token="admin_token").text)
-        print(ngac.get(Policy, token="admin_token").text)
-        print(
-            ngac.load(
-                Policy(
-                    name="Signals Access Policy",
-                ),
-                "EXAMPLES/policy_signals_access.pl",
-                token="admin_token",
-            ).text
+        # Check that the access request is allowed
+        assert ngac.validate(
+            access_request,
+            token="admin_token",
         )
-        print(
-            ngac.load(
-                Policy(name="Vehicle Ownership Policy"),
-                "EXAMPLES/policy_vehicle_ownership.pl",
-                token="admin_token",
-            ).text
+
+        # Failcase: Check that the access request is denied
+        access_request = (
+            User(id="Aebastian", attributes=[]),
+            "w",
+            Resource(id="VIN-1001 Door Signals"),
         )
-        print(
-            ngac.combine(
-                Policy(name="Combined Policy"),
-                Policy(name="Signals Access Policy"),
-                Policy(name="Vehicle Ownership Policy"),
-                token="admin_token",
-            ).text
+        assert not ngac.validate(
+            access_request,
+            token="admin_token",
         )
-        print(ngac.get(Policy, token="admin_token").text)
-        print(ngac.access("Sebastian", "r", "VIN-1001 Door Signals").text)
 
 
 if __name__ == "__main__":
+
+    if os.getcwd().endswith("src"):
+        from NGAC.info import *
+    else:
+        from info import *
     test_access()
     pass
     # Parse the command line arguments
