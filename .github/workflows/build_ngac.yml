@@ -30,7 +30,7 @@ jobs:
           echo "SUCCESS: NGAC server built"
           echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
           mkdir -p ../../src/NGAC/executables/linux
-          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/windows
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/linux
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
@@ -103,7 +103,7 @@ jobs:
           echo "SUCCESS: NGAC server built"
           echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
           mkdir -p ../../src/NGAC/executables/macos
-          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/windows
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/macos
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
