@@ -28,13 +28,15 @@ jobs:
           swipl -v -o pep_server -g pep_server -c pep.pl
 
           echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/windows
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git checkout -b ngac_exec_linux
-          git add tog-ngac-crosscpp/ngac tog-ngac-crosscpp/ngac_server tog-ngac-crosscpp/cme_sim tog-ngac-crosscpp/PEP-RAP/pep_server
+          git add .
           git commit -m "NGAC server built for Linux"
           git push --set-upstream origin ngac_exec_linux
   build_windows:
@@ -47,7 +49,7 @@ jobs:
       - name: Build NGAC
         run: |
           echo "Cloning the TOG-NGAC repo"
-          git clone
+          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
           echo "Building the NGAC server"
           cd tog-ngac-crosscpp
           swipl -v -o ngac -g ngac -c ngac.pl
@@ -61,13 +63,15 @@ jobs:
           swipl -v -o pep_server -g pep_server -c pep.pl
 
           echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/windows
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git checkout -b ngac_exec_windows
-          git add tog-ngac-crosscpp/ngac.exe tog-ngac-crosscpp/ngac_server.exe tog-ngac-crosscpp/cme_sim.exe tog-ngac-crosscpp/PEP-RAP/pep_server.exe
+          git add .
           git commit -m "NGAC server built for Windows"
           git push --set-upstream origin ngac_exec_windows
 
@@ -81,7 +85,7 @@ jobs:
       - name: Build NGAC
         run: |
           echo "Cloning the TOG-NGAC repo"
-          git clone
+          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
           echo "Building the NGAC server"
           cd tog-ngac-crosscpp
           swipl -v -o ngac -g ngac -c ngac.pl
@@ -95,12 +99,14 @@ jobs:
           swipl -v -o pep_server -g pep_server -c pep.pl
 
           echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/windows
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git checkout -b ngac_exec_macos
-          git add tog-ngac-crosscpp/ngac tog-ngac-crosscpp/ngac_server tog-ngac-crosscpp/cme_sim tog-ngac-crosscpp/PEP-RAP/pep_server
+          git add .
           git commit -m "NGAC server built for MacOS"
           git push --set-upstream origin ngac_exec_macos
