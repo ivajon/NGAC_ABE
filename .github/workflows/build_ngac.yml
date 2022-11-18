@@ -76,24 +76,50 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build_linux]
     steps:
-      - uses: peter-evans/create-pull-request@v3
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           commit-message: "NGAC server built for all OS"
-          title: "NGAC server built for all OS"
-          body: "NGAC server built for all OS"
+          committer: NgacBuilder <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
           branch: ngac_exec_linux
-          base: ngac_exec_all_os
+          delete-branch: true
+          title: "Built NGAC execs for Linux"
+          body: |
+            # Built NGAC execs for Linux
+            - [x] NGAC server built for Linux
+            ## Notes
+            This is an automated PR, please veri1fy the NGAC server built for Linux
+          reviewers: ${{ github.actor }}
+          team-reviewers: |
+            owners
+            maintainers
   create_pull_request_macos:
     name: Create Pull Request
     runs-on: ubuntu-latest
     needs: [build_macos]
     steps:
-      - uses: peter-evans/create-pull-request@v3
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           commit-message: "NGAC server built for all OS"
-          title: "NGAC server built for all OS"
-          body: "NGAC server built for all OS"
+          committer: NgacBuilder <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
           branch: ngac_exec_macos
-          base: ngac_exec_all_os
+          delete-branch: true
+          title: "Built NGAC execs for MacOS"
+          body: |
+            # Built NGAC execs for MacOS
+            - [x] NGAC server built for MacOS
+            ## Notes
+            This is an automated PR, please veri1fy the NGAC server built for MacOS
+          reviewers: ${{ github.actor }}
+          team-reviewers: |
+            owners
+            maintainers
