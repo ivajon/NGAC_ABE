@@ -74,7 +74,7 @@ jobs:
     # Creates a new PR with all of the changes into NGAC branch
     name: Create Pull Request
     runs-on: ubuntu-latest
-    needs: [build_linux, build_macos]
+    needs: [build_linux]
     steps:
       - uses: peter-evans/create-pull-request@v3
         with:
@@ -87,7 +87,7 @@ jobs:
   create_pull_request_macos:
     name: Create Pull Request
     runs-on: ubuntu-latest
-    needs: [build_linux, build_macos]
+    needs: [build_macos]
     steps:
       - uses: peter-evans/create-pull-request@v3
         with:
