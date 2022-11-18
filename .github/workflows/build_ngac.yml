@@ -20,14 +20,14 @@ jobs:
           swipl -v -o ngac -g ngac -c ngac.pl
           swipl -v -o ngac_server -g ngac_server -c ngac.pl
           echo "Building the CME server"
-          swipl -v -o cme_sim -g cme_server -c cme_sim.pl
+          swipl -v -o cme -g cme_server -c cme_sim.pl
           echo "Building the PEP server"
           cd PEP-RAP
           swipl -v -o pep_server -g pep_server -c pep.pl
           echo "SUCCESS: NGAC server built"
           echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
           mkdir -p ../../src/NGAC/executables/linux
-          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/linux
+          cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
@@ -53,14 +53,14 @@ jobs:
           swipl -v -o ngac -g ngac -c ngac.pl
           swipl -v -o ngac_server -g ngac_server -c ngac.pl
           echo "Building the CME server"
-          swipl -v -o cme_sim -g cme_server -c cme_sim.pl
+          swipl -v -o cme -g cme_server -c cme_sim.pl
           echo "Building the PEP server"
           cd PEP-RAP
           swipl -v -o pep_server -g pep_server -c pep.pl
           echo "SUCCESS: NGAC server built"
           echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
           mkdir -p ../../src/NGAC/executables/macos
-          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/macos
+          cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/macos
       - name: Commit and push NGAC server
         run: |
           echo "Committing and pushing the NGAC server"
