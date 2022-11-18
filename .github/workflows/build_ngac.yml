@@ -1,0 +1,135 @@
+on: [push]
+name: Unit Tests
+
+jobs:
+  # Builds the NGAC servers for LINUX, WINDOWS, and MACOS
+  # And commits and pushes them to the repo branch "ngac_exec_{os}"
+  build_linux:
+    name: Build NGAC for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: sudo apt-get install swi-prolog
+      - name: Build NGAC
+        run: |
+          echo "Cloning the TOG-NGAC repo"
+          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
+          echo "Building the NGAC server"
+          cd tog-ngac-crosscpp
+          swipl -v -o ngac -g ngac -c ngac.pl
+          swipl -v -o ngac_server -g ngac_server -c ngac-server.pl
+          echo "Building the CME server"
+          swipl -v -o cme_sim -g cme_server -c cme_server.pl
+          echo "Building the PEP server"
+          cd PEP-RAP
+          swipl -v -o pep_server -g pep_server -c pep.pl
+          echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          mkdir -p ../../src/NGAC/executables/linux
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/linux
+      - name: Commit and push NGAC server
+        run: |
+          echo "Committing and pushing the NGAC server"
+          git config --global user.email "NgacBuilder[bot]@users.noreply.github.com"
+          git config --global user.name "NgacBuilder[bot]"
+          git checkout -b ngac_exec_linux
+          git add .
+          git commit -m "NGAC server built for Linux"
+          git push --set-upstream origin ngac_exec_linux
+  build_windows:
+    name: Build NGAC for Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: choco install swi-prolog
+      - name: Build NGAC
+        run: |
+          echo "Cloning the TOG-NGAC repo"
+          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
+          echo "Building the NGAC server"
+          cd tog-ngac-crosscpp
+          swipl -v -o ngac -g ngac -c ngac.pl
+          swipl -v -o ngac_server -g ngac_server -c ngac-server.pl
+          echo "Building the CME server"
+          swipl -v -o cme_sim -g cme_server -c cme_server.pl
+          echo "Building the PEP server"
+          cd PEP-RAP
+          swipl -v -o pep_server -g pep_server -c pep.pl
+          echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          mkdir -p ../../src/NGAC/executables/windows
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/windows
+      - name: Commit and push NGAC server
+        run: |
+          echo "Committing and pushing the NGAC server"
+          git config --global user.email "NgacBuilder[bot]@users.noreply.github.com"
+          git config --global user.name "NgacBuilder[bot]"
+          git checkout -b ngac_exec_windows
+          git add .
+          git commit -m "NGAC server built for Windows"
+          git push --set-upstream origin ngac_exec_windows
+  build_macos:
+    name: Build NGAC for MacOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: brew install swi-prolog
+      - name: Build NGAC
+        run: |
+          echo "Cloning the TOG-NGAC repo"
+          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
+          echo "Building the NGAC server"
+          cd tog-ngac-crosscpp
+          swipl -v -o ngac -g ngac -c ngac.pl
+          swipl -v -o ngac_server -g ngac_server -c ngac-server.pl
+          echo "Building the CME server"
+          swipl -v -o cme_sim -g cme_server -c cme_server.pl
+          echo "Building the PEP server"
+          cd PEP-RAP
+          swipl -v -o pep_server -g pep_server -c pep.pl
+          echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          mkdir -p ../../src/NGAC/executables/macos
+          cp ../ngac ../ngac_server ../cme_sim ./pep_server ../../src/NGAC/executables/macos
+      - name: Commit and push NGAC server
+        run: |
+          echo "Committing and pushing the NGAC server"
+          git config --global user.email "NgacBuilder[bot]@users.noreply.github.com"
+          git config --global user.name "NgacBuilder[bot]"
+          git checkout -b ngac_exec_macos
+          git add .
+          git commit -m "NGAC server built for MacOS"
+          git push --set-upstream origin ngac_exec_macos
+  create_pull_request:
+    # Creates a new PR with all of the changes into NGAC branch
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    needs: [build_linux, build_windows, build_macos]
+    steps:
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "NGAC server built for all OS"
+          title: "NGAC server built for all OS"
+          body: "NGAC server built for all OS"
+          branch: ngac_exec_linux
+          base: ngac_exec_all_os
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "NGAC server built for all OS"
+          title: "NGAC server built for all OS"
+          body: "NGAC server built for all OS"
+          branch: ngac_exec_windows
+          base: ngac_exec_all_os
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "NGAC server built for all OS"
+          title: "NGAC server built for all OS"
+          body: "NGAC server built for all OS"
+          branch: ngac_exec_macos
+          base: ngac_exec_all_os
