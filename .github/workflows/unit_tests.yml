@@ -22,6 +22,8 @@ jobs:
           cd ./src
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
           cd ./NGAC
+          python ./test_executables.py
+          cat os.txt
           pytest ./test_executables.py -o log_cli=true -o log_cli_level=INFO
           cat os.txt
 
@@ -45,5 +47,7 @@ jobs:
           cd ./src
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
           cd ./NGAC
+          python ./test_executables.py
+          cat os.txt
           pytest ./test_executables.py -o log_cli=true -o log_cli_level=INFO
           cat os.txt
