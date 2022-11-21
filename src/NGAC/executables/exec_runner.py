@@ -119,9 +119,13 @@ class ExecRunner:
         self.executable.kill()
         self.logger.kill()
         self.err_logger.kill()
-        
+        # Wait for the process to stop
+        self.executable.wait()
+        self.logger.wait()
+        self.err_logger.wait()
 
-        self.is_running = False
+        # Check that the process is no longer running
+        self.is_running = self.executable.poll() is None
 
     def __enter__(self):
         """

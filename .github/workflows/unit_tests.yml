@@ -20,14 +20,7 @@ jobs:
         run: |
           cd ./src
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
-
-          cd NGAC/executables/
-          python __main__.py &
-
-          # Make some simple get requests to the NGAC server
-          # Ensure that the NGAC server is running
-          curl -s -G "http://127.0.0.1:8001/paapi/setpol" --data-urlencode "policy=Policy (a)" --data-urlencode "token=admin_token"
-
+          pytest ./NGAC/test_executables.py -o log_cli=true -o log_cli_level=INFO
 
   test_macos:
     name: Test on MacOS
@@ -47,12 +40,4 @@ jobs:
         run: |
           cd ./src
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
-
-          cd NGAC/executables/
-          python __main__.py &
-
-          # Make some simple get requests to the NGAC server
-          # Ensure that the NGAC server is running
-          curl -s -G "http://127.0.0.1:8001/paapi/setpol" --data-urlencode "policy=Policy (a)" --data-urlencode "token=admin_token"
-
-  
+          pytest ./NGAC/test_executables.py -o log_cli=true -o log_cli_level=INFO
