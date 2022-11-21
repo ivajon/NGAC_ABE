@@ -3,7 +3,7 @@ name: Unit Tests
 
 jobs:
   test_linux:
-    name: Test beds
+    name: Test on Linux
     runs-on: ubuntu-latest
     # Runs pytest on the test directory, generated with github copilot
     steps:
@@ -21,7 +21,7 @@ jobs:
           cd ./src
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
   test_macos:
-    name: Test beds
+    name: Test on MacOS
     runs-on: macos-latest
     # Runs pytest on the test directory, generated with github copilot
     steps:
@@ -38,21 +38,4 @@ jobs:
         run: |
           cd ./src
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
-  test_windows:
-    name: Test beds
-    runs-on: windows-latest
-    # Runs pytest on the test directory, generated with github copilot
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-      - name: Run tests
-        run: |
-          cd ./src
-          pytest ./test.py -o log_cli=true -o log_cli_level=INFO
+  
