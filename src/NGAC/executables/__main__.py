@@ -1,3 +1,8 @@
+"""
+Next Generation Access Control (NGAC) server
+---
+"""
+
 def start_ngac():
     from pep import PEP
     from ngac_server import NGACServer

@@ -22,10 +22,7 @@ This also infers that the server will not halt if the main thread is halted. Thi
 The solution is to manually kill the server process when the main thread is halted.
 
 #### Side effects of starting the NGAC server
-When starting the NGAC server, the server will automatically start the CME and PEP servers. This is done to make the NGAC server
-easier to use. The CME and PEP servers are started in the background, and are not accessible to the user. This is done to prevent
-the user from accidentally stopping the CME or PEP servers. The CME and PEP servers are stopped when the NGAC server is stopped.
-
+When you start the NGAC server, you also need to start the CME and PEP servers. Look at the `start_ngac` function in the `__main__.py` file for an example of how to start the NGAC server.
 ## Usage
 ```python
     ngac_server = NGACServer()
