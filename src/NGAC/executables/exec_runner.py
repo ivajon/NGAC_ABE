@@ -56,7 +56,7 @@ class ExecRunner:
         Initialize the ExecRunner class
         """
 
-        def get_os_name(os_name) -> Literal["windows","arch","linux", "mac"]:
+        def get_os_name(os_name) -> Literal["windows","arch","linux", "macos"]:
             if os_name == "nt":
                 return "windows"
             elif os_name == "posix":
@@ -66,10 +66,10 @@ class ExecRunner:
                 elif os.path.exists("/etc/debian_version"):
                     return "linux"
                     # Check for mac
-                elif os.path.exists("/etc/darwin_version"):
-                    return "macos"
-            else:
+            elif os_name == "mac":
                 return "macos"
+            else:
+                raise Exception("Unsupported OS")
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
         self.path = (
