@@ -1,2 +1,2 @@
-pytest
-request
+pytest=*
+request=*
