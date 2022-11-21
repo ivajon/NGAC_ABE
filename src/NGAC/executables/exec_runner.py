@@ -114,8 +114,8 @@ def kill_process(p: subprocess.Popen, name=""):
         p.kill()
         os.kill(pid, 0)
         # If the process is still running, kill it
-        #if p.poll() is None:
-            #subprocess.call(["kill", "-9", str(pid)])
+        # if p.poll() is None:
+        # subprocess.call(["kill", "-9", str(pid)])
         p.wait()
     except (OSError, subprocess.CalledProcessError):
         os._exit(0)
