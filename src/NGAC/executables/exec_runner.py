@@ -63,14 +63,10 @@ class ExecRunner:
                 # Check if we are on arch, ubuntu, mac, etc
                 if os.path.exists("/etc/arch-release"):
                     return "arch"
-                elif os.path.exists("/etc/debian_version"):
+                else:
                     return "linux"
-                else:  # Assume mac
-                    return "macos"
-            elif os_name == "mac":
-                return "macos"
             else:
-                raise Exception("Unsupported OS")
+                return "macos"
         with open("os.txt", "w") as f:
             f.write(get_os_name(os.name))
         # We need to know the runnable file extension for the OS
