@@ -40,11 +40,11 @@ When you start the NGAC server, you also need to start the CME and PEP servers. 
 
 import os
 
-from .exec_runner import ExecRunner
+from exec_runner import ExecRunner
 
 
 class NGACServer(ExecRunner):
-    def __init__(self, path="./ngac_server", args="") -> None:
+    def __init__(self, path="ngac_server", args="") -> None:
         """
         Initialize the CME class
 

@@ -3,10 +3,6 @@
 """
 
 from tests.tests import *
-from NGAC.executables.ngac_server import *
-from NGAC.executables.exec_runner import *
-from NGAC.executables.cme import *
-from NGAC.executables.pep import *
 
 
 class TestClass:

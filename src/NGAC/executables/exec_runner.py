@@ -57,14 +57,20 @@ class ExecRunner:
             if os_name == "nt":
                 return "windows"
             elif os_name == "posix":
-                return "linux"
+                # Check if we are on arch, ubuntu, mac, etc
+                if os.path.exists("/etc/arch-release"):
+                    return "arch"
+                elif os.path.exists("/etc/debian_version"):
+                    return "linux"
+                else: # Assume mac
+                    return "mac"
             elif os_name == "mac":
                 return "mac"
             else:
                 raise Exception("Unsupported OS")
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
-        self.path = get_os_name(os.name) + "/" + file_name + get_extension(os.name)
+        self.path = "./"+get_os_name(os.name) + "/" + file_name + get_extension(os.name)
         self.path += get_extension(os.name)
         self.args = args
         self.is_running = False

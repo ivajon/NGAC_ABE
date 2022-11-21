@@ -19,11 +19,11 @@ Usage:
         # Do stuff
 ```
 """
-from .exec_runner import ExecRunner
+from exec_runner import ExecRunner
 
 
 class CME(ExecRunner):
-    def __init__(self, path="./cme", args="") -> None:
+    def __init__(self, path="cme", args="") -> None:
         """
         Initialize the CME class
 

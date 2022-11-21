@@ -7,10 +7,7 @@ The PEP is used to enforce policies on the system.
 
 This file is not intended to be run directly, but rather ran as a part of the `ngac_server`.
 """
-
-import os
-
-from .exec_runner import ExecRunner
+from exec_runner import ExecRunner
 
 
 class PEP(ExecRunner):
@@ -31,7 +28,8 @@ class PEP(ExecRunner):
             # Do stuff
     ```
     """
-    def __init__(self, path="./pep_server", args="") -> None:
+
+    def __init__(self, path="pep_server", args="") -> None:
         """
         Initialize the PEP class
 
