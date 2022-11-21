@@ -7,3 +7,5 @@ tog-ngac-crosscpp
 tog-ngac-crosscpp/*
 .vscode
 .vscode/*
+*log*
+*result*
