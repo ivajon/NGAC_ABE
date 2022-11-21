@@ -47,12 +47,14 @@ class ExecRunner:
     """
       Main app that will be ran as subprocess
     """
+
     def __init__(
         self, file_name, args, logger="tee", log_folder="./LOG", log_name=""
     ) -> None:
         """
         Initialize the ExecRunner class
         """
+
         def get_os_name(os_name):
             if os_name == "nt":
                 return "windows"
@@ -62,15 +64,18 @@ class ExecRunner:
                     return "arch"
                 elif os.path.exists("/etc/debian_version"):
                     return "linux"
-                else: # Assume mac
+                else:  # Assume mac
                     return "mac"
             elif os_name == "mac":
                 return "mac"
             else:
                 raise Exception("Unsupported OS")
+
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
-        self.path = "./"+get_os_name(os.name) + "/" + file_name + get_extension(os.name)
+        self.path = (
+            "./" + get_os_name(os.name) + "/" + file_name + get_extension(os.name)
+        )
         self.path += get_extension(os.name)
         self.args = args
         self.is_running = False
@@ -114,8 +119,8 @@ class ExecRunner:
         """
         Stop the executable
         """
-        #kill_process(self.executable, self.path)
-        #kill_process(self.logger, self.path)
+        # kill_process(self.executable, self.path)
+        # kill_process(self.logger, self.path)
         self.executable.kill()
         self.logger.kill()
         self.err_logger.kill()
@@ -156,8 +161,6 @@ class ExecRunner:
         self.stop()
 
 
-
-
 def kill_process(p: subprocess.Popen, name=""):
     """
     Kills a process, quite violently if needed
@@ -171,7 +174,7 @@ def kill_process(p: subprocess.Popen, name=""):
         # Be cruel
         if "python" in name:
             raise Exception("Python process killed")
-        #p.kill()
+        # p.kill()
         os.kill(executable, 0)
         # If the process is still running, kill it
         if p.poll() is None:
