@@ -63,12 +63,13 @@ class ExecRunner:
                 # Check if we are on arch, ubuntu, mac, etc
                 if os.path.exists("/etc/arch-release"):
                     return "arch"
-                else:
+                elif os.path.exists("/etc/debian_version"):
                     return "linux"
+                    # Check for mac
+                elif os.path.exists("/etc/darwin_version"):
+                    return "maco"
             else:
                 return "macos"
-        with open("os.txt", "w") as f:
-            f.write(get_os_name(os.name))
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
         self.path = (
