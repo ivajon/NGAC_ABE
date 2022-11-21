@@ -22,5 +22,3 @@ if __name__ == "__main__":
         if function[0].startswith("test_"):
             print(f"Running {function[0]}")
             function[1]()
-
-
