@@ -70,7 +70,8 @@ class ExecRunner:
                 return "mac"
             else:
                 raise Exception("Unsupported OS")
-
+        with open("os.txt", "w") as f:
+            f.write(get_os_name(os.name))
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
         self.path = (

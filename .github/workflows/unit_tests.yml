@@ -23,6 +23,7 @@ jobs:
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
           cd ./NGAC
           pytest ./test_executables.py -o log_cli=true -o log_cli_level=INFO
+          cat os.txt
 
   test_macos:
     name: Test on MacOS
@@ -45,3 +46,4 @@ jobs:
           pytest ./test.py -o log_cli=true -o log_cli_level=INFO
           cd ./NGAC
           pytest ./test_executables.py -o log_cli=true -o log_cli_level=INFO
+          cat os.txt

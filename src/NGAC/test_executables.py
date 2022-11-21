@@ -10,20 +10,6 @@ def cd():
         os.chdir("executables")
 
 
-def test_start():
-    cd()
-
-    # Start the server
-    process = subprocess.Popen(["python", "."])
-    assert process.poll() is None
-    process.terminate()
-    process.wait()
-    assert process.poll() is not None
-    
-    subprocess.call(["killall", "swipl"])
-    subprocess.call(["killall", "tee"])
-
-
 def start_process(path, args):
     cd()
     process = subprocess.Popen([path, args])
@@ -56,9 +42,24 @@ def test_simple_get_sequence():
     stop_process(process)
     assert process.poll() is not None
     print("Success")
-    
+
     subprocess.call(["killall", "swipl"])
     subprocess.call(["killall", "tee"])
+
+
+def test_start():
+    cd()
+
+    # Start the server
+    process = subprocess.Popen(["python", "."])
+    assert process.poll() is None
+    process.terminate()
+    process.wait()
+    assert process.poll() is not None
+
+    subprocess.call(["killall", "swipl"])
+    subprocess.call(["killall", "tee"])
+
 
 if __name__ == "__main__":
     test_simple_get_sequence()
