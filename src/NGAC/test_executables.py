@@ -23,12 +23,14 @@ def stop_process(process):
 
 
 def test_simple_get_sequence():
-    process = start_process("python", ".")
+    import os
+    # Start the server, if os is ubuntu we need to use python3
+    process = start_process("python3", ".")
     assert process.poll() is None
     import requests
     import time
 
-    time.sleep(10)
+    time.sleep(1)
 
     base_url = "http://127.0.0.1:8001/paapi/setpol"
     data = {"policy": "Policy (a)", "token": "admin_token"}

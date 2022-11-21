@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: sudo apt-get install swi-prolog
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -29,6 +31,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: brew install swi-prolog
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:

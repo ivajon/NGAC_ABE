@@ -1,4 +1,0 @@
-Options=[deny(false),grant(false),pqportnumber(_8494),importfile(_8518),selftest(false),token(_8566),verbose(false),jsonresp(false),epp(false),crosscpp(_8662)]
-ngac-server version 0.4.7 starting
-Audit log file: LOG/audit_log_2022-11-21_16:24:54
-ngac-server listening on port 8001
