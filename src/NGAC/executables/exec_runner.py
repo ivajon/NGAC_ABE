@@ -1,7 +1,18 @@
 """
-# ExecRunner
-A "safe" ish way to run executables as subprocesses.
+ExecRunner
+---
 
+This class is used to start and stop executables
+it is used to start and stop all of the NGAC executables.
+
+## Usage
+
+```python
+python = ExecRunner("python", "-c 'import time;while True:print(\"Hello world\");time.sleep(1)'") 
+with python:
+    assert python.is_running == True
+assert python.is_running == False
+```
 """
 
 import subprocess
@@ -17,21 +28,43 @@ def get_extension(os_name):
     elif os_name == "posix":
         return ""
     elif os_name == "mac":
-        return ".app"  # Not sure if this is correct
+        return ""
     else:
         raise Exception("Unsupported OS")
 
 
 class ExecRunner:
+    logger = None
+    """
+      Logs the output of the `executable` to a file
+    """
+
+    err_logger = None
+    """
+      Logger that logs the error output of the executable
+    """
+    executable = None
+    """
+      Main app that will be ran as subprocess
+    """
     def __init__(
-        self, path, args, logger="tee", log_folder="./LOG", log_name=""
+        self, file_name, args, logger="tee", log_folder="./LOG", log_name=""
     ) -> None:
         """
         Initialize the ExecRunner class
         """
+        def get_os_name(os_name):
+            if os_name == "nt":
+                return "windows"
+            elif os_name == "posix":
+                return "linux"
+            elif os_name == "mac":
+                return "mac"
+            else:
+                raise Exception("Unsupported OS")
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
-        self.path = path
+        self.path = get_os_name(os.name) + "/" + file_name + get_extension(os.name)
         self.path += get_extension(os.name)
         self.args = args
         self.is_running = False
@@ -48,7 +81,7 @@ class ExecRunner:
         Start the executable
         """
         # Start the executable, passing its stdout to a file and stderr to the console
-        self.pid = subprocess.Popen(
+        self.executable = subprocess.Popen(
             [self.path, self.args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -57,16 +90,17 @@ class ExecRunner:
         # Start the logger
         self.logger = subprocess.Popen(
             [self.logger_app, self.log_name],
-            stdin=self.pid.stdout,
+            stdin=self.executable.stdout,
             stdout=subprocess.PIPE,
         )
-        self.pid.stdout.close()
+        self.executable.stdout.close()
+
         self.err_logger = subprocess.Popen(
             [self.logger_app, f".{self.log_name.strip('.txt')}_err.txt"],
-            stdin=self.pid.stderr,
+            stdin=self.executable.stderr,
             stdout=subprocess.PIPE,
         )
-        self.pid.stderr.close()
+        self.executable.stderr.close()
 
         self.is_running = True
 
@@ -74,8 +108,13 @@ class ExecRunner:
         """
         Stop the executable
         """
-        kill_process(self.pid, self.path)
-        kill_process(self.logger, self.path)
+        #kill_process(self.executable, self.path)
+        #kill_process(self.logger, self.path)
+        self.executable.kill()
+        self.logger.kill()
+        self.err_logger.kill()
+        
+
         self.is_running = False
 
     def __enter__(self):
@@ -97,6 +136,17 @@ class ExecRunner:
         """
         return self.path.split("/")[-1].strip(".exe")
 
+    def __str__(self):
+        return f"{self.name()}({self.path})"
+
+    def __repr__(self):
+        return str(self)
+
+    def __del__(self):
+        self.stop()
+
+
+
 
 def kill_process(p: subprocess.Popen, name=""):
     """
@@ -105,17 +155,17 @@ def kill_process(p: subprocess.Popen, name=""):
     # Be kind
     p.terminate()
     p.wait()
-    pid = p.pid
+    executable = p.executable
     p.terminate()
     try:
         # Be cruel
         if "python" in name:
             raise Exception("Python process killed")
-        p.kill()
-        os.kill(pid, 0)
+        #p.kill()
+        os.kill(executable, 0)
         # If the process is still running, kill it
-        # if p.poll() is None:
-        # subprocess.call(["kill", "-9", str(pid)])
+        if p.poll() is None:
+            subprocess.call(["kill", "-9", str(executable)])
         p.wait()
     except (OSError, subprocess.CalledProcessError):
         os._exit(0)

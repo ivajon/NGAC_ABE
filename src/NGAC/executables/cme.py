@@ -1,6 +1,25 @@
-import os
+"""
+CME
+---
 
-from exec_runner import ExecRunner
+This module contains the CME class, which is used to start and stop the CME executable.
+
+The CME executable is used to manage the NGAC database. It is used to add, remove, and modify policies, attributes, and resources.
+
+Usage:
+```python
+
+    cme = CME()
+    cme.start()
+    # Do stuff
+    cme.stop()
+
+    # Or use the with statement
+    with CME() as cme:
+        # Do stuff
+```
+"""
+from .exec_runner import ExecRunner
 
 
 class CME(ExecRunner):

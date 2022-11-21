@@ -1,11 +1,1 @@
-ERROR: -g ngac_server: Socket error: Address already in use
-ERROR: In:
-ERROR:   [14] socket:tcp_bind(<socket>(0x55b0dd85c1c0),8001)
-ERROR:   [13] thread_httpd:make_socket(8001,server:[...],_3080) at /usr/lib/swipl/library/http/thread_httpd.pl:254
-ERROR:   [12] thread_httpd:http_server(server:http_dispatch,server:[...]) at /usr/lib/swipl/library/http/thread_httpd.pl:200
-ERROR:   [11] server:server_with_opts([deny(false),...|...]) at /mnt/c/Users/ivarj/Documents/git/NGAC_ABE/src/NGAC/tog-ngac-crosscpp/server.pl:110
-ERROR:    [8] catch(user:ngac_server,error(socket_error(eaddrinuse,'Address already in use'),context(_3256,_3258)),'$toplevel':true) at /usr/lib/swipl/boot/init.pl:562
-ERROR:    [7] catch_with_backtrace(user:ngac_server,error(socket_error(eaddrinuse,'Address already in use'),context(_3320,_3322)),'$toplevel':true) at /usr/lib/swipl/boot/init.pl:629
-ERROR: 
-ERROR: Note: some frames are missing due to last-call optimization.
-ERROR: Re-run your program in debug mode (:- debug.) to get more detail.
+linux/./ngac_server: line 3: /usr/lib/swi-prolog/bin/amd64/swipl: No such file or directory
