@@ -19,6 +19,9 @@ def test_start():
     process.terminate()
     process.wait()
     assert process.poll() is not None
+    
+    subprocess.call(["killall", "swipl"])
+    subprocess.call(["killall", "tee"])
 
 
 def start_process(path, args):
@@ -44,6 +47,7 @@ def test_simple_get_sequence():
     base_url = "http://127.0.0.1:8001/paapi/setpol"
     data = {"policy": "Policy (a)", "token": "admin_token"}
     r = requests.post(base_url, data=data)
+    print(r.text)
     if r.status_code != 200:
         print(r.text)
         stop_process(process)
