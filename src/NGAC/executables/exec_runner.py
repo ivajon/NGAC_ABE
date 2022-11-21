@@ -17,6 +17,7 @@ assert python.is_running == False
 
 import subprocess
 import os
+from typing import Literal
 
 
 def get_extension(os_name):
@@ -55,7 +56,7 @@ class ExecRunner:
         Initialize the ExecRunner class
         """
 
-        def get_os_name(os_name):
+        def get_os_name(os_name) -> Literal["windows","arch","linux", "mac"]:
             if os_name == "nt":
                 return "windows"
             elif os_name == "posix":
@@ -65,9 +66,9 @@ class ExecRunner:
                 elif os.path.exists("/etc/debian_version"):
                     return "linux"
                 else:  # Assume mac
-                    return "mac"
+                    return "macos"
             elif os_name == "mac":
-                return "mac"
+                return "macos"
             else:
                 raise Exception("Unsupported OS")
         with open("os.txt", "w") as f:
