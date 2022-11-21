@@ -67,7 +67,7 @@ class ExecRunner:
                     return "linux"
                     # Check for mac
                 elif os.path.exists("/etc/darwin_version"):
-                    return "maco"
+                    return "macos"
             else:
                 return "macos"
         # We need to know the runnable file extension for the OS
