@@ -63,19 +63,16 @@ class ExecRunner:
 
             if platform == "win32" or platform == "win64":
                 return "windows"
-            elif platform == "linux" or platform == "linux2":
+            elif platform == "darwin":
+                return "macos"
+            elif platform == "linux" or platform == "linux2" or os.name == "posix":
                 # Check if we are on arch, ubuntu, mac, etc
                 if os.path.exists("/etc/arch-release"):
                     return "arch"
                 elif os.path.exists("/etc/debian_version"):
                     return "linux"
-                    # Check for mac
-                elif os.path.exists("/Applications"):
-                    return "macos"
                 else:
-                    raise Exception("Unsupported OS")
-            elif platform == "darwin":
-                return "macos"
+                    return "linux"
             else:
                 raise Exception("Unsupported OS")
 
