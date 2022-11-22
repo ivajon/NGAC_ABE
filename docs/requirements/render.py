@@ -22,9 +22,7 @@ def main():
     my_parser.add_argument(
         "MD", metavar="md", type=str, help="the template MD file to read"
     )
-    my_parser.add_argument(
-        "OUT", metavar="out", type=str, help="the MD file to write"
-    )
+    my_parser.add_argument("OUT", metavar="out", type=str, help="the MD file to write")
 
     # Execute the parse_args() method
     args = my_parser.parse_args()

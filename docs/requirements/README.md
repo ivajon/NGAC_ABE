@@ -6,15 +6,16 @@ The functional requirements are the requirements that are directly related to th
 
 | PRIORITY |  NAME |  DESCRIPTION |
 |---|---|---|
-| Essential |  Atribute based access control |  Grant or deny access to resources based on attributes of the user |
+| Essential |  Attribute based access control |  Grant or deny access to resources based on attributes of the user |
 | Essential |  Attribute based cryptography |  Encrypt or decrypt data based on attributes of the user |
 | Essential |  Accessing and decrypting data |  Grant or deny access and if granted decrypt data based on attributes of the user |
 | Essential |  Attribute based storage and encryption |  Encrypt and store data based on attributes of the user and some policy. |
-| Desireable |  Dynamic attributes |  Support dynamic attributes such as time and location. |
-| Desireable |  Custom database  |  More permanent storage of attributes and policies. |
-| Desireable |  Functional interface using terminal |  Use the terminal to access the system. |
+| Desirable |  Dynamic attributes |  Support dynamic attributes such as time and location. |
+| Desirable |  Custom database  |  More permanent storage of attributes and policies. |
+| Desirable |  Functional interface using terminal |  Use the terminal to access the system. |
 | Optional |  Visualisation of attributes |  Visualise attributes of the user as graph and tree. |
 | Optional |  Fully featured TUI |  Use the terminal to access the system. |
+
 
 ## Non-Functional Requirements
 
@@ -23,6 +24,7 @@ The non-functional requirements are the requirements that are not directly relat
 | PRIORITY |  NAME |  DESCRIPTION |
 |---|---|---|
 | Essential |  Privacy |  Log as little as possible. |
-| Desireable |  Rapid response rates |  The server should respond to requests as quickly as possible. |
+| Desirable |  Rapid response rates |  The server should respond to requests as quickly as possible. |
 | Optional |  Resource agnostic |  The server should be able to grant access and enc/dec any given data. |
 | Optional |  Scalable |  The server should be capable of working with multiple instances of itself without race conditions. |
+
