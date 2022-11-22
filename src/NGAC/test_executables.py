@@ -45,22 +45,16 @@ def test_simple_get_sequence():
     assert process.poll() is not None
     print("Success")
 
-    subprocess.call(["killall", "swipl"])
-    subprocess.call(["killall", "tee"])
-
 
 def test_start():
     cd()
 
     # Start the server
-    process = subprocess.Popen(["python", "."])
+    process = subprocess.Popen(["python3", "."])
     assert process.poll() is None
     process.terminate()
     process.wait()
     assert process.poll() is not None
-
-    subprocess.call(["killall", "swipl"])
-    subprocess.call(["killall", "tee"])
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ class ExecRunner:
         Initialize the ExecRunner class
         """
 
-        def get_os_name(os_name) -> Literal["windows","arch","linux", "macos"]:
+        def get_os_name(os_name) -> Literal["windows", "arch", "linux", "macos"]:
             if os_name == "nt":
                 return "windows"
             elif os_name == "posix":
@@ -70,6 +70,7 @@ class ExecRunner:
                 return "macos"
             else:
                 raise Exception("Unsupported OS")
+
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
         self.path = (
@@ -95,13 +96,14 @@ class ExecRunner:
             [self.path, self.args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            shell=True,
+            preexec_fn=os.setsid,
         )
         # Start the logger
         self.logger = subprocess.Popen(
             [self.logger_app, self.log_name],
             stdin=self.executable.stdout,
             stdout=subprocess.PIPE,
+            preexec_fn=os.setsid,
         )
         self.executable.stdout.close()
 
@@ -109,6 +111,7 @@ class ExecRunner:
             [self.logger_app, f".{self.log_name.strip('.txt')}_err.txt"],
             stdin=self.executable.stderr,
             stdout=subprocess.PIPE,
+            preexec_fn=os.setsid,
         )
         self.executable.stderr.close()
 
@@ -128,8 +131,21 @@ class ExecRunner:
         self.logger.wait()
         self.err_logger.wait()
 
+        self.executable.terminate()
+        self.logger.terminate()
+        self.err_logger.terminate()
+        import signal
+        os.killpg(os.getpgid(self.executable.pid), signal.SIGTERM)
+        
+        is_running = lambda self,p: self.is_running and (p.poll() is None)
+
         # Check that the process is no longer running
-        self.is_running = self.executable.poll() is None
+        self.is_running = is_running(self,self.executable)
+        self.is_running = is_running(self,self.logger)
+        self.is_running = is_running(self,self.err_logger)
+
+
+
 
     def __enter__(self):
         """
@@ -151,12 +167,21 @@ class ExecRunner:
         return self.path.split("/")[-1].strip(".exe")
 
     def __str__(self):
+        """
+        Called when the class is printed
+        """
         return f"{self.name()}({self.path})"
 
     def __repr__(self):
+        """
+        Called when the class is printed
+        """
         return str(self)
 
     def __del__(self):
+        """
+        Called when the class is deleted
+        """
         self.stop()
 
 

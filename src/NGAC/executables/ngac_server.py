@@ -54,6 +54,12 @@ class NGACServer(ExecRunner):
         self.path = path
         self.args = args
         super().__init__(path, args)
+    def stop(self) -> None:
+        """
+        Stop the NGAC server
+        """
+        super().stop()
+        os.system("pkill -f 'ngac_server'")
 
 
 def test_ngac_server():

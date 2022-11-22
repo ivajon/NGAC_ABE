@@ -21,7 +21,8 @@ class NGAC:
 
     This is the main server for the NGAC application. It is responsible for handling all the requests from the clients.
     """
-    def __init__(self) -> None:
+
+    def __init__(self: "NGAC") -> None:
         """
         Initialize the NGAC class
         """
@@ -29,7 +30,7 @@ class NGAC:
         self.pep = PEP()
         self.ngac_server = NGACServer()
 
-    def __enter__(self):
+    def __enter__(self: "NGAC") -> "NGAC":
         """
         Enter the NGAC class
         """
@@ -38,7 +39,7 @@ class NGAC:
         self.ngac_server.start()
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self: "NGAC", exc_type, exc_value, traceback) -> None:
         """
         Exit the NGAC class
         """
@@ -46,7 +47,7 @@ class NGAC:
         self.cme.stop()
         self.pep.stop()
 
-    def __del__(self):
+    def __del__(self) -> None:
         """
         Delete the NGAC class
         """
@@ -55,10 +56,10 @@ class NGAC:
         self.pep.stop()
 
 
-
 if __name__ == "__main__":
     ngac = NGAC()
     print("NGAC created")
+
     def panic_handler(*args):
         """
         Runs when the program is halted
@@ -69,16 +70,15 @@ if __name__ == "__main__":
         """
         ngac.__exit__(None, None, None)
         exit()
+
     import atexit
+
     atexit.register(panic_handler)
     import sys
+
     sys.excepthook = panic_handler
     print("Exception handler set")
     with ngac:
         print("NGAC started")
         while True:
             pass
-
-
-
-

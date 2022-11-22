@@ -1,1 +1,1 @@
-./linux/pep_server: 3: exec: /usr/lib/swi-prolog/bin/amd64/swipl: not found
+% Started server at http://localhost:8005/
