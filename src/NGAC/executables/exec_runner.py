@@ -103,6 +103,12 @@ class ExecRunner:
             stderr=subprocess.PIPE,
             preexec_fn=os.setsid,
         )
+        print(self.executable.stdout.readline())
+        print(self.executable.stdout.readline())
+        print(self.executable.stdout.readline())
+        # Capture the output of the executable for a bit and ensure that it is running
+        self.is_running = self.executable.poll() is None
+
         # Start the logger
         self.logger = subprocess.Popen(
             [self.logger_app, self.log_name],
@@ -118,7 +124,14 @@ class ExecRunner:
             stdout=subprocess.PIPE,
             preexec_fn=os.setsid,
         )
+        # Check if the executable is still running
+        is_running = lambda self, p: self.is_running and (p.poll() is None)
         self.executable.stderr.close()
+
+        # Check that the process is still running
+        self.is_running = is_running(self, self.executable)
+        self.is_running = is_running(self, self.logger)
+        self.is_running = is_running(self, self.err_logger)
 
         self.is_running = True
 

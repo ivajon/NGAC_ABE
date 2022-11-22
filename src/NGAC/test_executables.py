@@ -31,7 +31,7 @@ def test_simple_get_sequence():
     import requests
     import time
 
-    time.sleep(1)
+    time.sleep(20)
 
     base_url = "http://127.0.0.1:8001/paapi/setpol"
     data = {"policy": "Policy (a)", "token": "admin_token"}
