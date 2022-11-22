@@ -60,10 +60,10 @@ class ExecRunner:
         def get_os_name(os_name) -> Literal["windows", "arch", "linux", "macos"]:
             print(os_name)
             print(platform)
-            
-            if os_name == "nt" or platform == "win32" or platform == "win64":
+
+            if platform == "win32" or platform == "win64":
                 return "windows"
-            elif os_name == "posix" or platform == "linux" or platform == "linux2":
+            elif platform == "linux" or platform == "linux2":
                 # Check if we are on arch, ubuntu, mac, etc
                 if os.path.exists("/etc/arch-release"):
                     return "arch"
