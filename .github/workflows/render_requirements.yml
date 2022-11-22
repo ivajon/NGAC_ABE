@@ -16,6 +16,6 @@ jobs:
           git config --global user.email "Renderer[bot]@users.noreply.github.com"
           git config --global user.name "Renderer[bot]"
           git add .
-          git commit -m "Renderd the requirements"
+          git commit -m "Rendered the requirements"
           git push
 
