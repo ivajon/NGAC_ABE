@@ -129,9 +129,18 @@ class ExecRunner:
         import signal
 
         # Kill all the processes
-        os.killpg(os.getpgid(self.executable.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(self.logger.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(self.err_logger.pid), signal.SIGTERM)
+        try:
+            os.killpg(os.getpgid(self.executable.pid), signal.SIGTERM)
+        except ProcessLookupError:
+            print("Process not found")
+        try:
+            os.killpg(os.getpgid(self.logger.pid), signal.SIGTERM)
+        except ProcessLookupError:
+            print("Process not found")
+        try:
+            os.killpg(os.getpgid(self.err_logger.pid), signal.SIGTERM)
+        except ProcessLookupError:
+            print("Process not found")
         print(f"Stopped {self.name()}")
         # Check if the executable is still running
         is_running = lambda self, p: self.is_running and (p.poll() is None)
