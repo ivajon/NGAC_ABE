@@ -37,6 +37,7 @@ class NGAC:
         self.cme.start()
         self.pep.start()
         self.ngac_server.start()
+        print("NGAC server started")
         return self
 
     def __exit__(self: "NGAC", exc_type, exc_value, traceback) -> None:
@@ -46,39 +47,19 @@ class NGAC:
         self.ngac_server.stop()
         self.cme.stop()
         self.pep.stop()
-
-    def __del__(self) -> None:
-        """
-        Delete the NGAC class
-        """
-        self.ngac_server.stop()
-        self.cme.stop()
-        self.pep.stop()
+        print("NGAC server stopped")
 
 
 if __name__ == "__main__":
     ngac = NGAC()
+    """
+    Ngac servers wrapper
+    """
     print("NGAC created")
 
-    def panic_handler(*args):
-        """
-        Runs when the program is halted
-
-        :param args: Arguments passed to the function
-
-        Stops the servers.
-        """
-        ngac.__exit__(None, None, None)
-        exit()
-
-    import atexit
-
-    atexit.register(panic_handler)
-    import sys
-
-    sys.excepthook = panic_handler
     print("Exception handler set")
     with ngac:
         print("NGAC started")
-        while True:
+        for i in range(100000):
             pass
+    print("NGAC stopped")

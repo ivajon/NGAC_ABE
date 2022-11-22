@@ -128,7 +128,7 @@ class ExecRunner:
         os.killpg(os.getpgid(self.executable.pid), signal.SIGTERM)
         os.killpg(os.getpgid(self.logger.pid), signal.SIGTERM)
         os.killpg(os.getpgid(self.err_logger.pid), signal.SIGTERM)
-
+        print(f"Stopped {self.name()}")
         # Check if the executable is still running
         is_running = lambda self, p: self.is_running and (p.poll() is None)
 
@@ -167,12 +167,6 @@ class ExecRunner:
         Called when the class is printed
         """
         return str(self)
-
-    def __del__(self):
-        """
-        Called when the class is deleted
-        """
-        self.stop()
 
 
 def kill_process(p: subprocess.Popen, name=""):
