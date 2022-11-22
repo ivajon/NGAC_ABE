@@ -35,6 +35,7 @@ def test_simple_get_sequence():
 
     base_url = "http://127.0.0.1:8001/paapi/setpol"
     data = {"policy": "Policy (a)", "token": "admin_token"}
+
     r = requests.get(base_url, params=data)
     print(r.text)
     if r.status_code != 200:
@@ -47,7 +48,7 @@ def test_simple_get_sequence():
     print("Success")
 
 
-def test_start():
+def _start():
     cd()
 
     # Start the server
