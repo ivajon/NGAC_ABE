@@ -103,8 +103,7 @@ class ExecRunner:
             stderr=subprocess.PIPE,
             preexec_fn=os.setsid,
         )
-        print(self.executable.stdout.readline())
-        print(self.executable.stdout.readline())
+        # Read one line at a time from the executable
         print(self.executable.stdout.readline())
         # Capture the output of the executable for a bit and ensure that it is running
         self.is_running = self.executable.poll() is None
