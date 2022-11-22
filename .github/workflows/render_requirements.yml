@@ -17,5 +17,5 @@ jobs:
           git config --global user.name "Renderer[bot]"
           git add .
           git commit -m "Rendered the requirements"
-          git push
+          git push origin HEAD:${{ github.head_ref }}
 
