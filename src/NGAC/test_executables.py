@@ -24,6 +24,7 @@ def stop_process(process):
 
 def test_simple_get_sequence():
     import os
+
     # Start the server, if os is ubuntu we need to use python3
     process = start_process("python3", ".")
     assert process.poll() is None

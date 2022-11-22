@@ -1,6 +1,6 @@
 ERROR: -g ngac_server: Socket error: Address already in use
 ERROR: In:
-ERROR:   [14] socket:tcp_bind(<socket>(0x55fc28fe4770),8001)
+ERROR:   [14] socket:tcp_bind(<socket>(0x560c2d361780),8001)
 ERROR:   [13] thread_httpd:make_socket(8001,server:[...],_3080) at /usr/lib/swipl/library/http/thread_httpd.pl:254
 ERROR:   [12] thread_httpd:http_server(server:http_dispatch,server:[...]) at /usr/lib/swipl/library/http/thread_httpd.pl:200
 ERROR:   [11] server:server_with_opts([deny(false),...|...]) at /mnt/c/Users/ivarj/Documents/git/NGAC_ABE/src/NGAC/tog-ngac-crosscpp/server.pl:110

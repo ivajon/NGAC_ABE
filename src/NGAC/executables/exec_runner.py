@@ -18,6 +18,7 @@ assert python.is_running == False
 import subprocess
 import os
 from typing import Literal
+from sys import platform
 
 
 def get_extension(os_name):
@@ -57,7 +58,7 @@ class ExecRunner:
         """
 
         def get_os_name(os_name) -> Literal["windows", "arch", "linux", "macos"]:
-            if os_name == "nt":
+            if os_name == "nt" or platform == "win32" or platform == "win64":
                 return "windows"
             elif os_name == "posix":
                 # Check if we are on arch, ubuntu, mac, etc
@@ -66,7 +67,7 @@ class ExecRunner:
                 elif os.path.exists("/etc/debian_version"):
                     return "linux"
                     # Check for mac
-            elif os_name == "mac":
+            elif platform == "darwin":
                 return "macos"
             else:
                 raise Exception("Unsupported OS")
@@ -121,31 +122,20 @@ class ExecRunner:
         """
         Stop the executable
         """
-        # kill_process(self.executable, self.path)
-        # kill_process(self.logger, self.path)
-        self.executable.kill()
-        self.logger.kill()
-        self.err_logger.kill()
-        # Wait for the process to stop
-        self.executable.wait()
-        self.logger.wait()
-        self.err_logger.wait()
-
-        self.executable.terminate()
-        self.logger.terminate()
-        self.err_logger.terminate()
         import signal
+
+        # Kill all the processes
         os.killpg(os.getpgid(self.executable.pid), signal.SIGTERM)
-        
-        is_running = lambda self,p: self.is_running and (p.poll() is None)
+        os.killpg(os.getpgid(self.logger.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(self.err_logger.pid), signal.SIGTERM)
+
+        # Check if the executable is still running
+        is_running = lambda self, p: self.is_running and (p.poll() is None)
 
         # Check that the process is no longer running
-        self.is_running = is_running(self,self.executable)
-        self.is_running = is_running(self,self.logger)
-        self.is_running = is_running(self,self.err_logger)
-
-
-
+        self.is_running = is_running(self, self.executable)
+        self.is_running = is_running(self, self.logger)
+        self.is_running = is_running(self, self.err_logger)
 
     def __enter__(self):
         """
