@@ -1,0 +1,5 @@
+PRIORITY, NAME, DESCRIPTION
+Essential, Privacy, Log as little as possible.
+Desireable, Rapid response rates, The server should respond to requests as quickly as possible.
+Optional, Resource agnostic, The server should be able to grant access and enc/dec any given data.
+Optional, Scalable, The server should be capable of working with multiple instances of itself without race conditions.
