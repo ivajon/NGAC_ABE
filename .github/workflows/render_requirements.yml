@@ -12,7 +12,6 @@ jobs:
           python render.py ./README_template.md ./README.md
       - name: Commit and push NGAC server
         run: |
-          echo "Committing and pushing the NGAC server"
           git config --global user.email "Renderer[bot]@users.noreply.github.com"
           git config --global user.name "Renderer[bot]"
           git add .
