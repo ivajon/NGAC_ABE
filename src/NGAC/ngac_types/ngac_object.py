@@ -9,13 +9,5 @@ class NgacObject:
     def __init__(self, type: str):
         self.type = type
 
-    def get_type(self) -> str:
+    def get_type(self):
         return self.type
-
-
-def test_ngac_object():
-    """
-    Test NGAC object class
-    """
-    ngac_object = NgacObject("NgacObject")
-    assert ngac_object.get_type() == "NgacObject"

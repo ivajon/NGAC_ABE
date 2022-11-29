@@ -1,49 +1,68 @@
-def start_ngac():
-    from pep import PEP
-    from ngac_server import NGACServer
-    from cme import CME
+"""
+Next Generation Access Control (NGAC) server
+---
 
+This file contains functionality to run the NGAC server as a standalone application.
+
+## Usage
+```bash
+    python .
+```
+"""
+from pep import PEP
+from ngac_server import NGACServer
+from cme import CME
+
+
+class NGAC:
     """
-    Start the NGAC server
+    Next Generation Access Control (NGAC) server
+    ---
+
+    This is the main server for the NGAC application. It is responsible for handling all the requests from the clients.
     """
-    cme = CME()
-    cme.start()
-    pep = PEP()
-    pep.start()
-    ngac_server = NGACServer()
-    ngac_server.start()
-    return ngac_server, cme, pep
+
+    def __init__(self: "NGAC") -> None:
+        """
+        Initialize the NGAC class
+        """
+        self.cme = CME()
+        self.pep = PEP()
+        self.ngac_server = NGACServer()
+
+    def __enter__(self: "NGAC") -> "NGAC":
+        """
+        Enter the NGAC class
+        """
+        self.cme.start()
+        self.pep.start()
+        self.ngac_server.start()
+        print("NGAC server started")
+        return self
+
+    def __exit__(self: "NGAC", exc_type, exc_value, traceback) -> None:
+        """
+        Exit the NGAC class
+        """
+        self.ngac_server.stop()
+        self.cme.stop()
+        self.pep.stop()
+        print("NGAC server stopped")
 
 
-def stop_ngac(ngac_server, cme, pep):
-    from pep import PEP
-    from ngac_server import NGACServer
-    from cme import CME
-
+if __name__ == "__main__":
+    ngac = NGAC()
     """
-    Stop the NGAC server
+    Ngac servers wrapper
     """
-    ngac_server.stop()
-    cme.stop()
-    pep.stop()
+    print("NGAC created")
 
+    print("Exception handler set")
 
-ngac_server, cme, pep = start_ngac()
+    print("NGAC started")
 
-
-def panic_handler(*args):
-    stop_ngac(ngac_server, cme, pep)
-    exit()
-
-
-import atexit
-
-atexit.register(panic_handler)
-import sys
-
-# Also shutdown the NGAC server if the script runs into an error
-sys.excepthook = panic_handler
-# What do to on sigint
-
-while True:
-    pass
+    with ngac:
+        print("NGAC started")
+        for i in range(100000):
+            pass
+    print("NGAC stopped")

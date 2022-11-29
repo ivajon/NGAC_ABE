@@ -1,4 +1,3 @@
-
 class InfoTypes:
     def get_start(self) -> str:
         """
