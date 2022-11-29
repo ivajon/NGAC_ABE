@@ -16,7 +16,7 @@ def stop_process(process):
     assert process.poll() is not None
 
 
-def test_simple_get_sequence():
+def simple_get_sequence():
     import os
 
     import requests
@@ -34,20 +34,23 @@ def test_simple_get_sequence():
         assert False
     print("Success")
 
-
-
-if __name__ == "__main__":
+def test_simple_get_sequence():
     import os
     os.chdir("executables")
     cme = start_process("python3", "cme.py")
     pep = start_process("python3", "pep.py")
     ngac = start_process("python3", "ngac_server.py")
+    
     import time
     time.sleep(2)
 
-    test_simple_get_sequence()
+    simple_get_sequence()
 
     stop_process(cme)
     stop_process(pep)
     stop_process(ngac)
+    os.chdir("..")
+
+if __name__ == "__main__":
+    test_simple_get_sequence()
 

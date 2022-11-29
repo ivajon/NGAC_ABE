@@ -51,4 +51,7 @@ def test_pep():
 
 
 if __name__ == "__main__":
-    test_pep()
+    p = PEP()
+    p.start()
+    while True:
+        pass

@@ -4,7 +4,7 @@
     This class is used to implement policies
 """
 
-from ngac_object import NgacObject
+from .ngac_object import NgacObject
 
 
 class Policy(NgacObject):

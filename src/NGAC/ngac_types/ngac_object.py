@@ -6,7 +6,7 @@
 
 
 class NgacObject:
-    def __init__(self, type):
+    def __init__(self, type: str):
         self.type = type
 
     def get_type(self):

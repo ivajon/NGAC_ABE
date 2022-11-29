@@ -58,6 +58,9 @@ if __name__ == "__main__":
     print("NGAC created")
 
     print("Exception handler set")
+
+    print("NGAC started")
+
     with ngac:
         print("NGAC started")
         for i in range(100000):

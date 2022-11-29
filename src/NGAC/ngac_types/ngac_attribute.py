@@ -4,7 +4,8 @@
     This class is used to implement attributes
 """
 
-from ngac_object import NgacObject
+
+from .ngac_object import NgacObject
 
 
 class Attribute(NgacObject):
