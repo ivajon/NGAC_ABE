@@ -21,7 +21,7 @@ jobs:
           swipl -v -o ngac -g ngac -c ngac.pl
           swipl -v -o ngac_server -g ngac_server -c ngac.pl
           echo "Building the CME server"
-          swipl -v -o cme -g cme_server -c cme_sim.pl
+          swipl -v -o cme -g cme -c cme_sim.pl
           echo "Building the PEP server"
           cd PEP-RAP
           swipl -v -o pep_server -g pep_server -c pep.pl
@@ -54,7 +54,7 @@ jobs:
           swipl -v -o ngac -g ngac -c ngac.pl
           swipl -v -o ngac_server -g ngac_server -c ngac.pl
           echo "Building the CME server"
-          swipl -v -o cme -g cme_server -c cme_sim.pl
+          swipl -v -o cme -g cme -c cme_sim.pl
           echo "Building the PEP server"
           cd PEP-RAP
           swipl -v -o pep_server -g pep_server -c pep.pl
