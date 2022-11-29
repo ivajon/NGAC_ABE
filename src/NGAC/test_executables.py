@@ -20,7 +20,7 @@ def test_simple_get_sequence():
     import os
 
     # Start the server, if os is ubuntu we need to use python3
-    process = start_process("python3", ".")
+    process = start_process("python3", "executables")
     assert process.poll() is None
     import requests
     import time

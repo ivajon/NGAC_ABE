@@ -60,6 +60,8 @@ if __name__ == "__main__":
     print("Exception handler set")
     with ngac:
         print("NGAC started")
+        while True:
+            pass
         for i in range(100000):
             pass
     print("NGAC stopped")
