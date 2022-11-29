@@ -42,16 +42,6 @@ def test_simple_get_sequence():
     print("Success")
 
 
-def _start():
-    cd()
-
-    # Start the server
-    process = subprocess.Popen(["python3", "."])
-    assert process.poll() is None
-    process.terminate()
-    process.wait()
-    assert process.poll() is not None
-
 
 if __name__ == "__main__":
     test_simple_get_sequence()
