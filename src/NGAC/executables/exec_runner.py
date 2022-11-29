@@ -78,9 +78,12 @@ class ExecRunner:
 
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
-        self.path = (# If we are in executables don't add prefix executables, otherwise add it
-            ("" if file_name.startswith("executables") else "executables/")+
-            "./" + get_os_name(os.name) + "/" + file_name + get_extension(os.name)
+        self.path = (  # If we are in executables don't add prefix executables, otherwise add it
+            "./"  # ("./" if file_name.startswith("executables") else "./executables/")
+            + get_os_name(os.name)
+            + "/"
+            + file_name
+            + get_extension(os.name)
         )
         self.path += get_extension(os.name)
         self.args = args
@@ -106,7 +109,7 @@ class ExecRunner:
             shell=True,
         )
         # Read one line at a time from the executable
-        for i in [0,1,2]:
+        for i in [0, 1, 2]:
             print(self.executable.stdout.readline())
         # Capture the output of the executable for a bit and ensure that it is running
         self.is_running = self.executable.poll() is None
