@@ -103,6 +103,7 @@ class ExecRunner:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             preexec_fn=os.setsid,
+            shell=True,
         )
         # Read one line at a time from the executable
         print(self.executable.stdout.readline())

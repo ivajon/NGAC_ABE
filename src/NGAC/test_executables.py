@@ -3,15 +3,9 @@ import subprocess
 # Here we want to test the ngac executables
 
 
-def cd():
-    import os
-
-    if os.path.exists("executables"):
-        os.chdir("executables")
 
 
 def start_process(path, args):
-    cd()
     process = subprocess.Popen([path, args])
     return process
 
@@ -24,11 +18,9 @@ def stop_process(process):
 
 def test_simple_get_sequence():
     import os
-    os.chdir("executables")
 
     # Start the server, if os is ubuntu we need to use python3
     process = start_process("python3", ".")
-    os.chdir("..")
     assert process.poll() is None
     import requests
     import time
