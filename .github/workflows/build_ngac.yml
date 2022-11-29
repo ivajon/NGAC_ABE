@@ -1,4 +1,4 @@
-on: [pull_request]
+on: [push]
 name: Build tog-ngac-crosscpp for all targets
 
 jobs:
