@@ -45,6 +45,7 @@ def test_cme():
     time.sleep(1)
     cme.stop()
 
+
 if __name__ == "__main__":
     cme = CME()
     cme.start()

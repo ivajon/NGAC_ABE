@@ -35,4 +35,5 @@ def test_access_request():
         assert isinstance(access_request[0], user.User)
         assert isinstance(access_request[1], str)
         assert isinstance(access_request[2], resource.Resource)
+
     validate_access_request(access_request)

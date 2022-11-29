@@ -3,8 +3,6 @@ import subprocess
 # Here we want to test the ngac executables
 
 
-
-
 def start_process(path, args):
     process = subprocess.Popen([path, args])
     return process
@@ -34,14 +32,17 @@ def simple_get_sequence():
         assert False
     print("Success")
 
+
 def test_simple_get_sequence():
     import os
+
     os.chdir("executables")
     cme = start_process("python3", "cme.py")
     pep = start_process("python3", "pep.py")
     ngac = start_process("python3", "ngac_server.py")
-    
+
     import time
+
     time.sleep(2)
 
     simple_get_sequence()
@@ -51,6 +52,6 @@ def test_simple_get_sequence():
     stop_process(ngac)
     os.chdir("..")
 
+
 if __name__ == "__main__":
     test_simple_get_sequence()
-
