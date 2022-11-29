@@ -19,9 +19,6 @@ def stop_process(process):
 def test_simple_get_sequence():
     import os
 
-    # Start the server, if os is ubuntu we need to use python3
-    process = start_process("python3", "executables")
-    assert process.poll() is None
     import requests
     import time
 
@@ -34,14 +31,23 @@ def test_simple_get_sequence():
     print(r.text)
     if r.status_code != 200:
         print(r.text)
-        stop_process(process)
         assert False
-
-    stop_process(process)
-    assert process.poll() is not None
     print("Success")
 
 
 
 if __name__ == "__main__":
+    import os
+    os.chdir("executables")
+    cme = start_process("python3", "cme.py")
+    pep = start_process("python3", "pep.py")
+    ngac = start_process("python3", "ngac_server.py")
+    import time
+    time.sleep(2)
+
     test_simple_get_sequence()
+
+    stop_process(cme)
+    stop_process(pep)
+    stop_process(ngac)
+
