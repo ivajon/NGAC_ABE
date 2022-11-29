@@ -1,9 +1,7 @@
-on: [push]
+on: [pull_request]
 name: Build tog-ngac-crosscpp for all targets
 
 jobs:
-  # Builds the NGAC servers for LINUX, WINDOWS, and MACOS
-  # And commits and pushes them to the repo branch "ngac_exec_{os}"
   build_linux:
     name: Build NGAC for Linux
     runs-on: ubuntu-latest
