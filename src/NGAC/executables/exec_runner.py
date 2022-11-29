@@ -106,7 +106,8 @@ class ExecRunner:
             shell=True,
         )
         # Read one line at a time from the executable
-        print(self.executable.stdout.readline())
+        for i in [0,1,2]:
+            print(self.executable.stdout.readline())
         # Capture the output of the executable for a bit and ensure that it is running
         self.is_running = self.executable.poll() is None
 
