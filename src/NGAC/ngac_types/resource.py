@@ -1,7 +1,10 @@
 """
-Resource abstraction
+Resource
+---
 
-A resource can be a file or something else
+This file describes a simple resource abstraction. A resource is a set of `attributes` and a resource specific `Id`.
+
+This resource abstraction is fully agnostic to what the resource actually is. That needs to be done by a content manager.
 """
 from typing import List
 
@@ -13,44 +16,39 @@ from .ngac_attribute import ObjectAttribute
 class Resource(NgacObject):
     """
     Resource abstraction
+    ---
 
-    it's possible to iterate over a resource's attributes
-
-    Example:
-    ```python
-    for attribute in resource:
-        print(attribute)
-    ```
-
-    A resource is much more static than a `user`
+    A Resource is a set of `ObjectAttribute`s and a resource specific `id`.
     """
 
     def __init__(self, attributes: List[ObjectAttribute] = None, id: str = ""):
+        """
+        Creates a new resource abstraction.
+        """
         self.id = id
         self.attributes = attributes
-        # super.__init__("Resource")
 
     def get_resource(self) -> str:
         """
-        Returns the resource id
+        Returns the resource id.
         """
         return self.id
 
     def append(self, attribute: ObjectAttribute):
         """
-        Appends an attribute to the resource
+        Appends an attribute to the resource.
         """
         self.attributes.append(attribute)
 
     def remove(self, attribute: ObjectAttribute):
         """
-        Removes an attribute from the resource
+        Removes an attribute from the resource.
         """
         self.attributes.remove(attribute)
 
     def pop(self, index: int) -> ObjectAttribute:
         """
-        Pops an attribute from the resource
+        Pops an attribute from the resource.
         """
         return self.attributes.pop(index)
 
@@ -72,7 +70,7 @@ class Resource(NgacObject):
 
 def test_create_resource():
     """
-    Tests the creation of a resource
+    Tests the creation of a resource.
     """
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
@@ -82,7 +80,7 @@ def test_create_resource():
 
 def test_iterate_over_resource():
     """
-    Tests the iteration over a resource
+    Tests the iteration over a resource.
     """
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
@@ -92,7 +90,7 @@ def test_iterate_over_resource():
 
 def test_append_resource():
     """
-    Tests the appending of a resource
+    Tests the appending of a resource.
     """
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
@@ -102,7 +100,7 @@ def test_append_resource():
 
 def test_remove_resource():
     """
-    Tests the removal of a resource
+    Tests the removal of a resource.
     """
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")
@@ -112,7 +110,7 @@ def test_remove_resource():
 
 def test_resource_cover_all():
     """
-    Tests the coverage of the resource class
+    Tests the coverage of the resource class.
     """
     attributes = [ObjectAttribute("attr1"), ObjectAttribute("attr2")]
     resource = Resource(attributes, id="resource1")

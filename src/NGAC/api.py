@@ -1,59 +1,30 @@
 """
-Defines an API for the NGAC system.
+API
+---
 
+Defines all of the valid endpoints for the NGAC API
 
-"""
+## Endpoints
 
-POLICY_ACCESS_ENDPOINT = "paapi"
-"""
-Policy access API,
-This is used to set, get and manipulate policies
-
-## Example
-```bash
-curl -s -G "http://127.0.0.1:8001/paapi/loadpol" --data-urlencode "policyfile=EXAMPLES/policy_signals_access.pl" --data-urlencode "token=admin_token"
-```
-"""
-
-POLICY_QUERY_ENDPOINT = "pqapi"
-"""
-Policy query API,
-This is used to query the policy server for information
-
-## Example
-```bash
-curl -s -G "http://127.0.0.1:8001/pqapi/access" --data-urlencode "user=jones" --data-urlencode "ar=read" --data-urlencode "object=mrec1"
-```
+## Policy Access API
+- LoadPolicy
+- SetPolicy
+- GetPolicy
+- CombinePolicy
+- AddPolicy
+- DeletePolicy
+- PurgePolicy
+## Policy Query API
+- Access
 """
 
 
-POLICY_LOAD_ENDPOINT = "loadpol"
-
-"""API = {
-    POLICY_ACCESS_ENDPOINT: {
-        "load": "loadpol",
-        "set": "setpol",
-        "get": "getpol",
-        "combine": "combinepol",
-        "add": "add",
-        "delete": "delete",
-        "purge": "purgepol",
-    },
-    POLICY_QUERY_ENDPOINT: {
-        "access": "access",
-    },
-}"""
-"""
-API definition for the NGAC server
-
-This is very implementation specific, and will need to be changed
-if the NGAC server is changed.
-"""
-
-
-class Operation:
+class Endpoint:
     """
-    Defines an operation for the API
+    Endpoint
+    ---
+
+    An API endpoint abstraction. Calling str() on an Endpoint will return the endpoint as a string.
     """
 
     def __str__(self) -> str:
@@ -69,9 +40,15 @@ class Operation:
         return self.__str__()
 
 
-def operation(name, endpoint, derived_from):
+def endpoint(name, endpoint, derived_from):
     """
-    Creates a new operation class
+    Creates a new `endpoint`
+    ---
+
+    Resulting format of the endpoint is
+    ```
+    f"/{str(derived_from)}/{endpoint}"
+    ```
     """
 
     return type(
@@ -80,49 +57,38 @@ def operation(name, endpoint, derived_from):
         {
             "__repr__": lambda self: str(derived_from()) + endpoint,
             "__str__": lambda self: self.__repr__(),
+            "name": name,
         },
     )
 
 
-PolicyAccessAPI = operation("PolicyAccessAPI", "/paapi", derived_from=Operation)
-PolicyQueryAPI = operation("PolicyQueryAPI", "/pqapi", derived_from=Operation)
+PolicyAccessAPI = endpoint("PolicyAccessAPI", "/paapi", derived_from=Endpoint)
+PolicyQueryAPI = endpoint("PolicyQueryAPI", "/pqapi", derived_from=Endpoint)
 
-LoadPolicy = operation("LoadPolicy", "/loadpol", derived_from=PolicyAccessAPI)
-SetPolicy = operation("SetPolicy", "/setpol", derived_from=PolicyAccessAPI)
-GetPolicy = operation("GetPolicy", "/getpol", derived_from=PolicyAccessAPI)
-CombinePolicy = operation("CombinePolicy", "/combinepol", derived_from=PolicyAccessAPI)
-AddPolicy = operation("AddPolicy", "/add", derived_from=PolicyAccessAPI)
-DeletePolicy = operation("DeletePolicy", "/delete", derived_from=PolicyAccessAPI)
-PurgePolicy = operation("PurgePolicy", "/purgepol", derived_from=PolicyAccessAPI)
+LoadPolicy = endpoint("LoadPolicy", "/loadpol", derived_from=PolicyAccessAPI)
+SetPolicy = endpoint("SetPolicy", "/setpol", derived_from=PolicyAccessAPI)
+GetPolicy = endpoint("GetPolicy", "/getpol", derived_from=PolicyAccessAPI)
+CombinePolicy = endpoint("CombinePolicy", "/combinepol", derived_from=PolicyAccessAPI)
+AddPolicy = endpoint("AddPolicy", "/add", derived_from=PolicyAccessAPI)
+DeletePolicy = endpoint("DeletePolicy", "/delete", derived_from=PolicyAccessAPI)
+PurgePolicy = endpoint("PurgePolicy", "/purgepol", derived_from=PolicyAccessAPI)
 
-Access = operation("Access", "/access", derived_from=PolicyQueryAPI)
-
-
-class API:
-    def __init__(self, operations):
-        self.operations = operations
-
-    def __str__(self):
-        repr = "API:\n"
-        for operation in self.operations:
-            repr += f"\t{type(operation).__name__}: {operation}\n"
-        return repr
+Access = endpoint("Access", "/access", derived_from=PolicyQueryAPI)
 
 
 def test_api():
-    api = API(
-        [
-            LoadPolicy(),
-            SetPolicy(),
-            GetPolicy(),
-            CombinePolicy(),
-            AddPolicy(),
-            DeletePolicy(),
-            PurgePolicy(),
-            Access(),
-        ]
-    )
-    print(api)
+    api = [
+        LoadPolicy(),
+        SetPolicy(),
+        GetPolicy(),
+        CombinePolicy(),
+        AddPolicy(),
+        DeletePolicy(),
+        PurgePolicy(),
+        Access(),
+    ]
+    for endpoint in api:
+        print(endpoint)
 
 
 if __name__ == "__main__":

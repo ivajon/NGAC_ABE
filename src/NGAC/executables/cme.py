@@ -1,4 +1,9 @@
-import os
+"""
+CME
+---
+
+Starts the NGAC cme server.
+"""
 
 from exec_runner import ExecRunner
 
@@ -6,10 +11,7 @@ from exec_runner import ExecRunner
 class CME(ExecRunner):
     def __init__(self, path="./cme", args="") -> None:
         """
-        Initialize the CME class
-
-        :param path: Path to the CME executable
-        :param args: Arguments to pass to the CME executable
+        Initialize the CME class.
         """
         self.path = path
         self.args = args

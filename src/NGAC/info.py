@@ -1,21 +1,36 @@
+"""
+Info
+---
+
+Different types of info need different colors in the terminal.
+
+
+"""
+
 
 class InfoTypes:
+    """
+    Generic `info` message, these are grey
+    """
+
     def get_start(self) -> str:
         """
         Returns the color prefix
         """
-        # Basic info is in grey
         return "\033[90m"
 
     def get_end(self) -> str:
         """
         Returns the color postfix
         """
-        # Basic info is in grey
         return "\033[0m"
 
 
 class Error(InfoTypes):
+    """
+    Specifies that the message is an `error` message, these are red.
+    """
+
     def get_start(self) -> str:
         return "\033[91m"
 
@@ -24,8 +39,11 @@ class Error(InfoTypes):
 
 
 class Info(InfoTypes):
+    """
+    Specifies that the message is an `info` message, these are blue.
+    """
+
     def get_start(self) -> str:
-        # Info messages are blue
         return "\033[94m"
 
     def get_end(self) -> str:
@@ -33,8 +51,11 @@ class Info(InfoTypes):
 
 
 class Success(InfoTypes):
+    """
+    Specifies that is it a `success` message, these are green.
+    """
+
     def get_start(self) -> str:
-        # Success messages are green
         return "\033[92m"
 
     def get_end(self) -> str:
@@ -42,6 +63,10 @@ class Success(InfoTypes):
 
 
 class Channel:
+    """
+    Generic channel, this can not be printed to.
+    """
+
     def t():
         """
         Returns the type of the channel
@@ -50,6 +75,10 @@ class Channel:
 
 
 class StdOut(Channel):
+    """
+    Specifies that the output channel should be `stdout`.
+    """
+
     def t():
         """
         Returns the type of the channel
@@ -59,13 +88,7 @@ class StdOut(Channel):
 
 class File(Channel):
     """
-    Write to a file, creating it if it doesn't exist, since we are logging to file
-    it does not support colors
-
-    :param path: Path to the file
-
-    Uses wa+ mode, so the file is created if it doesn't exist, and the file is
-    opened for writing at then end of the file.
+    Specifies that the output channel should be a `file`.
     """
 
     def __init__(self, path):
@@ -79,6 +102,10 @@ class File(Channel):
 
 
 class StdErr(Channel):
+    """
+    Specifies that the output channel should be `stderr`.
+    """
+
     def t():
         """
         Returns the type of the channel
@@ -88,54 +115,30 @@ class StdErr(Channel):
 
 def print_color(color, message):
     """
-    Prints a message in a specific color
-
-    :param color: The color specified by its rgb values
-    :param message: The message to print
-
-    :return: None
+    Prints the [`message`] in the specified [`color`]
     """
     print(f"\033[38;2;{color[0]};{color[1]};{color[2]}m{message}\033[0m")
 
 
-def info(t: InfoTypes, msg: str, channel: Channel = StdOut) -> None:
+def info(message_type: InfoTypes, message: str, channel: Channel = StdOut):
+    """
+    Logs a [`message_type`] [`message`] to the [`channel`] specified
+    """
     import sys
 
-    """
-    Prints a message to the console
-
-    :param t: The type of message
-    :param msg: The message to print
-    :param channel: The channel to print to
-
-    :return: None
-
-    ```python
-    from info import info, Info, Error, Success
-    info(Info(), "This is an info message")
-    info(Error(), "This is an error message")
-    info(Success(), "This is a success message")
-    ```
-
-    Logging to a file:
-    ```python
-    from info import info, Info, Error, Success, File
-    info(Info(), "This is an info message", File("log.txt"))
-    info(Error(), "This is an error message", File("log.txt"))
-    info(Success(), "This is a success message", File("log.txt"))
-    ```
-    """
     if channel.t() == File:
         with open(channel.path, "a+") as f:
-            f.write(f"{type(t).__name__}:\n\t{msg}")
+            f.write(f"{type(message_type).__name__}:\n\t{message}")
     elif channel.t() == StdOut:
         print(
-            f"{t.get_start()}{type(t).__name__}:\n\t{msg}{t.get_end()}", file=sys.stdout
+            f"{message_type.get_start()}{type(message_type).__name__}:\n\t{message}{message_type.get_end()}",
+            file=sys.stdout,
         )
     elif channel.t() == StdErr:
 
         print(
-            f"{t.get_start()}{type(t).__name__}:\n\t{msg}{t.get_end()}", file=sys.stderr
+            f"{message_type.get_start()}{type(message_type).__name__}:\n\t{message}{message_type.get_end()}",
+            file=sys.stderr,
         )
     else:
         raise Exception("Invalid channel type")

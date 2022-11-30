@@ -264,12 +264,16 @@ def test_access():
         CombinedPolicy = Policy(
             name="Combined Policy", path="EXAMPLES/policy_combined.pl"
         )
+
         # Ensure that the default policy is none
         ret = ngac.get(Policy, token="admin_token").text
         assert "none" in ret
+
         # Load the two policies
         ret = ngac.load(SignalAccessPolicy, token="admin_token").status_code
+
         assert ret == 200
+
         ret = ngac.load(VehicleOwnershipPolicy, token="admin_token").status_code
         assert ret == 200
 

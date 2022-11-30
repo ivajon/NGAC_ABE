@@ -1,7 +1,8 @@
 """
-# ExecRunner
-A "safe" ish way to run executables as subprocesses.
+ExecRunner
+---
 
+An abstraction for starting executables in a "platform agnostic" manner.
 """
 
 import subprocess
@@ -10,11 +11,9 @@ import os
 
 def get_extension(os_name):
     """
-    Gets the extension for the executable based on the OS name
+    Gets the extension for the executable based on the OS name.
     """
-    if os_name == "nt":
-        return ".exe"
-    elif os_name == "posix":
+    if os_name == "posix":
         return ""
     elif os_name == "mac":
         return ".app"  # Not sure if this is correct
@@ -23,14 +22,19 @@ def get_extension(os_name):
 
 
 class ExecRunner:
+    """
+    ExecRunner
+    ---
+
+    This is a class should not be used in a standalone manner.
+    """
+
     def __init__(
         self, path, args, logger="tee", log_folder="./LOG", log_name=""
     ) -> None:
         """
-        Initialize the ExecRunner class
+        Initialize the ExecRunner class.
         """
-        # We need to know the runnable file extension for the OS
-        # If we are on windows, append .exe to the path
         self.path = path
         self.path += get_extension(os.name)
         self.args = args
@@ -45,22 +49,23 @@ class ExecRunner:
 
     def start(self):
         """
-        Start the executable
+        Starts the executable.
         """
-        # Start the executable, passing its stdout to a file and stderr to the console
+
         self.pid = subprocess.Popen(
             [self.path, self.args],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             shell=True,
         )
-        # Start the logger
+
         self.logger = subprocess.Popen(
             [self.logger_app, self.log_name],
             stdin=self.pid.stdout,
             stdout=subprocess.PIPE,
         )
         self.pid.stdout.close()
+
         self.err_logger = subprocess.Popen(
             [self.logger_app, f".{self.log_name.strip('.txt')}_err.txt"],
             stdin=self.pid.stderr,
@@ -72,7 +77,7 @@ class ExecRunner:
 
     def stop(self):
         """
-        Stop the executable
+        Stop the executable.
         """
         kill_process(self.pid, self.path)
         kill_process(self.logger, self.path)
@@ -80,20 +85,20 @@ class ExecRunner:
 
     def __enter__(self):
         """
-        Called when the class is used in a with statement
+        Called when the class is used in a with statement.
         """
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, _exc_type, _exc_value, _traceback):
         """
-        Called when the class is used in a with statement
+        Called when the class is used in a with statement.
         """
         self.stop()
 
     def name(self):
         """
-        Get the name of the executable
+        Get the name of the executable.
         """
         return self.path.split("/")[-1].strip(".exe")
 

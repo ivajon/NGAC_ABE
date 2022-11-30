@@ -18,7 +18,6 @@
     
 """
 
-import socket
 from typing import List
 import sys
 

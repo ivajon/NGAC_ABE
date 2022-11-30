@@ -1,7 +1,9 @@
 """
-    NGAC Object class
+NGAC Object
+---
 
-    This is a super class which the other types will inherit from. 
+This file implements a type level NgacObject. It it self should never be instantiated as it merely exists for
+typing.
 """
 
 
@@ -15,7 +17,7 @@ class NgacObject:
 
 def test_ngac_object():
     """
-    Test NGAC object class
+    Test NGAC object class.
     """
     ngac_object = NgacObject("NgacObject")
     assert ngac_object.get_type() == "NgacObject"
