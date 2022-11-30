@@ -54,7 +54,18 @@ class UserAttribute(Attribute):
     """
 
     def __init__(self, user_attr: str):
-        self.user_attr = user_attr
+        #
+        if (type(user_attr) == list and len(user_attr) == 1) or type(user_attr) not in [
+            str,
+            list,
+        ]:
+            raise TypeError
+        elif type(user_attr) == list:
+            self.user_attr = user_attr[0]
+        else:
+            self.user_attr = user_attr
+
+    # self.user_attr = user_attr
 
     def __str__(self) -> str:
         return self.user_attr

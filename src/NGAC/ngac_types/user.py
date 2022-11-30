@@ -22,14 +22,26 @@ class User(NgacObject):
     ```
     """
 
-    def __init__(self, attributes: List[UserAttribute], id: str = ""):
+    def __init__(self, id: str, attributes: List[UserAttribute] = None):
         """
         Creates a new user
         :param attributes: the user's attributes
         :param id: the user's id, name or similar
         """
-        self.id = id
-        self.attributes = attributes
+
+        if attributes is None:
+            self.attributes = []
+        else:
+            self.attributes = attributes
+
+        if (type(id) == list and len(id) == 1) or type(id) not in [str, list]:
+            raise TypeError
+        elif type(id) == list:
+            self.id = id[0]
+        else:
+            self.id = id
+
+        # self.attributes = attributes
 
     def get_attributes(self) -> List[UserAttribute]:
         """
@@ -78,6 +90,9 @@ class User(NgacObject):
 
     def __getitem__(self, index: int) -> UserAttribute:
         return self.attributes[index]
+
+    def __str__(self) -> str:
+        return f"User: {self.id}, Attributes: {self.attributes}"
 
 
 def test_create_user():
