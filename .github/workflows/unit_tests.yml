@@ -2,8 +2,8 @@ on: [push]
 name: Unit Tests
 
 jobs:
-  build_linux:
-    name: Build NGAC for Linux
+  test_ngac_simple:
+    name: Simple NGAC Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,12 +27,6 @@ jobs:
           echo "Coppying the NGAC server, into src/NGAC/executables/linux"
           mkdir -p ../../src/NGAC/executables/linux
           cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
-  test_ngac_simple:
-    needs: build_linux
-    name: Simple NGAC Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
@@ -58,6 +52,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: sudo apt-get install swi-prolog
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
