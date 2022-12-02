@@ -60,8 +60,6 @@ jobs:
 
       - name: Run tests
         run: |
-          ls
-          cd src/NGAC/executables
           ls -la
           python cme.py
           python pep.py
