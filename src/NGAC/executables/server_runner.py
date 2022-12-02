@@ -52,3 +52,21 @@ def start() -> NGAC:
 
 def stop(ngac: NGAC):
     ngac.stop()
+
+
+def test_servers():
+    servers = NGAC()
+    with servers:
+        import time
+
+        time.sleep(2)
+        import requests
+
+        url = "http://127.0.0.1:8001/paapi/setpol"
+        args = {"policy": "Policy (a)", "token": "admin_token"}
+        ret = requests.get(url, params=args)
+        print(ret.text)
+        assert ret.ok
+
+if __name__ == "__main__":
+    test_servers()

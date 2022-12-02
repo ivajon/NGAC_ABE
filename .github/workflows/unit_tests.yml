@@ -21,7 +21,11 @@ jobs:
       - name: Run tests
         run: |
           cd src/NGAC/executables
+          python cme.py
+          python pep.py
           python ngac_server.py
+          python server_runner.py
+
   test_linux:
     needs: test_ngac_simple
     name: Test on Linux

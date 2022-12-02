@@ -7,7 +7,7 @@ An abstraction for starting executables in a "platform agnostic" manner.
 
 import subprocess
 import os
-from typing import Literal
+from typing import List, Literal
 from sys import platform
 
 
@@ -77,7 +77,7 @@ class ExecRunner:
         print(os.getcwd())
         print(self.path)
 
-    def start(self):
+    def start(self) -> List[str]:
         """
         Starts the executable.
         """
@@ -89,8 +89,9 @@ class ExecRunner:
             shell=True,
         )
         # Read one line at a time from the executable
+        log = []
         for i in [0, 1, 2]:
-            print(self.executable.stdout.readline())
+            log.append(self.executable.stdout.readline())
         # Capture the output of the executable for a bit and ensure that it is running
         self.is_running = self.executable.poll() is None
 
@@ -119,6 +120,8 @@ class ExecRunner:
         self.is_running = is_running(self, self.err_logger)
 
         self.is_running = True
+
+        return log
 
     def stop(self):
         """

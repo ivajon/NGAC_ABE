@@ -63,7 +63,9 @@ def test_ngac_server():
     import time
 
     ngac_server = NGACServer()
-    ngac_server.start()
+    log = ngac_server.start()
+    assert log != [b"",b"",b""]
+    print(log)
     time.sleep(1)
     print("Ngac server is running: ", ngac_server.is_running)
     assert ngac_server.is_running
@@ -75,17 +77,13 @@ def test_ngac_server():
     import requests
 
     url = "http://127.0.0.1:8001/paapi/setpol"
-    args = {
-        "policy":"Policy (a)",
-        "token":"admin_token"
-    }
-    ret = requests.get(url,params=args)
+    args = {"policy": "Policy (a)", "token": "admin_token"}
+    ret = requests.get(url, params=args)
     print(ret.text)
-    assert(ret.ok)
+    assert ret.ok
     ngac_server.stop()
     assert ngac_server.is_running == False
 
 
 if __name__ == "__main__":
     test_ngac_server()
-    # test_ngac_server()

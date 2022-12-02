@@ -20,17 +20,15 @@ class CME(ExecRunner):
 
 def test_cme():
     cme = CME()
-    cme.start()
+    log = cme.start()
     # Try to connect to the CME
     import subprocess
     import time
-
+    assert log != [b"",b"",b""]
+    print(log)
     time.sleep(1)
     cme.stop()
 
 
 if __name__ == "__main__":
-    cme = CME()
-    cme.start()
-    while True:
-        pass
+    test_cme()
