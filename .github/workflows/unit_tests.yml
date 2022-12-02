@@ -20,7 +20,7 @@ jobs:
 
       - name: Run tests
         run: |
-          cd src/NGAC/exutables
+          cd src/NGAC/executables
           python ngac_server.py
   test_linux:
     needs: test_ngac_simple
