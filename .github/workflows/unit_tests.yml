@@ -39,13 +39,6 @@ jobs:
           killall swipl
           sleep 2
 
-          # Now we want to run the arch versions
-          ./arch/cme &
-          ./arch/pep_server &
-          ./arch/ngac_server &
-          sleep 5
-          killall swipl
-
   test_ngac_simple:
     needs: test_servers_by_calling_them_from_bash
     name: Simple NGAC Test
