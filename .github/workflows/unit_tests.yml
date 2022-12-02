@@ -41,6 +41,7 @@ jobs:
 
       - name: Run tests
         run: |
+          ls
           python cme.py
           python pep.py
           python ngac_server.py

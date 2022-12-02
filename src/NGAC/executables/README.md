@@ -8,9 +8,7 @@ To run the executables as a python package you also need to have [python](https:
 
 ## Executables
 
-- [NGAC server](./ngac_server) or [ngac_server.exe](./ngac_server.exe)
-- [PEP](./pep) or [pep.exe](./pep.exe)
-- [PDP](./pdp) or [pdp.exe](./pdp.exe)
+Executables are compiled for a specific OS. This means that you find ubuntu/debian releases in the `linux` folder, manjaro/arch releases in the `arc` folder and mac releases in the `mac` folder.
 
 ## Python package
 
