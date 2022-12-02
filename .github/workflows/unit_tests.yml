@@ -42,6 +42,7 @@ jobs:
       - name: Run tests
         run: |
           ls
+          cd src/NGAC/executables
           python cme.py
           python pep.py
           python ngac_server.py
