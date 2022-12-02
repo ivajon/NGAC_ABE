@@ -48,9 +48,9 @@ class ExecRunner:
                 if os.path.exists("/etc/arch-release"):
                     return "arch"
                 elif os.path.exists("/etc/debian_version"):
-                    return "linux"
+                    return "arc"
                 else:
-                    return "linux"
+                    return "arc"
             else:
                 raise Exception("Unsupported OS")
 
