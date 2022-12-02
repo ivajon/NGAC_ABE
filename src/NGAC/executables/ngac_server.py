@@ -72,12 +72,18 @@ def test_ngac_server():
     # Execute curl -s -G "http://127.0.0.1:8001/paapi/setpol" --data-urlencode "policy=Policy (a)" --data-urlencode "token=admin_token"
     # This should return a 200 status code
 
-    os.system(
-        'curl -s -G "http://127.0.0.1:8001/paapi/setpol" --data-urlencode "policy=Policy (a)" --data-urlencode "token=admin_token"'
-    )
+    import requests
+
+    url = "http://127.0.0.1:8001/paapi/setpol"
+    args = {
+        "policy":"Policy (a)",
+        "token":"admin_token"
+    }
+    ret = requests.get(url,params=args)
+    print(ret.text)
+    assert(ret.ok)
     ngac_server.stop()
     assert ngac_server.is_running == False
-    print("Ngac server is running: ", ngac_server.is_running)
 
 
 if __name__ == "__main__":
