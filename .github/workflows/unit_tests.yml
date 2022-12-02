@@ -32,7 +32,7 @@ jobs:
       - name: Run the servers
         run: |
           cd src/NGAC/executables/
-          ./start_ngac.sh
+          bash start_ngac.sh
           sleep 5
           killall swipl
           sleep 2
