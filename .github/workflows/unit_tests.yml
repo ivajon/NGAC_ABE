@@ -31,16 +31,13 @@ jobs:
         run: sudo apt-get install swi-prolog
       - name: Run the servers
         run: |
-          cd src/NGAC/executables
-          ./linux/cme &
-          ./linux/pep_server &
-          ./linux/ngac_server &
+          cd src/NGAC/executables/
+          ./start_ngac.sh
           sleep 5
           killall swipl
           sleep 2
-
   test_linux:
-    needs: test_ngac_simple
+    needs: test_servers_by_calling_them_from_bash
     name: Test on Linux
     runs-on: ubuntu-latest
     steps:
