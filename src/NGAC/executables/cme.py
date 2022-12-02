@@ -24,8 +24,9 @@ def test_cme():
     # Try to connect to the CME
     import subprocess
     import time
+
     print(log)
-    assert log != [b"",b"",b""]
+    assert log != [b"", b"", b""]
     time.sleep(1)
     cme.stop()
 

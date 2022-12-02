@@ -65,7 +65,7 @@ def test_ngac_server():
     ngac_server = NGACServer()
     log = ngac_server.start()
     print(log)
-    assert log != [b"",b"",b""]
+    assert log != [b"", b"", b""]
     time.sleep(1)
     print("Ngac server is running: ", ngac_server.is_running)
     assert ngac_server.is_running

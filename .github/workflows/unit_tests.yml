@@ -39,33 +39,6 @@ jobs:
           killall swipl
           sleep 2
 
-  test_ngac_simple:
-    needs: test_servers_by_calling_them_from_bash
-    name: Simple NGAC Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install SWI Prolog
-        run: sudo apt-get install swi-prolog
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
-          pip install pytest
-          pip install pytest-cov
-
-      - name: Run tests
-        run: |
-          ls -la
-          python cme.py
-          python pep.py
-          python ngac_server.py
-          python server_runner.py
-
   test_linux:
     needs: test_ngac_simple
     name: Test on Linux
