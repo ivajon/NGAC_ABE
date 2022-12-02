@@ -9,7 +9,7 @@ from exec_runner import ExecRunner
 
 
 class CME(ExecRunner):
-    def __init__(self, path="./cme", args="") -> None:
+    def __init__(self, path="cme", args="") -> None:
         """
         Initialize the CME class.
         """
@@ -27,3 +27,10 @@ def test_cme():
 
     time.sleep(1)
     cme.stop()
+
+
+if __name__ == "__main__":
+    cme = CME()
+    cme.start()
+    while True:
+        pass

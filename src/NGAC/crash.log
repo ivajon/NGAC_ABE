@@ -1,0 +1,160 @@
+Error:
+	Exception: <class 'KeyboardInterrupt'>
+Value: 
+Traceback: <traceback object at 0x7fd19d988980>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f3264b048c0>Error:
+	Exception: <class 'TypeError'>
+Value: Policy.__init__() got an unexpected keyword argument 'path'
+Traceback: <traceback object at 0x7f83c8d84740>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'path'
+Traceback: <traceback object at 0x7f2bf6e2ea80>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f9f8fa54a80>Error:
+	Exception: <class 'KeyboardInterrupt'>
+Value: 
+Traceback: <traceback object at 0x7f2d7c872d00>Error:
+	Exception: <class 'NameError'>
+Value: name 'Policy' is not defined
+Traceback: <traceback object at 0x7fc51f578c40>Error:
+	Exception: <class 'NameError'>
+Value: name 'Policy' is not defined
+Traceback: <traceback object at 0x7fd69b8e5f00>Error:
+	Exception: <class 'NameError'>
+Value: name 'Policy' is not defined
+Traceback: <traceback object at 0x7fce15584c40>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fe495d66680>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7fe496869040>Error:
+	Exception: <class 'AttributeError'>
+Value: 'NGAC' object has no attribute 'combine'
+Traceback: <traceback object at 0x7f62d41e5e00>Error:
+	Exception: <class 'TypeError'>
+Value: NGAC.combine_policies() got multiple values for argument 'token'
+Traceback: <traceback object at 0x7feb7c2bcc80>Error:
+	Exception: <class 'TypeError'>
+Value: User.__init__() missing 1 required positional argument: 'attributes'
+Traceback: <traceback object at 0x7ff00e3eefc0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'NGAC' object has no attribute 'access'
+Traceback: <traceback object at 0x7f9bccca1f80>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7f4429d15d00>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7f7c110c6540>Error:
+	Exception: <class 'TypeError'>
+Value: __str__ returned non-string (type NoneType)
+Traceback: <traceback object at 0x7f4624ce91c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7f82c41091c0>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f04878352c0>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f9c96385300>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f38c00c13c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7fa4cb1c1340>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7f4204aa51c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7f9fae5f1340>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7f6a418dd3c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7fa6897f53c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7f36694193c0>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7fae65d313c0>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f207bad9240>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7fbf20c593c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'Policy' object has no attribute 'split'
+Traceback: <traceback object at 0x7fa3074f13c0>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7fde335113c0>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f47708b27c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'NGAC' object has no attribute 'combine'
+Traceback: <traceback object at 0x7f57aa21d280>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7ff1ed432500>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7f8bec452c40>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7ff7b771d440>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7f458de493c0>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7fd527872600>Error:
+	Exception: <class 'AttributeError'>
+Value: 'bool' object has no attribute 'text'
+Traceback: <traceback object at 0x7f76f97fb640>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7f59d4ddcc00>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7fb99ba84c00>Error:
+	Exception: <class 'AssertionError'>
+Value: 
+Traceback: <traceback object at 0x7fa0b3840d40>Error:
+	Exception: <class 'TypeError'>
+Value: Policy.__init__() got an unexpected keyword argument 'name'
+Traceback: <traceback object at 0x7fc701181000>Error:
+	Exception: <class 'KeyboardInterrupt'>
+Value: 
+Traceback: <traceback object at 0x7fe639179880>Error:
+	Exception: <class 'KeyboardInterrupt'>
+Value: 
+Traceback: <traceback object at 0x7f5288d43f00>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f6c56da1ff0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7f6c57c10e40>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f5e4eb8ba90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7f5e4f70d040>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f9158a03a90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7f9159585040>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7eff4db4fa90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7eff4e6d4ec0>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fda0b93fa90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7fda0c4c5080>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f6d4809ba90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7f6d48c2d080>Error:
+	Exception: <class 'requests.exceptions.ConnectionError'>
+Value: HTTPConnectionPool(host='localhost', port=8001): Max retries exceeded with url: /paapi/getpol?token=admin_token (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fe136257a90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Traceback: <traceback object at 0x7fe136ddd080>

@@ -1,49 +1,24 @@
-def start_ngac():
-    from pep import PEP
-    from ngac_server import NGACServer
-    from cme import CME
+"""
+Next Generation Access Control (NGAC) server
+---
 
+This file contains functionality to run the NGAC server as a standalone application.
+
+## Usage
+```bash
+    python .
+```
+"""
+from server_runner import NGAC
+
+
+if __name__ == "__main__":
+    ngac = NGAC()
     """
-    Start the NGAC server
+    Starts the ngac servers
     """
-    cme = CME()
-    cme.start()
-    pep = PEP()
-    pep.start()
-    ngac_server = NGACServer()
-    ngac_server.start()
-    return ngac_server, cme, pep
-
-
-def stop_ngac(ngac_server, cme, pep):
-    from pep import PEP
-    from ngac_server import NGACServer
-    from cme import CME
-
-    """
-    Stop the NGAC server
-    """
-    ngac_server.stop()
-    cme.stop()
-    pep.stop()
-
-
-ngac_server, cme, pep = start_ngac()
-
-
-def panic_handler(*args):
-    stop_ngac(ngac_server, cme, pep)
-    exit()
-
-
-import atexit
-
-atexit.register(panic_handler)
-import sys
-
-# Also shutdown the NGAC server if the script runs into an error
-sys.excepthook = panic_handler
-# What do to on sigint
-
-while True:
-    pass
+    with ngac:
+        print("NGAC started")
+        while True:
+            pass
+    print("NGAC stopped")

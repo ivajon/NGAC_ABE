@@ -290,13 +290,12 @@ class NGAC:
         # Start all the executables as subprocesses
         import os
         import subprocess
+        os.chdir("executables")
+        self.runners = subprocess.Popen(["python","."])
+        os.chdir("..")
+        import time
 
-        self.runners = subprocess.Popen(
-            ["python", "__main__.py"],
-            cwd="./NGAC/executables"
-            if os.getcwd().endswith("src")
-            else "./executables",
-        )
+        time.sleep(2)
         self.running = True
 
     def stop(self) -> None:
@@ -304,8 +303,6 @@ class NGAC:
         Stop the NGAC server
         """
         self.runners.terminate()
-        # Wait for the subprocesses to stop
-        self.runners.wait()
         self.running = False
         import os
         import subprocess
