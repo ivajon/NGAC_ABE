@@ -27,6 +27,7 @@ jobs:
           echo "Coppying the NGAC server, into src/NGAC/executables/linux"
           mkdir -p ../../src/NGAC/executables/linux
           cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
+          cd ../../src/NGAC/executables
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
@@ -40,7 +41,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cd src/NGAC/executables
           python cme.py
           python pep.py
           python ngac_server.py
