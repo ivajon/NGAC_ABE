@@ -28,6 +28,7 @@ jobs:
           mkdir -p ../../src/NGAC/executables/linux
           cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
   test_ngac_simple:
+    needs: build_linux
     name: Simple NGAC Test
     runs-on: ubuntu-latest
     steps:
