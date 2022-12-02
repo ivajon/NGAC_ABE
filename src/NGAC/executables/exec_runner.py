@@ -48,11 +48,11 @@ class ExecRunner:
                 if os.path.exists("/etc/arch-release"):
                     return "arch"
                 elif os.path.exists("/etc/debian_version"):
-                    return "arch"
+                    return "linux"
                 else:
-                    return "arch"
+                    return "linux"
             else:
-                raise "arch"
+                raise "linux"
 
         # We need to know the runnable file extension for the OS
         # If we are on windows, append .exe to the path
