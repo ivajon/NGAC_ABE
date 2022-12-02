@@ -81,7 +81,5 @@ def test_ngac_server():
 
 
 if __name__ == "__main__":
-    with NGACServer() as ngac:
-        while True:
-            pass
+    test_ngac_server()
     # test_ngac_server()

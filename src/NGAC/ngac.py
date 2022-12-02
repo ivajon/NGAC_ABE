@@ -290,8 +290,9 @@ class NGAC:
         # Start all the executables as subprocesses
         import os
         import subprocess
+
         os.chdir("executables")
-        self.runners = subprocess.Popen(["python","."])
+        self.runners = subprocess.Popen(["python", "."])
         os.chdir("..")
         import time
 
