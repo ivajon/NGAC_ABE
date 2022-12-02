@@ -68,5 +68,6 @@ def test_servers():
         print(ret.text)
         assert ret.ok
 
+
 if __name__ == "__main__":
     test_servers()

@@ -31,4 +31,5 @@ def test_cme():
 
 
 if __name__ == "__main__":
+    print("CME.py started")
     test_cme()
