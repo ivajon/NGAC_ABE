@@ -34,6 +34,7 @@ jobs:
           cd src/NGAC/executables/
           echo "Starting the servers individually"
           cd linux
+          sleep 20
           ./ngac_server &
           ./cme &
           ./pep_server &
