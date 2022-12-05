@@ -32,6 +32,18 @@ jobs:
       - name: Run the servers
         run: |
           cd src/NGAC/executables/
+          echo "Starting the servers individually"
+          cd linux
+          ./ngac_server &
+          ./cme &
+          ./pep_server &
+          cd ..
+          sleep 5
+          echo "Killing the servers"
+          killall swipl
+          echo "SUCCESS: Servers killed"
+          echo "Starting the servers in a group"
+          
           bash start_ngac.sh
           sleep 5
           killall swipl
