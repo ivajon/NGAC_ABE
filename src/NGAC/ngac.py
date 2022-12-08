@@ -216,7 +216,6 @@ class NGAC:
             assert self.load_policy(policy.path, token=token).status_code == 200
         base_url = f"{self.policy_server_url}{SetPolicy()}"
         params = {"policy": str(policy), "token": f"{token}"}
-        info(InfoTypes(), f"Switching to policy NGAC server: {str(policy)}")
         return requests.get(base_url, params=params)
 
     def load(self, item: NgacType, token: str = "") -> requests.Response:
@@ -240,9 +239,7 @@ class NGAC:
 
         base_url = f"{self.policy_server_url}{LoadPolicy()}"
         params = {"policyfile": f"{path}", "token": f"{token}"}
-        info(InfoTypes(), f"Loading: {path.split('/')[-1]}")
         res = requests.get(base_url, params=params)
-        print(res.text)
         return res
 
     ##########################################################
