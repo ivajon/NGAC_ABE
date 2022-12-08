@@ -33,7 +33,7 @@ jobs:
         run: |
           git pull
           echo "Cloning the TOG-NGAC repo"
-          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
+          git clone https://github.com/ivario123/tog-ngac-crosscpp
           echo "Building the NGAC server"
           cd tog-ngac-crosscpp
           cat server.pl
