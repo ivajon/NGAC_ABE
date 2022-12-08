@@ -3,8 +3,6 @@ Info
 ---
 
 Different types of info need different colors in the terminal.
-
-
 """
 
 
@@ -126,18 +124,20 @@ def info(message_type: InfoTypes, message: str, channel: Channel = StdOut):
     """
     import sys
 
+    name = type(message_type).__name__
+    name = name if name != "InfoTypes" else ""
     if channel.t() == File:
         with open(channel.path, "a+") as f:
-            f.write(f"{type(message_type).__name__}:\n\t{message}")
+            f.write(f"{name}:\n\t{message}")
     elif channel.t() == StdOut:
         print(
-            f"{message_type.get_start()}{type(message_type).__name__}:\n\t{message}{message_type.get_end()}",
+            f"{message_type.get_start()}{name}:\n\t{message}{message_type.get_end()}",
             file=sys.stdout,
         )
     elif channel.t() == StdErr:
 
         print(
-            f"{message_type.get_start()}{type(message_type).__name__}:\n\t{message}{message_type.get_end()}",
+            f"{message_type.get_start()}{name}:\n\t{message}{message_type.get_end()}",
             file=sys.stderr,
         )
     else:

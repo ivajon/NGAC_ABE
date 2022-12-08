@@ -6,6 +6,11 @@ This folder contains the source code for the python wrapper for the Next Generat
 
 ```sh
 |- ngac_types/                # NGAC types
+|- executables/               # NGAC executables
+| access_request.py           # Access Request class
+| api.py                      # NGAC endpoints
+| ngac.py                     # NGAC python frontend
+| info.py                     # NGAC info
 ```
 
 ## NGAC Types

@@ -63,7 +63,20 @@ def endpoint(name, endpoint, derived_from):
 
 
 PolicyAccessAPI = endpoint("PolicyAccessAPI", "/paapi", derived_from=Endpoint)
+"""
+Policy access API
+---
+
+This is the endpoint that you talk to when you want to modify the NGAC server.
+"""
 PolicyQueryAPI = endpoint("PolicyQueryAPI", "/pqapi", derived_from=Endpoint)
+"""
+Policy Query Api
+---
+
+This is the endpoint that you talk to when you want to check if a certain thing is 
+valid, such as access requests.
+"""
 
 LoadPolicy = endpoint("LoadPolicy", "/loadpol", derived_from=PolicyAccessAPI)
 SetPolicy = endpoint("SetPolicy", "/setpol", derived_from=PolicyAccessAPI)
@@ -74,22 +87,3 @@ DeletePolicy = endpoint("DeletePolicy", "/delete", derived_from=PolicyAccessAPI)
 PurgePolicy = endpoint("PurgePolicy", "/purgepol", derived_from=PolicyAccessAPI)
 
 Access = endpoint("Access", "/access", derived_from=PolicyQueryAPI)
-
-
-def test_api():
-    api = [
-        LoadPolicy(),
-        SetPolicy(),
-        GetPolicy(),
-        CombinePolicy(),
-        AddPolicy(),
-        DeletePolicy(),
-        PurgePolicy(),
-        Access(),
-    ]
-    for endpoint in api:
-        print(endpoint)
-
-
-if __name__ == "__main__":
-    test_api()
