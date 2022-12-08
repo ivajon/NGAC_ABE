@@ -289,7 +289,7 @@ class NGAC:
         import subprocess
 
         os.chdir("executables")
-        self.runners = subprocess.Popen(["bash", "start_ngac.sh"])
+        self.runners = subprocess.Popen(["bash", "better_start_ngac.sh"])
         os.chdir("..")
         import time
 

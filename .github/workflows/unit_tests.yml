@@ -56,7 +56,7 @@ jobs:
           cd src/NGAC/executables/
           echo "Starting the servers individually"
           sleep 20
-          bash start_ngac.sh
+          bash better_start_ngac.sh
           sleep 5
           echo "Killing the servers"
           echo "SUCCESS: Servers killed"
