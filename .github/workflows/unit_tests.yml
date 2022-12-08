@@ -27,6 +27,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: sudo apt-get install swi-prolog
+      - name: Build NGAC
+        run: |
+          git pull
+          echo "Cloning the TOG-NGAC repo"
+          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
+          echo "Building the NGAC server"
+          cd tog-ngac-crosscpp
+          swipl -v -o ngac -g ngac -c ngac.pl
+          swipl -v -o ngac_server -g ngac_server -c ngac.pl
+          echo "Building the CME server"
+          swipl -v -o cme -g cme -c cme_sim.pl
+          echo "Building the PEP server"
+          cd PEP-RAP
+          swipl -v -o pep_server -g pep_server -c pep.pl
+          echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          mkdir -p ../../src/NGAC/executables/linux
+          cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
       - name: Run the servers
         run: |
           echo "Install SWI Prolog"
@@ -34,8 +54,6 @@ jobs:
           echo $PATH
           echo "List the contents of /usr/lib/swi-prolog/bin"
           ls /usr/lib/swi-prolog/bin
-          echo "List the contents of /usr/lib/swi-prolog/bin/amd64"
-          ls /usr/lib/swi-prolog/bin/amd64
           cd src/NGAC/executables/
           echo "Starting the servers individually"
           cd linux
