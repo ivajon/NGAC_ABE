@@ -1,7 +1,7 @@
 import os
 
 if os.getcwd().endswith("src"):
-    from NGAC.ngac import NGAC
+    from .ngac import NGAC
 else:
     from ngac import NGAC
 

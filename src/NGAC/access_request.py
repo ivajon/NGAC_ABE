@@ -9,7 +9,7 @@ from typing import Tuple
 import os
 
 if os.getcwd().endswith("src"):
-    from NGAC.ngac_types import user, resource
+    from .ngac_types import user, resource
 else:
     from ngac_types import user, resource
 
@@ -43,7 +43,7 @@ def test_access_request():
     u1 = user.User("user")
     r1 = resource.Resource("resource")
     operation = "Read"
-    access_request = AccessRequest(u1, operation, r1)
+    access_request = (u1, operation, r1)
 
     def validate_access_request(access_request: AccessRequest):
         """

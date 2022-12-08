@@ -26,19 +26,23 @@ import os
 
 base_dir_changed = False
 if os.getcwd().endswith("src"):
-    os.chdir("NGAC")
-    base_dir_changed = True
-from api import *
-from info import *
-from ngac_types import *
-from ngac_types.ngac_object import NgacObject as NgacType
-from ngac_types.ngac_policy import Policy
-from ngac_types.user import User
-from ngac_types.resource import Resource
-from access_request import AccessRequest
-
-if base_dir_changed:
-    os.chdir("..")
+    from .endpoints import *
+    from .info import *
+    from .ngac_types import *
+    from .ngac_types.ngac_object import NgacObject as NgacType
+    from .ngac_types.ngac_policy import Policy
+    from .ngac_types.user import User
+    from .ngac_types.resource import Resource
+    from .access_request import AccessRequest
+else:
+    from endpoints import *
+    from info import *
+    from ngac_types import *
+    from ngac_types.ngac_object import NgacObject as NgacType
+    from ngac_types.ngac_policy import Policy
+    from ngac_types.user import User
+    from ngac_types.resource import Resource
+    from access_request import AccessRequest
 
 
 class NGAC:
