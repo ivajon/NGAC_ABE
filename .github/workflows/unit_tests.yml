@@ -82,6 +82,9 @@ jobs:
           bash better_start_ngac.sh
           cd ..
           sleep 5
+          echo "Run the NGAC tests"
+          python test_ngac.py
+          sleep 5
           pytest test_ngac.py --cov=ngac --cov-report=xml --cov-report=html
 
 # jobs:
