@@ -30,7 +30,7 @@ jobs:
       - name: Run the servers
         run: |
           echo "Install SWI Prolog"
-          run: sudo apt-get install swi-prolog
+          sudo apt-get install swi-prolog
           echo $PATH
           ls ~/usr/bin
           ls ~/usr/lib/swi-prolog
