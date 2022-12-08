@@ -6,30 +6,6 @@ else:
     from ngac import NGAC
 
 
-def test_ngac():
-    """
-    Starts and stops the NGAC server
-
-    This is a basic test to ensure that the NGAC server can be started and stopped
-    """
-    ngac = NGAC()
-    ngac.start()
-    ngac.stop()
-
-
-def test_with_ngac():
-    """
-    Test the NGAC class in a with statement
-
-    This should ensure that the NGAC server is stopped
-    and never left running
-    """
-    # This creates a new NGAC instance, starts it, and then stops it
-    # This should wrap the entire function
-    with NGAC() as ngac:
-        assert ngac is not None
-
-
 def test_combine_policies():
     """
     Test the combine policies method
@@ -44,26 +20,25 @@ def test_combine_policies():
         from ngac_types.ngac_policy import Policy
         from ngac_types.user import User
         from ngac_types.resource import Resource
-    with NGAC() as ngac:
-        import time
+    ngac = NGAC()
+    import time
 
-        time.sleep(1)
-        # Load the policies
-        policyA = Policy(
-            name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
-        )
-        policyB = Policy(
-            name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
-        )
-        ngac.load_policy(policyA.path, token="admin_token")
-        ngac.load_policy(policyB.path, token="admin_token")
-
-        policies = [policyA, policyB]
-        target_policy = Policy(name="target_policy")
-        ngac.combine_policies(policies, target_policy, token="admin_token")
-        assert ngac.switch_to(target_policy, token="admin_token").status_code == 200
-        print(ngac.get_policy(token="admin_token").text)
-        assert True
+    time.sleep(1)
+    # Load the policies
+    policyA = Policy(
+        name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
+    )
+    policyB = Policy(
+        name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
+    )
+    ngac.load_policy(policyA.path, token="admin_token")
+    ngac.load_policy(policyB.path, token="admin_token")
+    policies = [policyA, policyB]
+    target_policy = Policy(name="target_policy")
+    ngac.combine_policies(policies, target_policy, token="admin_token")
+    assert ngac.switch_to(target_policy, token="admin_token").status_code == 200
+    print(ngac.get_policy(token="admin_token").text)
+    assert True
 
 
 def test_load_policy():
@@ -80,14 +55,14 @@ def test_load_policy():
         from ngac_types.ngac_policy import Policy
         from ngac_types.user import User
         from ngac_types.resource import Resource
-    with NGAC() as ngac:
-        import time
+    ngac = NGAC()
+    import time
 
-        policy = Policy(name="CondPolicy1", path="./EXAMPLES/condpolicy1.pl")
-        time.sleep(2)
-        # Switch to the policy
-        print(ngac.switch_to(policy, token="admin_token").text)
-        print(ngac.get(Policy, token="admin_token").text)
+    policy = Policy(name="CondPolicy1", path="./EXAMPLES/condpolicy1.pl")
+    time.sleep(2)
+    # Switch to the policy
+    print(ngac.switch_to(policy, token="admin_token").text)
+    print(ngac.get(Policy, token="admin_token").text)
 
 
 def test_set_get_policy():
@@ -106,15 +81,13 @@ def test_set_get_policy():
         from ngac_types.ngac_policy import Policy
         from ngac_types.user import User
         from ngac_types.resource import Resource
+    ngac = NGAC()
+    time.sleep(2)
 
-    with NGAC() as ngac:
-        time.sleep(2)
-
-        print(ngac.switch_to(Policy(name="Policy (b)"), token="admin_token").text)
-        assert ngac.get(Policy, token="admin_token").text.split("\n")[0] == "Policy (b)"
-
-        print(ngac.switch_to(Policy(name="Policy (a)"), token="admin_token").text)
-        assert ngac.get(Policy, token="admin_token").text.split("\n")[0] == "Policy (a)"
+    print(ngac.switch_to(Policy(name="Policy (b)"), token="admin_token").text)
+    assert ngac.get(Policy, token="admin_token").text.split("\n")[0] == "Policy (b)"
+    print(ngac.switch_to(Policy(name="Policy (a)"), token="admin_token").text)
+    assert ngac.get(Policy, token="admin_token").text.split("\n")[0] == "Policy (a)"
 
 
 def test_ngac_server():
@@ -253,74 +226,71 @@ def test_access():
     import time
 
     ngac = NGAC()
-    with ngac:
-        time.sleep(2)
-        # Default policy is none
-        SignalAccessPolicy = Policy(
-            name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
-        )
-        VehicleOwnershipPolicy = Policy(
-            name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
-        )
-        CombinedPolicy = Policy(
-            name="Combined Policy", path="EXAMPLES/policy_combined.pl"
-        )
+    time.sleep(2)
+    # Default policy is none
+    SignalAccessPolicy = Policy(
+        name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
+    )
+    VehicleOwnershipPolicy = Policy(
+        name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
+    )
+    CombinedPolicy = Policy(name="Combined Policy", path="EXAMPLES/policy_combined.pl")
 
-        # Ensure that the default policy is none
-        ret = ngac.get(Policy, token="admin_token").text
-        if "none" not in ret:
-            ret = ngac.switch_to(Policy(name="none"),token="admin_token")
-        ret = ngac.get(Policy, token="admin_token").text
-        
-        assert "none" in ret
+    # Ensure that the default policy is none
+    ret = ngac.get(Policy, token="admin_token").text
+    if "none" not in ret:
+        ret = ngac.switch_to(Policy(name="none"), token="admin_token")
+    ret = ngac.get(Policy, token="admin_token").text
 
-        # Load the two policies
-        ret = ngac.load(SignalAccessPolicy, token="admin_token").status_code
+    assert "none" in ret
 
-        assert ret == 200
+    # Load the two policies
+    ret = ngac.load(SignalAccessPolicy, token="admin_token").status_code
 
-        ret = ngac.load(VehicleOwnershipPolicy, token="admin_token").status_code
-        assert ret == 200
+    assert ret == 200
 
-        # Combine the two policies
-        assert (
-            ngac.combine_policies(
-                [SignalAccessPolicy, VehicleOwnershipPolicy],
-                CombinedPolicy,
-                token="admin_token",
-            ).status_code
-            == 200
-        )
+    ret = ngac.load(VehicleOwnershipPolicy, token="admin_token").status_code
+    assert ret == 200
 
-        # Switch to the combined policy
-        assert ngac.switch_to(CombinedPolicy, token="admin_token").status_code == 200
-
-        # Check that the combined policy is the current policy
-        ret = ngac.get(Policy, token="admin_token").text
-        assert "Combined Policy" in ret
-
-        access_request = (
-            User(id="Sebastian", attributes=[]),
-            "r",
-            Resource(id="VIN-1001 Door Signals"),
-        )
-
-        # Check that the access request is allowed
-        assert ngac.validate(
-            access_request,
+    # Combine the two policies
+    assert (
+        ngac.combine_policies(
+            [SignalAccessPolicy, VehicleOwnershipPolicy],
+            CombinedPolicy,
             token="admin_token",
-        )
+        ).status_code
+        == 200
+    )
 
-        # Failcase: Check that the access request is denied
-        access_request = (
-            User(id="Aebastian", attributes=[]),
-            "w",
-            Resource(id="VIN-1001 Door Signals"),
-        )
-        assert not ngac.validate(
-            access_request,
-            token="admin_token",
-        )
+    # Switch to the combined policy
+    assert ngac.switch_to(CombinedPolicy, token="admin_token").status_code == 200
+
+    # Check that the combined policy is the current policy
+    ret = ngac.get(Policy, token="admin_token").text
+    assert "Combined Policy" in ret
+
+    access_request = (
+        User(id="Sebastian", attributes=[]),
+        "r",
+        Resource(id="VIN-1001 Door Signals"),
+    )
+
+    # Check that the access request is allowed
+    assert ngac.validate(
+        access_request,
+        token="admin_token",
+    )
+
+    # Failcase: Check that the access request is denied
+    access_request = (
+        User(id="Aebastian", attributes=[]),
+        "w",
+        Resource(id="VIN-1001 Door Signals"),
+    )
+    assert not ngac.validate(
+        access_request,
+        token="admin_token",
+    )
 
 
 if __name__ == "__main__":

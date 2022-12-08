@@ -40,6 +40,7 @@ from access_request import AccessRequest
 if base_dir_changed:
     os.chdir("..")
 
+
 class NGAC:
     """
     NGAC server wrapper class
@@ -236,52 +237,3 @@ class NGAC:
             )
             res = requests.get(base_url, params=params)
         return res
-
-    ##########################################################
-    #                        Context                         #
-    ##########################################################
-
-    def start(self) -> None:
-        """
-        Start the NGAC server
-        """
-        return
-        # Start all the executables as subprocesses
-        import os
-        import subprocess
-
-        os.chdir("executables")
-        self.runners = subprocess.Popen(["bash", "better_start_ngac.sh"])
-        os.chdir("..")
-        import time
-
-        time.sleep(2)
-        self.running = True
-
-    def stop(self) -> None:
-        """
-        Stop the NGAC server
-        """
-        return
-        self.runners.terminate()
-        self.running = False
-        import os
-        import subprocess
-
-        if os.name == "nt":
-            # Kill all processes running under swipl
-            subprocess.run(["taskkill", "/F", "/IM", "swipl.exe"])
-        else:
-            # Kill all processes running under swipl
-            subprocess.run(["killall", "swipl"])
-
-    def __enter__(self) -> "NGAC":
-        return self
-        info(InfoTypes(), "Starting NGAC server")
-        self.start()
-        return self
-
-    def __exit__(self, exc_type, exc_value, exc_tb) -> None:
-        return
-        info(InfoTypes(), "Stopping NGAC server")
-        self.stop()

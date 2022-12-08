@@ -9,9 +9,9 @@ from typing import Tuple
 import os
 
 if os.getcwd().endswith("src"):
-    from NGAC.ngac_types import user, resource, ngac_policy
+    from NGAC.ngac_types import user, resource
 else:
-    from ngac_types import user, resource, ngac_policy
+    from ngac_types import user, resource
 
 # Define a tuple type, (user,operation,resource)
 AccessRequest = Tuple[user.User, str, resource.Resource]
@@ -35,9 +35,9 @@ def test_access_request():
     Test access request
     """
     if os.getcwd().endswith("src"):
-        from NGAC.ngac_types import user, resource, ngac_policy
+        from NGAC.ngac_types import user, resource
     else:
-        from ngac_types import user, resource, ngac_policy
+        from ngac_types import user, resource
 
     u1 = user.User("user")
     r1 = resource.Resource("resource")
