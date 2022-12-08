@@ -50,28 +50,17 @@ jobs:
           cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
       - name: Run the servers
         run: |
-          echo "Install SWI Prolog"
-          sudo apt-get install swi-prolog
           echo $PATH
           echo "List the contents of /usr/lib/swi-prolog/bin"
           ls /usr/lib/swi-prolog/bin
           cd src/NGAC/executables/
           echo "Starting the servers individually"
-          cd linux
           sleep 20
-          ./ngac_server &
-          ./cme &
-          ./pep_server &
-          cd ..
-          sleep 5
-          echo "Killing the servers"
-          ps -u
-          echo "SUCCESS: Servers killed"
-          echo "Starting the servers in a group"
-
           bash start_ngac.sh
           sleep 5
-          killall swipl
+          echo "Killing the servers"
+          echo "SUCCESS: Servers killed"
+          echo "Starting the servers in a group"
           sleep 2
   test_linux:
     needs: test_servers_by_calling_them_from_bash
