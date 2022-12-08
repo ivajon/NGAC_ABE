@@ -32,10 +32,10 @@ jobs:
           echo "Install SWI Prolog"
           sudo apt-get install swi-prolog
           echo $PATH
-          ls ~/usr/bin
-          ls ~/usr/lib/swi-prolog
-          ls ~/usr/lib/swi-prolog/bin
-          ls ~/usr/lib/swi-prolog/bin/amd64
+          ls /usr/bin
+          ls /usr/lib/swi-prolog
+          ls /usr/lib/swi-prolog/bin
+          ls /usr/lib/swi-prolog/bin/amd64
           cd src/NGAC/executables/
           echo "Starting the servers individually"
           cd linux
