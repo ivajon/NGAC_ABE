@@ -40,44 +40,6 @@ from access_request import AccessRequest
 if base_dir_changed:
     os.chdir("..")
 
-
-def exception_hook(exctype, value, traceback) -> None:
-    """
-    This function is called when an exception is raised
-
-    It ensures that the NGAC server is stopped and that all trailing subprocesses
-    are killed. It does risk killing other processes, but this is a risk that is not that problematic
-    in the development environment.
-
-    This should be replaced with a more robust solution in production.
-    """
-    print(f"Exception: {exctype}")
-    print(f"Value: {value}.")
-    print(f"Traceback: {traceback}.")
-    import subprocess
-
-    info(Error(), "An exception was raised. Stopping the NGAC server")
-    info(
-        Error(),
-        f"Exception: {exctype}\nValue: {value}\nTraceback: {traceback}",
-        File("crash.log"),
-    )
-    import os
-
-    if os.name == "nt":
-        # Kill all processes running under swipl
-        subprocess.run(["taskkill", "/F", "/IM", "swipl.exe"])
-
-        # Kill all processes running under python
-        subprocess.run(["taskkill", "/F", "/IM", "python.exe"])
-    else:
-        # Kill all processes running under swipl
-        subprocess.run(["killall", "swipl"])
-
-        # Kill all processes running under python
-        subprocess.run(["killall", "python"])
-
-
 class NGAC:
     """
     NGAC server wrapper class
@@ -123,7 +85,6 @@ class NGAC:
             raise ValueError("The policy server url should not end with a /")
         self.policy_server_url = policy_server_url
         self.running = False
-        sys.excepthook = exception_hook
 
     ##########################################################
     #                        Checkers                        #
@@ -284,7 +245,7 @@ class NGAC:
         """
         Start the NGAC server
         """
-        pass
+        return
         # Start all the executables as subprocesses
         import os
         import subprocess
@@ -301,7 +262,7 @@ class NGAC:
         """
         Stop the NGAC server
         """
-        pass
+        return
         self.runners.terminate()
         self.running = False
         import os
@@ -315,10 +276,12 @@ class NGAC:
             subprocess.run(["killall", "swipl"])
 
     def __enter__(self) -> "NGAC":
+        return self
         info(InfoTypes(), "Starting NGAC server")
         self.start()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_tb) -> None:
+        return
         info(InfoTypes(), "Stopping NGAC server")
         self.stop()
