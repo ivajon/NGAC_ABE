@@ -64,7 +64,7 @@ jobs:
           cd ..
           sleep 5
           echo "Killing the servers"
-          killall swipl
+          ps -u
           echo "SUCCESS: Servers killed"
           echo "Starting the servers in a group"
           
