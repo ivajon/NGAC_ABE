@@ -1,7 +1,8 @@
 """
-    NGAC resource abstraction class
+Resource abstraction
+---
 
-    This class is used to implement resources
+This file contains a simple resource abstraction, this is agnostic to what the resource is, as long as it has a name.
 """
 
 from ngac_object import NgacObject
