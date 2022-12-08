@@ -284,6 +284,7 @@ class NGAC:
         """
         Start the NGAC server
         """
+        pass
         # Start all the executables as subprocesses
         import os
         import subprocess
@@ -300,6 +301,7 @@ class NGAC:
         """
         Stop the NGAC server
         """
+        pass
         self.runners.terminate()
         self.running = False
         import os

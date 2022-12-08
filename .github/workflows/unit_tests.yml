@@ -62,14 +62,6 @@ jobs:
           echo "SUCCESS: Servers killed"
           echo "Starting the servers in a group"
           sleep 2
-  test_linux:
-    needs: test_servers_by_calling_them_from_bash
-    name: Test on Linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install SWI Prolog
-        run: sudo apt-get install swi-prolog
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -84,6 +76,12 @@ jobs:
       - name: Run tests
         run: |
           cd src/NGAC
+          cd executables
+          echo "Ensuring that log folder exists"
+          mkdir -p LOG
+          bash better_start_ngac.sh
+          cd ..
+          sleep 5
           pytest test_ngac.py --cov=ngac --cov-report=xml --cov-report=html
 
 # jobs:
