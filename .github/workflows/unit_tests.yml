@@ -45,7 +45,7 @@ jobs:
           cd PEP-RAP
           swipl -v -o pep_server -g pep_server -c pep.pl
           echo "SUCCESS: NGAC server built"
-          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+          echo "Coppying the NGAC server, into src/NGAC/executables/linux"
           mkdir -p ../../src/NGAC/executables/linux
           cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
       - name: Run the servers
@@ -68,7 +68,7 @@ jobs:
           ps -u
           echo "SUCCESS: Servers killed"
           echo "Starting the servers in a group"
-          
+
           bash start_ngac.sh
           sleep 5
           killall swipl
