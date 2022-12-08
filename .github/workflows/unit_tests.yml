@@ -36,6 +36,7 @@ jobs:
           git clone https://github.com/tog-rtd/tog-ngac-crosscpp
           echo "Building the NGAC server"
           cd tog-ngac-crosscpp
+          cat server.pl
           swipl -v -o ngac -g ngac -c ngac.pl
           swipl -v -o ngac_server -g ngac_server -c ngac.pl
           echo "Building the CME server"
