@@ -197,21 +197,8 @@ def parse_args():
 
 def test_access():
     """
-    Equivalent to
-    ```sh
-    echo 'set policy to "none"'
-    curl -s -G "http://127.0.0.1:8001/paapi/setpol" --data-urlencode "policy=none" --data-urlencode "token=admin_token"
-    echo 'get the policy'
-    curl -s -G "http://127.0.0.1:8001/paapi/getpol" --data-urlencode "token=admin_token"
-    echo 'load two policies'
-    curl -s -G "http://127.0.0.1:8001/paapi/loadpol" --data-urlencode "policyfile=EXAMPLES/policy_signals_access.pl" --data-urlencode "token=admin_token"
-    curl -s -G "http://127.0.0.1:8001/paapi/loadpol" --data-urlencode "policyfile=EXAMPLES/policy_vehicle_ownership.pl" --data-urlencode "token=admin_token"
-    echo 'form combined policy'
-    curl -s -G "http://127.0.0.1:8001/paapi/combinepol" --data-urlencode "policy1=Signals Access Policy" --data-urlencode "policy2=Vehicle Ownership Policy" --data-urlencode "combined=Combined Policy" --data-urlencode "token=admin_token"
-    curl -s -G "http://127.0.0.1:8001/paapi/getpol" --data-urlencode "token=admin_token"
-    echo 'try an access request without setting policy'
-    curl -s -G "http://127.0.0.1:8001/pqapi/access" --data-urlencode "user=Sebastian" --data-urlencode "ar=r" --data-urlencode "object=VIN-1001 Door Signals"
-    ```
+    Combines 2 policies and makes 2 access requests,
+    the first should pass, the second should fail
     """
     if os.getcwd().endswith("src"):
         from NGAC.ngac import NGAC
@@ -234,7 +221,7 @@ def test_access():
     VehicleOwnershipPolicy = Policy(
         name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
     )
-    CombinedPolicy = Policy(name="Combined Policy", path="EXAMPLES/policy_combined.pl")
+    CombinedPolicy = Policy(name="Combined Policy")
 
     # Ensure that the default policy is none
     ret = ngac.get(Policy, token="admin_token").text
