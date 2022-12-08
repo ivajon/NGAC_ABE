@@ -29,24 +29,24 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install SWI Prolog
         run: sudo apt-get install swi-prolog
-      - name: Build NGAC
-        run: |
-          git pull
-          echo "Cloning the TOG-NGAC repo"
-          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
-          echo "Building the NGAC server"
-          cd tog-ngac-crosscpp
-          swipl -v -o ngac -g ngac -c ngac.pl
-          swipl -v -o ngac_server -g ngac_server -c ngac.pl
-          echo "Building the CME server"
-          swipl -v -o cme -g cme -c cme_sim.pl
-          echo "Building the PEP server"
-          cd PEP-RAP
-          swipl -v -o pep_server -g pep_server -c pep.pl
-          echo "SUCCESS: NGAC server built"
-          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
-          mkdir -p ../../src/NGAC/executables/linux
-          cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
+#      - name: Build NGAC
+#        run: |
+#          git pull
+#          echo "Cloning the TOG-NGAC repo"
+#          git clone https://github.com/tog-rtd/tog-ngac-crosscpp
+#          echo "Building the NGAC server"
+#          cd tog-ngac-crosscpp
+#          swipl -v -o ngac -g ngac -c ngac.pl
+#          swipl -v -o ngac_server -g ngac_server -c ngac.pl
+#          echo "Building the CME server"
+#          swipl -v -o cme -g cme -c cme_sim.pl
+#          echo "Building the PEP server"
+#         cd PEP-RAP
+#         swipl -v -o pep_server -g pep_server -c pep.pl
+#         echo "SUCCESS: NGAC server built"
+#          echo "Coppying the NGAC server, into src/NGAC/executables/{os}"
+#          mkdir -p ../../src/NGAC/executables/linux
+#          cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
       - name: Run the servers
         run: |
           echo "Install SWI Prolog"
