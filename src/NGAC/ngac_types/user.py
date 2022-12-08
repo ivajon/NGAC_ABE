@@ -103,7 +103,11 @@ def test_create_with_attributes():
 
 def test_list_like_user():
     """
-    Test user class, list like operations.
+    <<<<<<< HEAD
+        Test user class, list like operations.
+    =======
+        Test user class, list like operations
+    >>>>>>> ngac
     """
     attributes = [
         UserAttribute("value1"),

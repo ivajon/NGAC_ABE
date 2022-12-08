@@ -1,7 +1,10 @@
 # Next Generation Access Control (NGAC) enabled by Attribute-Based Encryption (ABE)
 
+<<<<<<< HEAD
 [![Unit Tests](https://github.com/ivario123/NGAC_ABE/actions/workflows/unit_tests.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/unit_tests.yml) [![SpellCheck](https://github.com/ivario123/NGAC_ABE/actions/workflows/spellcheck.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/spellcheck.yml) [![Lint](https://github.com/ivario123/NGAC_ABE/actions/workflows/lint.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/lint.yml)
 
+=======
+>>>>>>> ngac
 Here we should have some good filler text.
 
 ## Prelude
