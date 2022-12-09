@@ -57,6 +57,9 @@ jobs:
           ls
           cd ./src
           ls
+          echo "Run the system tests"
+          pytest test.py
+          echo "Run the coverage report"
           pytest --cache-clear --cov=. test.py > pytest-coverage.txt
       - name: pytest-coverage-commentator
         uses: coroo/pytest-coverage-commentator@v1.0.2
