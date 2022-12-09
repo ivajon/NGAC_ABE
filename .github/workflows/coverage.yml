@@ -41,6 +41,7 @@ jobs:
       - name: Build coverage file
         run: |
           cd src/NGAC/executables/
+          mkdir -p LOG
           echo "Starting the servers individually"
           sleep 20
           bash better_start_ngac.sh
