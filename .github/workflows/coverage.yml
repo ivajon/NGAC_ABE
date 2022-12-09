@@ -28,20 +28,6 @@ jobs:
           echo "Coppying the NGAC server, into src/NGAC/executables/linux"
           mkdir -p ../../src/NGAC/executables/linux
           cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
-      - name: Run the servers
-        run: |
-          echo $PATH
-          echo "List the contents of /usr/lib/swi-prolog/bin"
-          ls /usr/lib/swi-prolog/bin
-          cd src/NGAC/executables/
-          echo "Starting the servers individually"
-          sleep 20
-          bash better_start_ngac.sh
-          sleep 5
-          echo "Killing the servers"
-          echo "SUCCESS: Servers killed"
-          echo "Starting the servers in a group"
-          sleep 2
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
@@ -54,9 +40,16 @@ jobs:
           pip install pytest-cov
       - name: Build coverage file
         run: |
-          ls
-          cd ./src
-          ls
+          cd src/NGAC/executables/
+          echo "Starting the servers individually"
+          sleep 20
+          bash better_start_ngac.sh
+          sleep 5
+          echo "Killing the servers"
+          echo "SUCCESS: Servers killed"
+          echo "Starting the servers in a group"
+          sleep 2
+          cd ../..
           echo "Run the system tests"
           pytest test.py
           echo "Run the coverage report"
