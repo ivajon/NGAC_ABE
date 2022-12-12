@@ -1,0 +1,20 @@
+name: Render
+on: [pull_request]
+jobs:
+  render:
+    name: Renders all the requirement csv files to Markdown tables
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Render
+        run: |
+          cd ./docs/requirements
+          python render.py ./README_template.md ./README.md
+      - name: Commit and push NGAC server
+        run: |
+          git config --global user.email "Renderer[bot]@users.noreply.github.com"
+          git config --global user.name "Renderer[bot]"
+          git add .
+          git commit -m "Rendered the requirements"
+          git push origin HEAD:${{ github.head_ref }}
+
