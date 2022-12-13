@@ -120,9 +120,9 @@ See line 2-14 in 03-loaditest2.sh
 Access = endpoint("Access", "/access", derived_from=PolicyQueryAPI)
 
 
-
 #############################################################################
-#                                epp endpoints                              #
+#                                EPP endpoints                              #
 #############################################################################
-ContextNotify = endpoint("ContextNotify","/context_notify",derived_from=EnforcementPoint)
-
+ContextNotify = endpoint(
+    "ContextNotify", "/context_notify", derived_from=EnforcementPoint
+)

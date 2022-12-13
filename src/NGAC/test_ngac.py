@@ -1,29 +1,24 @@
 import os
 
+
 if os.getcwd().endswith("src"):
-    from .ngac import NGAC
+    from NGAC.ngac import NGAC
+    from NGAC.ngac_types.ngac_policy import Policy
+    from NGAC.ngac_types.user import User
+    from NGAC.ngac_types.resource import Resource
 else:
     from ngac import NGAC
+    from ngac_types.ngac_policy import Policy
+    from ngac_types.user import User
+    from ngac_types.resource import Resource
 
 
 def test_combine_policies():
     """
     Test the combine policies method
     """
-    if os.getcwd().endswith("src"):
-        from NGAC.ngac import NGAC
-        from NGAC.ngac_types.ngac_policy import Policy
-        from NGAC.ngac_types.user import User
-        from NGAC.ngac_types.resource import Resource
-    else:
-        from ngac import NGAC
-        from ngac_types.ngac_policy import Policy
-        from ngac_types.user import User
-        from ngac_types.resource import Resource
     ngac = NGAC(token="admin_token")
-    import time
 
-    time.sleep(1)
     # Load the policies
     policyA = Policy(
         name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
@@ -45,44 +40,132 @@ def test_load_policy():
     """
     Test loading a policy from file
     """
-    if os.getcwd().endswith("src"):
-        from NGAC.ngac import NGAC
-        from NGAC.ngac_types.ngac_policy import Policy
-        from NGAC.ngac_types.user import User
-        from NGAC.ngac_types.resource import Resource
-    else:
-        from ngac import NGAC
-        from ngac_types.ngac_policy import Policy
-        from ngac_types.user import User
-        from ngac_types.resource import Resource
     ngac = NGAC(token="admin_token")
-    import time
 
     policy = Policy(name="CondPolicy1", path="./EXAMPLES/condpolicy1.pl")
-    time.sleep(2)
     # Switch to the policy
     print(ngac.change_policy(policy).text)
     print(ngac.get(Policy).text)
+
+
+def test_load_immidiate():
+    """
+    Tests the loadi system
+    """
+    ngac = NGAC(token="admin_token")
+    pol = """policy(ipolicy,access,[
+	user(u1),
+	user_attribute(ua1),
+	object(o1),
+	object_attribute(oa1),
+	policy_class(access),
+	connector('PM'),
+	assign(u1,ua1),
+	assign(o1,oa1),
+	assign(ua1,access),
+	assign(oa1,access),
+	assign(access,'PM'),
+	associate(ua1,[r,w],oa1)])"""
+    status = ngac.load_policy_from_str(pol)
+    assert status.ok
+    assert ngac.change_policy(Policy(name="ipolicy")).ok
+
+    current = ngac.read().text
+
+    print(status.text)
+    print(current)
+    print("set", current)
+    print("target", pol)
+    assert str(pol.split("(")[0]) == str(current.split("(")[0])
+
+
+def test_add_remove_user():
+    """
+    Tests adding and removing a user
+    """
+    ngac = NGAC(token="admin_token")
+    user = User(id="u123", attributes=["ua12"])
+    pol = """policy(cpolicy,access,[
+	user(u1),
+	user_attribute(ua1),
+	object(o1),
+	object_attribute(oa1),
+	policy_class(access),
+	connector('PM'),
+	assign(u1,ua1),
+	assign(o1,oa1),
+	assign(ua1,access),
+	assign(oa1,access),
+	assign(access,'PM'),
+	cond( weekday, associate(ua1,[r,w],oa1) )
+        ])"""
+    status = ngac.load_policy_from_str(pol)
+    assert status.ok
+    pol = Policy(name="cpolicy")
+    assert ngac.change_policy(pol).ok
+    print(ngac.add(user, target_policy=pol).text)
+    print(ngac.read().text)
+    ngac.remove_multiple(user, target_policy=pol)
+    print(ngac.read().text)
+
+
+def test_set_context():
+    """
+    Sets the context of the epp server and checks that it works
+    """
+    return
+    # There is some error in the setup of the epp server, we get Ok from server but
+    # the context is not set
+    ngac = NGAC(token="admin_token")
+    pol = """policy(cpolicy,access,[
+	user(u1),
+	user_attribute(ua1),
+	object(o1),
+	object_attribute(oa1),
+	policy_class(access),
+	connector('PM'),
+	assign(u1,ua1),
+	assign(o1,oa1),
+	assign(ua1,access),
+	assign(oa1,access),
+	assign(access,'PM'),
+	cond( weekday, associate(ua1,[r,w],oa1) )
+        ])"""
+    status = ngac.load_policy_from_str(pol)
+    assert status.ok
+    assert ngac.change_policy(Policy(name="cpolicy")).ok
+    # Change the context
+    resp = ngac.change_context(["weekday:true"], token="epp_token")
+    print(resp.text)
+    assert resp.ok
+
+    access_requests = [
+        (User(id="u1", attributes=[]), "r", Resource(id="o1", attributes=[])),
+        (User(id="u1", attributes=[]), "w", Resource(id="o1", attributes=[])),
+        (User(id="u2", attributes=[]), "r", Resource(id="o1", attributes=[])),
+    ]
+
+    def check_requests(requests, expected):
+        for i, request in enumerate(requests):
+            print("Checking request", request)
+            print("Expected", expected[i])
+            assert ngac.validate(request) == expected[i]
+
+    check_requests(access_requests, [True, True, False])
+    assert ngac.change_context(
+        ["business:false", "weekday:false"], token="epp_token"
+    ).ok
+    check_requests(access_requests, [False, False, False])
+    assert ngac.change_context(["weekday:true"], token="epp_token").ok
+    check_requests(access_requests, [True, True, False])
 
 
 def test_set_get_policy():
     """
     Test the ability to set and get policies
     """
-    import time
 
-    if os.getcwd().endswith("src"):
-        from NGAC.ngac import NGAC
-        from NGAC.ngac_types.ngac_policy import Policy
-        from NGAC.ngac_types.user import User
-        from NGAC.ngac_types.resource import Resource
-    else:
-        from ngac import NGAC
-        from ngac_types.ngac_policy import Policy
-        from ngac_types.user import User
-        from ngac_types.resource import Resource
     ngac = NGAC(token="admin_token")
-    time.sleep(2)
 
     print(ngac.change_policy(Policy(name="Policy (b)")).text)
     assert ngac.get(Policy).text.split("\n")[0] == "Policy (b)"
@@ -138,20 +221,8 @@ def test_access():
     Combines 2 policies and makes 2 access requests,
     the first should pass, the second should fail
     """
-    if os.getcwd().endswith("src"):
-        from NGAC.ngac import NGAC
-        from NGAC.ngac_types.ngac_policy import Policy
-        from NGAC.ngac_types.user import User
-        from NGAC.ngac_types.resource import Resource
-    else:
-        from ngac import NGAC
-        from ngac_types.ngac_policy import Policy
-        from ngac_types.user import User
-        from ngac_types.resource import Resource
-    import time
 
     ngac = NGAC(token="admin_token")
-    time.sleep(2)
     # Default policy is none
     SignalAccessPolicy = Policy(
         name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl"
@@ -216,19 +287,17 @@ def test_access():
 
 
 if __name__ == "__main__":
-
-    if os.getcwd().endswith("src"):
-        from NGAC.info import *
-    else:
-        from info import *
-    test_access()
+    test_set_context()
+    test_load_immidiate()
+    test_add_remove_user()
+    # test_access()
     pass
     # Parse the command line arguments
     args = parse_args()
 
     import sys
 
-    test_load_policy()
+    # test_load_policy()
 
     # Set the exception hook, very important for the tests
 
@@ -253,11 +322,6 @@ if __name__ == "__main__":
             exit(0)
 
     # Now the user wants to run a test
-    print("-" * 80)
-    info(InfoTypes(), "Running tests")
-    info(Info(), f"Tests: {args.test}")
-    info(Info(), f"Tests available: {[name for name, _ in tests]}")
-    print("-" * 80)
 
     # If the user wants to run all tests, then do so
     if args.test == "all" or args.test == "":

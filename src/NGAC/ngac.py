@@ -2,19 +2,8 @@
     NGAC server wrapper class
     ---
 
-    This class allows the NGAC server to be started and stopped
-    in a with statement. This ensures that the server is always stopped
-    and never left running.
-
-    It also provides an interface to the NGAC server, allowing the user to
+    This file provides an interface to the NGAC server, allowing the user to
     set and get policies, and to switch between policies.
-
-    ## Example
-    ```python
-    with NGAC() as ngac:
-        ngac.switch_to(Policy ("a"))
-        ngac.get(Policy)
-    ```
     
 """
 
@@ -279,12 +268,14 @@ class NGAC:
         params = {"policyfile": f"{path}", "token": f"{self.token}"}
         return requests.get(self.url(LoadPolicy()), params=params)
 
-    def load_policy_from_str(self, pol: str) -> requests.Response:
+    def load_policy_from_str(
+        self, pol: str
+    ) -> requests.Response:  # This should be replaced a function that loads from some python policy representation
         """
         Loads a policy from a string representation
         """
         params = {"policyspec": pol, "token": self.token}
-        return requests.get(self.url(LoadImmediate(), params=params))
+        return requests.get(self.url(LoadImmediate()), params=params)
 
     def combine_policies(
         self, policies: List[Policy], target_policy: Policy
@@ -316,11 +307,15 @@ class NGAC:
             res = requests.get(self.url(CombinePolicy()), params=params)
         return res
 
-    def change_context(self, context: List[str]) -> requests.Response:
+    def change_context(self, context: List[str], token: str = "") -> requests.Response:
         """
         Changes the context in the epp to the given context
         """
-        params = {"context": context, "token": self.token}
+        params = {
+            "context": f"[{','.join(context)}]",
+            "token": token if token != "" else self.token,
+        }
+        print(params)
         return requests.get(self.url(ContextNotify()), params=params)
 
     ##########################################################

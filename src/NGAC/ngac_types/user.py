@@ -9,9 +9,10 @@ from typing import List
 
 from .ngac_object import NgacObject
 from .ngac_attribute import UserAttribute
+from .policy_element import PolicyElement
 
 
-class User(NgacObject):
+class User(NgacObject, PolicyElement):
     """
     User abstraction
     ---
@@ -26,6 +27,15 @@ class User(NgacObject):
         """
         self.id = id
         self.attributes = attributes
+
+    def pol_el_repr(self) -> str:
+        """
+        Returns the representation as a list of policy elements.
+        """
+        base_str = ""
+        for attr in self.attributes:
+            base_str += f"assign({self.id},{attr}),"
+        return f"""[object({self.id}),{base_str[:-1]}]"""
 
     def get_attributes(self) -> List[UserAttribute]:
         """
