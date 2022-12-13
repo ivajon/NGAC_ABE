@@ -11,9 +11,10 @@ from typing import List
 
 from .ngac_object import *
 from .ngac_attribute import ObjectAttribute
+from .policy_element import PolicyElement
 
 
-class Resource(NgacObject):
+class Resource(NgacObject, PolicyElement):
     """
     Resource abstraction
     ---
@@ -27,6 +28,12 @@ class Resource(NgacObject):
         """
         self.id = id
         self.attributes = attributes
+
+    def pol_el_repr(self) -> str:
+        base_str = ""
+        for attr in self.attributes:
+            base_str += f"assign({self.id},{attr.get_attribute()}),"
+        return f"""[object({self.id}),{base_str[:-1]}]"""
 
     def get_resource(self) -> str:
         """
