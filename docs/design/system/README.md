@@ -25,7 +25,7 @@
 
 ### Access Revokation Flow
 
-![Access Revocation Flow](access_revokation_flow.drawio.svg)
+![Access Revocation Flow](access_revocation_flow.drawio.svg)
 
 ### Add Policy Element Flow
 
