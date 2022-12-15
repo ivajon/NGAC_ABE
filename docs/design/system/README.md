@@ -11,7 +11,7 @@
 
 ## Static System Design
 
-![System Design](system-design.drawio.svg)
+![System Design](system_design.drawio.svg)
 
 ## Dynamic System Design
 
