@@ -32,14 +32,10 @@ jobs:
           echo "List the contents of /usr/lib/swi-prolog/bin"
           ls /usr/lib/swi-prolog/bin
           cd src/NGAC/executables/
-          echo "Starting the servers individually"
+          echo "Starting the servers using BASH"
           sleep 20
           bash better_start_ngac.sh
-          sleep 5
-          echo "Killing the servers"
-          echo "SUCCESS: Servers killed"
-          echo "Starting the servers in a group"
-          sleep 2
+          sleep 7
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -50,20 +46,21 @@ jobs:
           pip install requests
           pip install pytest
           pip install pytest-cov
+          cd src/NGAC
+          pip install .
+          cd ../..
 
       - name: Run tests
         run: |
-          cd src/NGAC
-          cd executables
+          cd src/NGAC/executables
           echo "Ensuring that log folder exists"
           mkdir -p LOG
           bash better_start_ngac.sh
-          cd ..
+          cd ../../..
           sleep 5
-          echo "Run the NGAC tests"
-          python test_ngac.py
-          sleep 5
-          pytest test_ngac.py --cov=ngac --cov-report=xml --cov-report=html
+          echo "Run the tests"
+          # Running the tests
+          pytest test.py --cov=ngac --cov-report=xml --cov-report=html
 
 # jobs:
 #   test_linux:
