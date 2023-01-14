@@ -62,4 +62,3 @@ def endpoint(name, endpoint, derived_from):
             "name": name,
         },
     )
-
