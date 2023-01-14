@@ -8,10 +8,20 @@ typing.
 
 
 class NgacObject:
+    """
+    Type level NGAC object.
+    """
+
     def __init__(self, type: str):
+        """
+        This should never be instantiated.
+        """
         self.type = type
 
     def get_type(self) -> str:
+        """
+        Returns the type of the object.
+        """
         return self.type
 
 

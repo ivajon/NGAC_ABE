@@ -3,21 +3,21 @@
 if [ -f /etc/debian_version ]; then
     # We are running on Debian
     echo "Starting NGAC server on Debian"
-    ./linux/ngac_server &
+    ./linux/ngac_server --jsonresp &
     ./linux/cme &
     ./linux/pep_server &
     exit
     elif [ -f /etc/arch-release ]; then
     # We are running on Arch
     echo "Starting NGAC server on Arch"
-    ./arch/ngac_server &
+    ./arch/ngac_server --jsonresp &
     ./arch/cme &
     ./arch/pep_server &
     exit
     elif [ -f /etc/os-release ]; then
     # We are running on Mac
     echo "Starting NGAC server on Mac"
-    ./mac/ngac_server &
+    ./mac/ngac_server --jsonresp &
     ./mac/cme &
     ./mac/pep_server &
     exit

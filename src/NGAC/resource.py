@@ -10,7 +10,7 @@ from typing import List
 
 
 from .ngac_object import *
-from .ngac_attribute import ObjectAttribute
+from .attribute import ObjectAttribute
 from .policy_element import PolicyElement
 
 
@@ -60,18 +60,33 @@ class Resource(NgacObject, PolicyElement):
         return self.attributes.pop(index)
 
     def __iter__(self):
+        """
+        Iterates over the resource's attributes.
+        """
         return iter(self.attributes)
 
     def __getitem__(self, index: int) -> ObjectAttribute:
+        """
+        Returns the attribute at the given index.
+        """
         return self.attributes[index]
 
     def __len__(self) -> int:
+        """
+        Returns the number of the resources.
+        """
         return len(self.attributes)
 
     def __str__(self) -> str:
+        """
+        returns the string representation of the resource.
+        """
         return f"Resource({self.id}), attributes: {self.attributes}"
 
     def __repr__(self) -> str:
+        """
+        returns the string representation of the resource.
+        """
         return self.__str__()
 
 

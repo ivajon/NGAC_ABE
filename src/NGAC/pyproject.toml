@@ -1,0 +1,10 @@
+[project]
+name = "NGAC"
+version = "0.0.1"
+description = "Python API for the NGAC severs"
+readme = "README.md"
+requires-python = ">=3.9.6"
+authors = [{ name = "Ivar Jönsson", email = "ivajns-9@student.ltu.se" }]
+
+[project.urls]
+"source" = "https://github.com/ivario123/NGAC_ABE"

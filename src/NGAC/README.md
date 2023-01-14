@@ -51,4 +51,3 @@ ngac.switch_to(pol,token = "admin_token")
 # Ensure the policy is loaded
 print(ngac.get(Policy,token = "admin_token"))
 ```
-

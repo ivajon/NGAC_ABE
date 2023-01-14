@@ -8,7 +8,7 @@ with the `NGAC` abstraction.
 from typing import List
 
 from .ngac_object import NgacObject
-from .ngac_attribute import UserAttribute
+from .attribute import UserAttribute
 from .policy_element import PolicyElement
 
 
@@ -80,12 +80,21 @@ class User(NgacObject, PolicyElement):
         self.attributes.append(attribute)
 
     def __len__(self) -> int:
+        """
+        Returns the number of attributes.
+        """
         return len(self.attributes)
 
     def __getitem__(self, index: int) -> UserAttribute:
+        """
+        Returns the attribute at the given index.
+        """
         return self.attributes[index]
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the user.
+        """
         return f"User: {self.id}, Attributes: {self.attributes}"
 
 

@@ -8,10 +8,11 @@ A type level abstraction of an access request.
 from typing import Tuple
 import os
 
-from ngac_types import user, resource
+from .user import *
+from .resource import *
 
 # Define a tuple type, (user,operation,resource)
-AccessRequest = Tuple[user.User, str, resource.Resource]
+AccessRequest = Tuple[User, str, Resource]
 """
 Access Request
 ---
@@ -32,13 +33,8 @@ def test_access_request():
     """
     Test access request
     """
-    if os.getcwd().endswith("src"):
-        from NGAC.ngac_types import user, resource
-    else:
-        from ngac_types import user, resource
-
-    u1 = user.User("user")
-    r1 = resource.Resource("resource")
+    u1 = User("user")
+    r1 = Resource("resource")
     operation = "Read"
     access_request = (u1, operation, r1)
 
