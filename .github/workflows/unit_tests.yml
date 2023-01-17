@@ -58,7 +58,7 @@ jobs:
           echo "Ensuring that log folder exists"
           mkdir -p LOG
           bash better_start_ngac.sh
-          cd ../../..
+          cd .. 
           sleep 5
           echo "Run the tests"
           # Running the tests
