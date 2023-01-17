@@ -46,7 +46,9 @@ jobs:
           pip install requests
           pip install pytest
           pip install pytest-cov
-          cd src/NGAC
+          cd src/API
+          pip install .
+          cd ../NGAC
           pip install .
           cd ../..
 
