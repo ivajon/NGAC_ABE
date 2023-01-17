@@ -13,10 +13,8 @@ import requests
 import os
 import json
 
-# Import API helpers
-from API.endpoints import *
-from API.result import *
 
+from .endpoints import *
 from .info import *
 from .ngac_object import NgacObject as NgacType
 from .policy import Policy
@@ -32,6 +30,12 @@ def http_ok(code: int) -> bool:
     Checks if http status code is one of the OK ones
     """
     return code >= 200 and code < 300
+
+
+def http_error(code: int) -> str:
+    import http.client
+
+    return http.client.responses[code]
 
 
 class NGAC:
@@ -373,7 +377,10 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        print(resp)
+        status = resp["respStatus"].lower()
+        print(status)
+        if status == "error" or status == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
         print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
@@ -431,6 +438,7 @@ class NGAC:
         if resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
         print(Ok(resp["respMessage"]))
+        print(resp["respBody"])
         return Ok(resp["respMessage"])
 
     ##########################################################

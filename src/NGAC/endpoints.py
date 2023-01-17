@@ -18,7 +18,12 @@ Defines all of the valid endpoints for the NGAC API
 - Access
 """
 # See API endpoint.py for more info
-from API import endpoint, Endpoint
+from API import endpoint
+
+Endpoint = endpoint.Endpoint
+endpoint = endpoint.endpoint
+print(dir(endpoint))
+
 
 PolicyAccessAPI = endpoint("PolicyAccessAPI", "/paapi", derived_from=Endpoint)
 """

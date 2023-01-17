@@ -15,10 +15,10 @@ class Policy(NgacObject):
     A policy is a set of rules that define the access control policy.
     """
 
-    rules: List[PolicyElement | str] = []
+    rules: List[PolicyElement] = []
 
     def __init__(
-        self, path: str = None, name: str = None, rules: List[PolicyElement | str] = []
+        self, path: str = None, name: str = None, rules: List[PolicyElement] = []
     ):
         """
         Creates a new policy.

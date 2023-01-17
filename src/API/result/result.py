@@ -134,7 +134,7 @@ def unwrap(value: Result):
     try:
         assert type(value) != ERROR
     except AssertionError:
-        raise (f"Unwrapping error : {value}")
+        raise Exception(f"Unwrapping error : {value}")
     return value.value
 
 

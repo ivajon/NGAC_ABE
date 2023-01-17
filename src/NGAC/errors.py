@@ -5,7 +5,7 @@ Errors
 Defines a set of possible errors for the NGAC api
 """
 
-from .result import to_error
+from API.result.result import *
 
 
 def http_error(status: int):
