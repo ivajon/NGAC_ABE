@@ -62,9 +62,8 @@ jobs:
           sleep 5
           echo "Run the tests"
           # Running the tests
-          pytest test.py --cov=ngac --cov-report=xml --cov-report=html
-          echo "Run the coverage report"
-          pytest --cache-clear --cov= .test.py > pytest-coverage.txt
+          pytest test.py --cov=. --cov-report=xml --cov-report=html
+          
       - name: pytest-coverage-commentator
         uses: coroo/pytest-coverage-commentator@v1.0.2
         with:

@@ -62,7 +62,7 @@ jobs:
           sleep 5
           echo "Run the tests"
           # Running the tests
-          pytest test.py --cov=ngac --cov-report=xml --cov-report=html
+          pytest test.py
 
 # jobs:
 #   test_linux:
