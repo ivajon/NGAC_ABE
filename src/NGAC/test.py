@@ -10,7 +10,7 @@ The unwrap function is used to throw an error if the result is an error, replaci
 """
 
 import os
-from API.result.result import unwrap
+from API.result import unwrap
 
 from .ngac import NGAC
 from .policy import Policy

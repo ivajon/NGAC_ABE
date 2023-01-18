@@ -17,11 +17,9 @@ Defines all of the valid endpoints for the NGAC API
 ## Policy Query API
 - Access
 """
-# See API endpoint.py for more info
-from API import endpoint
+# See API endponit.py for more info
+from API.endpoint import *
 
-Endpoint = endpoint.Endpoint
-endpoint = endpoint.endpoint
 print(dir(endpoint))
 
 
