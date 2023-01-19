@@ -5,10 +5,10 @@
 
 
 def test_ngac_servers():
-    from NGAC.ngac import NGAC
-    from NGAC.result import unwrap
-    from NGAC.policy import Policy
-    from NGAC.user import User
+    from NgacApi.ngac import NGAC
+    from API.result import unwrap
+    from NgacApi.policy import Policy
+    from NgacApi.user import User
 
     ngac = NGAC(token="admin_token")
 
