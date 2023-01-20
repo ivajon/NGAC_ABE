@@ -1,4 +1,6 @@
 # Import external tools
+from logging.handlers import RotatingFileHandler
+from logging import basicConfig, Formatter
 from flask import Flask, request
 from json import loads
 from configparser import ConfigParser as CP
@@ -15,7 +17,7 @@ from NgacApi.policy import Policy
 from API.result import to_error, Error
 
 
-# Set up global variables
+# Set up logging
 logger = logging.getLogger(__name__)
 cfg = CP()
 # ------------------------------
@@ -27,11 +29,7 @@ if len(files_read) == 0:
     raise FileNotFoundError("Could not find data/SERVER.ini")
 # ------------------------------
 
-
-# Set up logging
-from logging import basicConfig, Formatter
-from logging.handlers import RotatingFileHandler
-
+# Initiate the logger
 file_handler = RotatingFileHandler(
     cfg["logging"]["folder"] + "/server.log",
     maxBytes=int(cfg["logging"]["maxBytes"]),
@@ -55,6 +53,8 @@ with open(cfg["NGAC"]["admin_key"], "r") as f:
     admin_token = f.read()
 ngac = NGAC(token=admin_token)
 # ------------------------------
+
+
 def error(value) -> Error:
     """
     Error
@@ -90,6 +90,9 @@ def has_keys(keys, dictionary):
 
 
 def access(args) -> Result:
+    """
+    Checks if a user has access to a resource
+    """
     try:
         user = User([], id=args["user_id"])
         resource = Resource([], id=args["file_name"])
@@ -98,7 +101,6 @@ def access(args) -> Result:
 
     access_request: AccessRequest = (user, "r", resource)
     access = ngac.validate(access_request)
-    print(access)
     if not access:
         return error("Access denied")
     return Ok((user, resource))
@@ -110,7 +112,13 @@ def read():
     data = loads(request.data)
     ret = has_keys(["user_id", "object_id"], data)
     if is_error():
-        return
+        logger.debug("Invalid invalid arguments")
+        return (
+            str(
+                f"Invalid arguments: {data}, expected: user_id, object_id. Atleast missing : {ret.value} in json format"
+
+            ), 400,
+        )
     result = access(data)
     return result.match(
         ok=lambda x: (f"{x[0]} has access to {x[1]}", 200),
@@ -120,9 +128,12 @@ def read():
 
 @app.route("/write", methods=["POST"])
 def write():
+    # Log the write request
+    logger.debug("Write request, with data: " + str(request.data))
     data = loads(request.data)
     ret = has_keys(["user_id", "object_id", "policy"], data)
     if is_error(ret):
+        logger.debug("Invalid invalid arguments")
         return (
             str(
                 f"Invalid arguments: {data}, expected: user_id, object_id, policy. Atleast missing : {ret.value} in json format"
@@ -143,9 +154,12 @@ def write():
 @app.route("/make_file", methods=["POST"])
 def make_file():
     # Now parse the request data
+    logger.debug("Make file request, with data: " + str(request.data))
     data = loads(request.data)
-    ret = has_keys(["user_id", "object_id", "policy", "object_attributes"], data)
+    ret = has_keys(["user_id", "object_id", "policy",
+                   "object_attributes"], data)
     if is_error(ret):
+        logger.debug("Invalid invalid arguments")
         return (
             str(
                 f"Invalid arguments: {data}, expected: user_id, object_id, policy. Atleast missing : {ret.value} in json format"
@@ -155,7 +169,8 @@ def make_file():
 
     f = Resource(data["object_attributes"], id=data["object_id"])
     status = ngac.add(f, current_policy)
-    ret = status.match(ok=lambda x: ("make_file", 200), error=lambda x: (str(x), 400))
+    ret = status.match(ok=lambda x: ("make_file", 200),
+                       error=lambda x: (str(x), 400))
     # Do some black magic to make the file on server
     return ret
 
