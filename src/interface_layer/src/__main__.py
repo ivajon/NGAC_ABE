@@ -16,6 +16,9 @@ from NgacApi.resource import Resource
 from NgacApi.policy import Policy
 from API.result import to_error, Error
 
+# Import local files
+from .admin.admin import *
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
