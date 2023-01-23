@@ -1,0 +1,3 @@
+[submodule "src/src/NGAC/tog-ngac-crosscpp"]
+	path = src/src/NGAC/tog-ngac-crosscpp
+	url = https://github.com/tog-rtd/tog-ngac-crosscpp

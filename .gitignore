@@ -8,6 +8,17 @@ tog-ngac-crosscpp/*
 .vscode
 .vscode/*
 *log*
+*result*
+*tog*
+src/NGAC/LOG/*
+tog*
+tog-ngac*
+result*
+*result*
+*log*
+*pdf*
+*log*
+*tog*
 *tog*
 *EXAMPLES*
 *results*
@@ -16,3 +27,8 @@ tog-ngac-crosscpp/*
 *Result*
 *result*
 *pytest*
+*rabe*
+*rabe*/*
+*LOG*
+*log*
+*egg*

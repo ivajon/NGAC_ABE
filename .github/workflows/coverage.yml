@@ -1,28 +1,69 @@
-# This workflow will install dependencies, create coverage tests and run Pytest Coverage Commentator
-# For more information see: https://github.com/coroo/pytest-coverage-commentator
-name: pytest-coverage-commentator
-on:
-  pull_request:
-    branches:
-      - "*"
+on: [push]
+name: Unit Tests
 jobs:
-  build:
+  test_ngac_standalone:
+    name: Test servers by calling them from bash
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
+      - name: Install SWI Prolog
+        run: sudo apt-get install swi-prolog
+      - name: Build NGAC
+        run: |
+          echo "Cloning the TOG-NGAC repo"
+          git clone https://github.com/ivario123/tog-ngac-crosscpp
+          echo "Building the NGAC server"
+          cd tog-ngac-crosscpp
+          cat server.pl
+          swipl -v -o ngac -g ngac -c ngac.pl
+          swipl -v -o ngac_server -g ngac_server -c ngac.pl
+          echo "Building the CME server"
+          swipl -v -o cme -g cme -c cme_sim.pl
+          echo "Building the PEP server"
+          cd PEP-RAP
+          swipl -v -o pep_server -g pep_server -c pep.pl
+          echo "SUCCESS: NGAC server built"
+          echo "Coppying the NGAC server, into src/NGAC/executables/linux"
+          mkdir -p ../../src/NGAC/executables/linux
+          cp ../ngac ../ngac_server ../cme ./pep_server ../../src/NGAC/executables/linux
+      - name: Run the servers
+        run: |
+          echo $PATH
+          echo "List the contents of /usr/lib/swi-prolog/bin"
+          ls /usr/lib/swi-prolog/bin
+          cd src/NGAC/executables/
+          echo "Starting the servers using BASH"
+          sleep 20
+          bash better_start_ngac.sh
+          sleep 7
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.10.9
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Build coverage file
+          pip install requests
+          pip install pytest
+          pip install pytest-cov
+          cd src/API
+          pip install .
+          cd ../NGAC
+          pip install .
+          cd ../..
+
+      - name: Run tests
         run: |
-          cd ./src
-          pytest --cache-clear --cov=. test.py > pytest-coverage.txt
+          cd src/NGAC/executables
+          echo "Ensuring that log folder exists"
+          mkdir -p LOG
+          bash better_start_ngac.sh
+          cd .. 
+          sleep 5
+          echo "Run the tests"
+          # Running the tests
+          pytest test.py --cov=. --cov-report=xml --cov-report=html
+          
       - name: pytest-coverage-commentator
         uses: coroo/pytest-coverage-commentator@v1.0.2
         with:
