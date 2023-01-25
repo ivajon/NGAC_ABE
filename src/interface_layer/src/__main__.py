@@ -83,17 +83,6 @@ logger.debug(f"Loaded the policy")
 # ------------------------------
 
 
-def has_keys(keys, dictionary):
-    """
-    Checks if a dictionary has all the keys in a list
-    ---
-    """
-    for key in keys:
-        if key not in dictionary.keys():
-            return Error(key)
-    return Ok("")
-
-
 def access(user_id, resource_id, access_mode) -> Result:
     """
     Checks if a user has access to a resource
