@@ -5,19 +5,20 @@ from flask import Flask, request
 from json import loads
 from configparser import ConfigParser as CP
 import logging
-
+from typing import Tuple
+from require import fields, response
 # Import local tools
 from NgacApi.ngac import NGAC
-from API.result import Result, Ok, Error, unwrap, is_error
+from result import Result, Ok, Error, unwrap, is_error
 from NgacApi import *
 from NgacApi.access_request import AccessRequest
 from NgacApi.user import User
 from NgacApi.resource import Resource
 from NgacApi.policy import Policy
-from API.result import to_error, Error
+from result import to_error, Error
 
 # Import local files
-from .admin.admin import *
+from admin.admin import *
 
 
 # Set up logging
@@ -48,11 +49,12 @@ logger.setLevel(cfg["logging"]["level"])
 
 # Set up the flask app
 app = Flask(__name__)
+app.register_blueprint(admin)
 # ------------------------------
 
 
 # Set up the NGAC
-with open(cfg["NGAC"]["admin_key"], "r") as f:
+with open(cfg["NGAC"]["admin_token"], "r") as f:
     admin_token = f.read()
 ngac = NGAC(token=admin_token)
 # ------------------------------
@@ -92,15 +94,17 @@ def has_keys(keys, dictionary):
     return Ok("")
 
 
-def access(args) -> Result:
+def access(user_id, resource_id, access_mode) -> Result:
     """
     Checks if a user has access to a resource
     """
-    try:
-        user = User([], id=args["user_id"])
-        resource = Resource([], id=args["file_name"])
-    except:
-        return error("Invalid arguments")
+    user = User([], id=user_id)
+    resource = Resource([], id=resource_id)
+    access_request: AccessRequest = (user, access_mode, resource)
+    access = ngac.validate(access_request).match(
+        ok=lambda x: x if x else Error("Access denied"),
+        error=lambda x: Error("NGAC server error"),
+    )
 
     access_request: AccessRequest = (user, "r", resource)
     access = ngac.validate(access_request)
@@ -110,76 +114,45 @@ def access(args) -> Result:
 
 
 @app.route("/read", methods=["POST"])
-def read():
-    logger.debug("Read request, with data: " + str(request.data))
-    data = loads(request.data)
-    ret = has_keys(["user_id", "object_id"], data)
-    if is_error():
-        logger.debug("Invalid invalid arguments")
-        return (
-            str(
-                f"Invalid arguments: {data}, expected: user_id, object_id. Atleast missing : {ret.value} in json format"
-
-            ), 400,
-        )
-    result = access(data)
-    return result.match(
-        ok=lambda x: (f"{x[0]} has access to {x[1]}", 200),
-        error=lambda x: (f"Access denied: {x}", 403),
+@fields(request)
+def read(user_id, resource_id):
+    def read_interal():
+        print("This should be replaced by a decrypt call")
+        return response("This is the file", code=200)
+    return access(user_id=user_id, resource_id=resource_id, access_mode="r").match(
+        ok=lambda x: read_interal(),
+        error=lambda x: response(x, code=403),
     )
 
 
 @app.route("/write", methods=["POST"])
-def write():
-    # Log the write request
-    logger.debug("Write request, with data: " + str(request.data))
-    data = loads(request.data)
-    ret = has_keys(["user_id", "object_id", "policy"], data)
-    if is_error(ret):
-        logger.debug("Invalid invalid arguments")
-        return (
-            str(
-                f"Invalid arguments: {data}, expected: user_id, object_id, policy. Atleast missing : {ret.value} in json format"
-            ),
-            400,
-        )
+@fields(request)
+def write(user_id, resource_id, policy):
+    logger.debug(f"{user_id} is trying to write to {resource_id}")
 
-    result = access(data)
+    result = access(user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(result):
-        return str(result.value), 403
+        return response(result.value, code=403)
 
-    user_id = data["user_id"]
-    file_name = data["object_id"]
-    policy = data["policy"]
     return "Time for ABE magic"
 
 
 @app.route("/make_file", methods=["POST"])
-def make_file():
+@fields(request)
+def make_file(user_id, object_id, policy, object_attributes):
     # Now parse the request data
-    logger.debug("Make file request, with data: " + str(request.data))
-    data = loads(request.data)
-    ret = has_keys(["user_id", "object_id", "policy",
-                   "object_attributes"], data)
-    if is_error(ret):
-        logger.debug("Invalid invalid arguments")
-        return (
-            str(
-                f"Invalid arguments: {data}, expected: user_id, object_id, policy. Atleast missing : {ret.value} in json format"
-            ),
-            400,
-        )
-
-    f = Resource(data["object_attributes"], id=data["object_id"])
+    logger.debug(f"{user_id} is trying to make a file with id {object_id}")
+    f = Resource(object_attributes, id=object_id)
     status = ngac.add(f, current_policy)
-    ret = status.match(ok=lambda x: ("make_file", 200),
-                       error=lambda x: (str(x), 400))
+    ret = status.match(ok=lambda x: response("File was created"),
+                       error=lambda x: response(f"Could not create file: {x}", 400))
     # Do some black magic to make the file on server
     return ret
 
 
 @app.route("/delete_file", methods=["POST"])
-def delete_file():
+@fields(request)
+def delete_file(user_id, object_id):
     """
     Removes a file from the server
     ---
@@ -187,36 +160,23 @@ def delete_file():
     Note: This will not remove the attributes from the policy,
     it will remove the object and the assigned attributes from the policy.
     """
-
-    # Here we need to use the policy parser to get all the attributes for the file
-    # We should not trust the user to know all object attributes
-
-    # Now parse the request data
+    logger.debug(f"{user_id} is trying to delete a file with id {object_id}")
+    # This should not be needed, placeholder for parsing the attributes of the file
     data = loads(request.data)
-
-    ret = has_keys(["user_id", "object_id"], data)
-    if is_error(ret):
-        return (
-            f"Invalid arguments: {data}, expected: user_id, object_id. Atleast missing : {ret.value} in json format",
-            400,
-        )
-    logger.debug(f"Delete request for file with data : {data} ")
-
     f: Resource = Resource(
-        [] if "object_attributes" not in data.keys() else data["object_attributes"],
-        id=data["object_id"],
+        [] if not "object_attributes" in data.keys() else data["object_attributes"],
+        id=object_id,
     )
-    access_request: AccessRequest = (User([], id=data["user_id"]), "w", f)
+    u: User = User([], id=user_id)
+    res: Result = access(
+        user_id=user_id, resource_id=object_id, access_mode="w")
+    if is_error(res):
+        return response(res.value, code=403)
 
-    def remove_file(f: Resource):
-        status = ngac.remove(f, target_policy=current_policy)
-        return status.match(
-            ok=lambda _: ("delete_file", 200), error=lambda x: (str(x), 403)
-        )
-
-    return ngac.validate(access_request).match(
-        ok=lambda x: remove_file(f) if x else ("Access denied", 403),
-        error=lambda _: ("Internal server error, try again later", 400),
+    status = ngac.remove(f, target_policy=current_policy)
+    # Now remove the file from the target storage
+    return status.match(
+        ok=lambda _: ("delete_file", 200), error=lambda x: (str(x), 403)
     )
 
 

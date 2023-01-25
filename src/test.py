@@ -6,14 +6,15 @@
 
 def test_ngac_servers():
     from NgacApi.ngac import NGAC
-    from API.result import unwrap
+    from result import unwrap
     from NgacApi.policy import Policy
     from NgacApi.user import User
 
     ngac = NGAC(token="admin_token")
 
     # Load a test policy
-    pol = Policy(name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl")
+    pol = Policy(name="Signals Access Policy",
+                 path="EXAMPLES/policy_signals_access.pl")
     print(ngac.load_policy(pol))
 
     # Swap to the policy

@@ -9,6 +9,7 @@ The `Attribute` class it self should never be used.
 
 
 from .ngac_object import NgacObject
+from .policy_element import PolicyElement
 
 
 class Attribute(NgacObject):
@@ -35,7 +36,7 @@ class Attribute(NgacObject):
         return hash(self.__str__())
 
 
-class ObjectAttribute(Attribute):
+class ObjectAttribute(Attribute, PolicyElement):
     """
     ObjectAttribute abstraction
     ---
@@ -50,8 +51,11 @@ class ObjectAttribute(Attribute):
     def __str__(self) -> str:
         return self.object_attribute
 
+    def pol_el_repr(self) -> str:
+        return f"object_attribute({self.object_attribute})"
 
-class UserAttribute(Attribute):
+
+class UserAttribute(Attribute, PolicyElement):
     """
     UserAttribute abstraction
     ---
@@ -64,6 +68,9 @@ class UserAttribute(Attribute):
 
     def __str__(self) -> str:
         return self.user_attr
+
+    def pol_el_repr(self) -> str:
+        return f"user_attribute({self.user_attr})"
 
 
 def test_ngac_attribute():

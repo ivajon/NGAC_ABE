@@ -10,7 +10,7 @@ The unwrap function is used to throw an error if the result is an error, replaci
 """
 
 import os
-from API.result import unwrap
+from result import unwrap
 
 from .ngac import NGAC
 from .policy import Policy
@@ -133,8 +133,8 @@ def test_set_context():
             assert status == excepted_value
 
     check_requests(access_requests, [True, True, False])
-    ## This is not working, not quite sure why, server is reporting the context change
-    ## But the context does not seem to be changed
+    # This is not working, not quite sure why, server is reporting the context change
+    # But the context does not seem to be changed
     # unwrap(ngac.change_context(["business:false", "weekday:false"], token="epp_token"))
     # check_requests(access_requests, [False, False, False])
     unwrap(ngac.change_context(["weekday:true"], token="epp_token"))

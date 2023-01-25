@@ -31,11 +31,11 @@ def delete_file(data):
     return ret.text
 
 
-def write_data_to_file(data, file_name, file_attributes):
+def write_data_to_file(data, resource_id, file_attributes):
     json = dumps(
         {
             "user_id": "u1",
-            "object_id": file_name,
+            "object_id": resource_id,
             "object_attributes": file_attributes,
             "policy": "A & !B",
             "data": data,
@@ -45,11 +45,11 @@ def write_data_to_file(data, file_name, file_attributes):
     write(json)
 
 
-def write_data_to_file_then_remove(data, file_name, file_attributes):
+def write_data_to_file_then_remove(data, resource_id, file_attributes):
     json = dumps(
         {
             "user_id": "u1",
-            "object_id": file_name,
+            "object_id": resource_id,
             "object_attributes": file_attributes,
             "policy": "A & !B",
             "data": data,
@@ -60,12 +60,14 @@ def write_data_to_file_then_remove(data, file_name, file_attributes):
     delete_file(json)
 
 
+print(read(dumps({"user_id": "u1", "resource_id": "o1"})))
+
 #write_data_to_file("Hello World", "o1", ["oa1"])
 write_data_to_file_then_remove("Hello World", "o1", ["oa1"])
 
 # post request to localhost:5000/read
-# payload = dumps({"user_id": "u1", "file_name": "o1"})
+# payload = dumps({"user_id": "u1", "resource_id": "o1"})
 # print(post("http://localhost:5000/read", data=payload).text)
 
-# payload = dumps({"user_id": "u1", "file_name": "o1", "policy": "A & !B"})
+# payload = dumps({"user_id": "u1", "resource_id": "o1", "policy": "A & !B"})
 # print(post("http://localhost:5000/write", data=payload).text)
