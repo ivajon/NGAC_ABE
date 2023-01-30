@@ -128,10 +128,10 @@ def write(user_id, resource_id, policy):
 
 @app.route("/make_file", methods=["POST"])
 @fields(request)
-def make_file(user_id, object_id, policy, object_attributes):
+def make_file(user_id, resource_id, policy, object_attributes):
     # Now parse the request data
-    logger.debug(f"{user_id} is trying to make a file with id {object_id}")
-    f = Resource(object_attributes, id=object_id)
+    logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
+    f = Resource(object_attributes, id=resource_id)
     status = ngac.add(f, current_policy)
     ret = status.match(ok=lambda x: response("File was created"),
                        error=lambda x: response(f"Could not create file: {x}", 400))
@@ -141,7 +141,7 @@ def make_file(user_id, object_id, policy, object_attributes):
 
 @app.route("/delete_file", methods=["POST"])
 @fields(request)
-def delete_file(user_id, object_id):
+def delete_file(user_id, resource_id):
     """
     Removes a file from the server
     ---
@@ -149,16 +149,16 @@ def delete_file(user_id, object_id):
     Note: This will not remove the attributes from the policy,
     it will remove the object and the assigned attributes from the policy.
     """
-    logger.debug(f"{user_id} is trying to delete a file with id {object_id}")
+    logger.debug(f"{user_id} is trying to delete a file with id {resource_id}")
     # This should not be needed, placeholder for parsing the attributes of the file
     data = loads(request.data)
     f: Resource = Resource(
         [] if not "object_attributes" in data.keys() else data["object_attributes"],
-        id=object_id,
+        id=resource_id,
     )
     u: User = User([], id=user_id)
     res: Result = access(
-        user_id=user_id, resource_id=object_id, access_mode="w")
+        user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(res):
         return response(res.value, code=403)
 
