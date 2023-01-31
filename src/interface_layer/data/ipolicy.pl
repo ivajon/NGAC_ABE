@@ -1,5 +1,6 @@
 policy(ipolicy,access,[
 	user(u1),
+	user(u2),
 	user_attribute(ua1),
 	object(o1),
 	object_attribute(oa1),

@@ -39,8 +39,12 @@ def load_policy(policy, policy_name):
 
 @admin.route("/read_policy", methods=["POST"])
 def read_policy():
+    print("read policy")
     ngac = NGAC(token=request.headers["token"])
-    return ngac.read().match(
-        lambda x: response(x.value),
-        lambda x: response(f"Error {x.value}", code=400)
+
+    ret = ngac.read()
+    print(ret)
+    return ret.match(
+        ok=lambda x: (x.value, 200),
+        error=lambda x: (f"Error {x.value}", 400)
     )

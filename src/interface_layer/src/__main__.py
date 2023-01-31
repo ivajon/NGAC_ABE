@@ -80,6 +80,7 @@ current_policy = Policy(name=policy_name)
 logger.debug(f"Loading {current_policy.name}...")
 unwrap(ngac.change_policy(current_policy))
 logger.debug(f"Loaded the policy")
+print(ngac.read())
 # ------------------------------
 
 
@@ -90,16 +91,12 @@ def access(user_id, resource_id, access_mode) -> Result:
     user = User([], id=user_id)
     resource = Resource([], id=resource_id)
     access_request: AccessRequest = (user, access_mode, resource)
-    access = ngac.validate(access_request).match(
-        ok=lambda x: x if x else Error("Access denied"),
+    print(access_request)
+    ret = ngac.validate(access_request).match(
+        ok=lambda x: Ok(x) if x else Error("Access denied"),
         error=lambda x: Error("NGAC server error"),
     )
-
-    access_request: AccessRequest = (user, "r", resource)
-    access = ngac.validate(access_request)
-    if not access:
-        return error("Access denied")
-    return Ok((user, resource))
+    return ret
 
 
 @app.route("/read", methods=["POST"])
@@ -108,9 +105,12 @@ def read(user_id, resource_id):
     def read_interal():
         print("This should be replaced by a decrypt call")
         return response("This is the file", code=200)
-    return access(user_id=user_id, resource_id=resource_id, access_mode="r").match(
+    print(f"{user_id} is trying to read {resource_id}")
+    res = access(user_id=user_id, resource_id=resource_id, access_mode="r")
+    print(res)
+    return res.match(
         ok=lambda x: read_interal(),
-        error=lambda x: response(x, code=403),
+        error=lambda x: (x, 403)
     )
 
 

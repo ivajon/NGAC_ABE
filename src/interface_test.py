@@ -1,11 +1,10 @@
-from requests import get, post
-from json import dumps, loads
+from requests import post
+from json import dumps
 
 
 def write(data):
     status = post("http://localhost:5000/write", data=data)
     print(dumps(status.text))
-
     return status.text
 
 
@@ -66,6 +65,12 @@ def unassign(data):
     }).text
 
 
+def read_pol():
+    return post("http://localhost:5000/admin/read_policy",headers={
+        "token": "admin-token"
+    }).text
+
+
 """
 Read o1 with u1, we know this should work
 
@@ -75,5 +80,7 @@ Read o1 with u1, we know this should not work
 """
 
 print(read(dumps({"user_id": "u1", "resource_id": "o1"})))
+print(read_pol())
 print(unassign(dumps({"user_id": "u1", "attribute": "ua1"})))
+print(read_pol())
 print(read(dumps({"user_id": "u1", "resource_id": "o1"})))

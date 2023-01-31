@@ -98,7 +98,7 @@ class NGAC:
         :param access_request: The access request to validate
         :return: True if the access request is valid, False otherwise
         """
-
+        print(access_request)
         info(
             InfoTypes(),
             f"Validating {str(access_request[0])} => {access_request[1]} => {str(access_request[2])}",
@@ -118,7 +118,8 @@ class NGAC:
         resp = json.loads(response.text)
         if resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
+        print(resp)
+        print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"] != "deny")
 
     ##########################################################

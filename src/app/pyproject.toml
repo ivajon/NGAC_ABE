@@ -1,0 +1,5 @@
+[project]
+authors = [{ name = "Ivar Jönsson", email = "ivajns-9@student.ltu.se" }]
+name = "NGAC-ABE-CLI"
+version = "0.0.1"
+description = "A CLI for the NGAC-ABE project"
