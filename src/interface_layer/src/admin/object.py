@@ -9,6 +9,8 @@ from require import fields, response
 from NgacApi.attribute import ObjectAttribute
 from NgacApi.ngac import NGAC
 from NgacApi.resource import Resource
+from configparser import ConfigParser
+from . import url
 
 
 resource = Blueprint("resource", __name__, url_prefix="/resource")
@@ -21,11 +23,12 @@ def make_resource(object_id, attribute):
     Creates a new resource
     ---
     """
-    ngac = NGAC(token=request.headers["token"])
+    global url
+    ngac = NGAC(token=request.headers["token"], policy_server_url=url)
     object = Resource([ObjectAttribute(attribute)], id=object_id)
     return ngac.add_resource(object).match(
-        lambda x: response("Resource created"),
-        lambda x: response(f"Error {x.value}", code=400)
+        lambda x: ("Resource created"),
+        lambda x: (f"Error {x.value}", 400)
     )
 
 
@@ -36,13 +39,14 @@ def object_assign(object_id, attribute):
     Assign attributes to a resource
     ---
     """
-    ngac = NGAC(token=request.headers["token"])
+    global url
+    ngac = NGAC(token=request.headers["token"], policy_server_url=url)
     attr = ObjectAttribute(attribute)
     object = Resource([attr], id=object_id)
 
     return ngac.assign(object, attr).match(
-        lambda x: response("Attribute assigned"),
-        lambda x: response(f"Error {x.value}", code=400)
+        lambda x: ("Attribute assigned"),
+        lambda x: (f"Error {x.value}", 400)
     )
 
 
@@ -53,11 +57,12 @@ def object_unassign(object_id, attribute):
     Remove attributes from a resource
     ---
     """
-    ngac = NGAC(token=request.headers["token"])
+    global url
+    ngac = NGAC(token=request.headers["token"], policy_server_url=url)
     attr = ObjectAttribute(attribute)
     object = Resource([attr], id=object_id)
 
     return ngac.remove_assignment(object, attr).match(
-        lambda x: response("Attribute unassigned"),
-        lambda x: response(f"Error {x.value}", code=400)
+        lambda x: ("Attribute unassigned"),
+        lambda x: (f"Error {x.value}", 400)
     )

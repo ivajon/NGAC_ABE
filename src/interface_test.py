@@ -61,13 +61,13 @@ def write_data_to_file_then_remove(data, resource_id, file_attributes):
 
 def unassign(data):
     return post("http://localhost:5000/admin/user/unassign", data=data, headers={
-        "token": "admin-token"
+        "token": "admin_token"
     }).text
 
 
 def read_pol():
-    return post("http://localhost:5000/admin/read_policy",headers={
-        "token": "admin-token"
+    return post("http://localhost:5000/admin/read_policy", headers={
+        "token": "admin_token"
     }).text
 
 

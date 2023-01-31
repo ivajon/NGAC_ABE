@@ -1,6 +1,6 @@
 # Import external tools
 from logging.handlers import RotatingFileHandler
-from logging import basicConfig, Formatter
+from logging import basicConfig, Formatter, DEBUG
 from flask import Flask, request
 from json import loads
 from configparser import ConfigParser as CP
@@ -19,6 +19,7 @@ from result import to_error, Error
 
 # Import local files
 from admin.admin import *
+from admin.admin import set_current_policy
 
 
 # Set up logging
@@ -43,7 +44,7 @@ file_handler.setFormatter(
     Formatter("%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s")
 )
 logger.addHandler(file_handler)
-logger.setLevel(cfg["logging"]["level"])
+logger.setLevel(DEBUG)  # cfg["logging"]["level"])
 # ------------------------------
 
 
@@ -56,7 +57,7 @@ app.register_blueprint(admin)
 # Set up the NGAC
 with open(cfg["NGAC"]["admin_token"], "r") as f:
     admin_token = f.read()
-ngac = NGAC(token=admin_token)
+ngac = NGAC(token=admin_token, policy_server_url="http://130.240.200.92:8001")
 # ------------------------------
 
 
@@ -80,7 +81,9 @@ current_policy = Policy(name=policy_name)
 logger.debug(f"Loading {current_policy.name}...")
 unwrap(ngac.change_policy(current_policy))
 logger.debug(f"Loaded the policy")
-print(ngac.read())
+pol = Policy(name=policy_name)
+print(ngac.read(pol))
+set_current_policy(policy_name)
 # ------------------------------
 
 

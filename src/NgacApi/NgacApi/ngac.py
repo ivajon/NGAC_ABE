@@ -4,7 +4,7 @@
 
     This file provides an interface to the NGAC server, allowing the user to
     set and get policies, and to switch between policies.
-    
+
 """
 
 from typing import List
@@ -45,16 +45,16 @@ class NGAC:
 
     Wraps the entire NGAC execution and provides an interface to the NGAC server.
 
-    ## Examples
+    # Examples
 
-    ### Start and stop the NGAC server
+    # Start and stop the NGAC server
 
     ```python
     ngac = NGAC()
     ngac.start()
     ngac.stop()
     ```
-    ### Changing between policies
+    # Changing between policies
 
     ```python
     with NGAC() as ngac:
@@ -70,7 +70,7 @@ class NGAC:
         :param policy_server_url: The url of the policy server
         :return: None
 
-        ### Example:
+        # Example:
         ```python
         with NGAC() as ngac:
             ngac.switch_to(Policy("test"))
@@ -98,7 +98,6 @@ class NGAC:
         :param access_request: The access request to validate
         :return: True if the access request is valid, False otherwise
         """
-        print(access_request)
         info(
             InfoTypes(),
             f"Validating {str(access_request[0])} => {access_request[1]} => {str(access_request[2])}",
@@ -118,8 +117,6 @@ class NGAC:
         resp = json.loads(response.text)
         if resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        print(resp)
-        print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"] != "deny")
 
     ##########################################################
@@ -131,9 +128,8 @@ class NGAC:
         Get the policy from the NGAC server
         :return: The response from the NGAC server
 
-        ### Example:
+        # Example:
         ```python
-        #print(unwrap(ngac.get_policy()))
         ```
         """
         # This is bad, we should make the user pass a token
@@ -151,7 +147,7 @@ class NGAC:
         # prin(Ok(resp["respMessage"]))
         return Ok(resp["respBody"])
 
-    def read(self, policy: Policy = None) -> Result:
+    def read(self, policy: Policy) -> Result:
         """
         Returns the details of a policy.
         ---
@@ -159,14 +155,7 @@ class NGAC:
         If no policy is specified then it will return the currently loaded policy.
         If, however, a policy is specified then it will return that policies specification.
         """
-        params = (
-            {
-                "token": f"{self.token}",
-            }
-            if policy == None
-            else {"token": f"{self.token}", "policy": f"{policy.name}"}
-        )
-
+        params = ({"token": f"{self.token}", "policy": f"{policy.name}"})
         response = requests.get(self.url(ReadPolicy()), params=params)
         if not http_ok(response.status_code):
             return Error(http_error(response.status_code))
@@ -176,7 +165,6 @@ class NGAC:
         resp = json.loads(response.text)
         if resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # prin(Ok(resp["respMessage"]))
         return Ok(resp["respBody"])
 
     ##########################################################
@@ -243,7 +231,7 @@ class NGAC:
             return Error(NoServerResponse)
 
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
         # prin(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
@@ -306,10 +294,9 @@ class NGAC:
         resp = json.loads(response.text)
         if resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # prin(Ok(resp["respMessage"]))
         return Ok(resp["respBody"])
 
-    def remove_assignment(self, a: PolicyElement, b: PolicyElement, target_policy: Policy = None) -> Result:
+    def remove_assignment(self, a: PolicyElement, b: PolicyElement, target_policy: Policy) -> Result:
         """
         Removes an assignment from a policy
         ---
@@ -321,12 +308,7 @@ class NGAC:
         params = (
             {
                 "token": f"{self.token}",
-                "policy_element": f"assign({a.pol_el_repr()},{b.pol_el_repr()})",
-            }
-            if target_policy == None
-            else {
-                "token": f"{self.token}",
-                "policy_element": f"assign({a.pol_el_repr()},{b.pol_el_repr()})",
+                "policy_element": f"assign({a.id},{b})",
                 "policy": f"{target_policy}",
             }
         )
@@ -335,11 +317,9 @@ class NGAC:
             return Error(http_error(response.status_code))
         if response is None:
             return Error(NoServerResponse)
-
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "failure" or resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # prin(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
 
     def add(self, element: PolicyElement, target_policy: Policy = None) -> Result:
@@ -368,7 +348,7 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
         # prin(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
@@ -401,7 +381,7 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
         # prin(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
@@ -418,12 +398,12 @@ class NGAC:
         params = (
             {
                 "token": f"{self.token}",
-                "policy_element": f"assign({a.pol_el_repr()},{b.pol_el_repr()})",
+                "policy_element": f"assign({a.id},{b.pol_el_repr()})",
             }
             if target_policy == None
             else {
                 "token": f"{self.token}",
-                "policy_element": f"assign({a.pol_el_repr()},{b.pol_el_repr()})",
+                "policy_element": f"assign({a.id},{b})",
                 "policy": f"{target_policy}",
             }
         )
@@ -433,9 +413,8 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
 
     def change_policy(self, target_policy: NgacType) -> Result:
@@ -445,7 +424,6 @@ class NGAC:
 
         Allows changing to a loaded policy
         """
-        # print(target_policy)
         if target_policy.path is not None:
             # We need to load the policy first
             unwrap(self.load_policy(path=target_policy.path))
@@ -457,9 +435,8 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
 
     def load_policy(self, path="") -> Result:
@@ -474,9 +451,8 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
 
     def load_policy_from_policy(self, pol: Policy) -> Result:
@@ -490,9 +466,8 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        if resp["respStatus"] == "Error":
+        if resp["respStatus"] == "Error" or resp["respStatus"] == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
 
     def load_policy_from_str(
@@ -508,12 +483,9 @@ class NGAC:
         if response is None:
             return Error(NoServerResponse)
         resp = json.loads(response.text)
-        # print(resp)
         status = resp["respStatus"].lower()
-        # print(status)
         if status == "error" or status == "failure":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
         return Ok(resp["respMessage"])
 
     def combine_policies(self, policies: List[Policy], target_policy: Policy) -> Result:
@@ -559,7 +531,6 @@ class NGAC:
             "context": f"[{','.join(context)}]",
             "token": token if token != "" else self.token,
         }
-        # print(params)
         response = requests.get(self.url(ContextNotify()), params=params)
         if not http_ok(response.status_code):
             return Error(http_error(response.status_code))
@@ -568,8 +539,6 @@ class NGAC:
         resp = json.loads(response.text)
         if resp["respStatus"] == "Error":
             return Error(generic_NGAC_error(resp["respMessage"]))
-        # print(Ok(resp["respMessage"]))
-        # print(resp["respBody"])
         return Ok(resp["respMessage"])
 
     ##########################################################

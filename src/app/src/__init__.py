@@ -83,6 +83,18 @@ delete_parser = sub.add_parser(
     help="Delete a file from the server."
 )
 
+admin_parser = sub.add_parser(
+    "admin",
+    help="Admin commands."
+)
+
+admin_sub = admin_parser.add_subparsers(
+    description="The following admin commands are available:",
+    help="admin command",
+    dest="admin_command"
+)
+
+
 
 # _________ READ _________
 
