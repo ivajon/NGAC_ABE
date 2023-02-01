@@ -23,9 +23,6 @@ jobs:
         if: ${{ failure() }}
         run: black .
 
-      - name: Format with black
-        run: black .
-
       - name: Commit changes
         if: ${{ failure() }} && github.event_name == 'pull_request'
         run: |
@@ -34,3 +31,4 @@ jobs:
           git add .
           git commit -m "Format Python code with black"
           git push origin ${{ github.head_ref }}
+        continue-on-error: true
