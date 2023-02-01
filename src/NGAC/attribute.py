@@ -1,7 +1,10 @@
 """
-    NGAC attribute abstraction class
+NGAC attribute
+---
 
-    This class is used to implement attributes
+This file describes a simple attribute abstraction as well as 2 wrapper classes that are used for the `User` and `Resource` classes.
+
+The `Attribute` class it self should never be used.
 """
 
 
@@ -11,6 +14,7 @@ from .ngac_object import NgacObject
 class Attribute(NgacObject):
     """
     NGAC attribute abstraction class
+    ---
 
     This class is only for typing.
     """
@@ -34,8 +38,9 @@ class Attribute(NgacObject):
 class ObjectAttribute(Attribute):
     """
     ObjectAttribute abstraction
+    ---
 
-    Serves typing purposes
+    Used to described attributes for `Resource`s.
     """
 
     def __init__(self, object_attribute: str):
@@ -49,23 +54,13 @@ class ObjectAttribute(Attribute):
 class UserAttribute(Attribute):
     """
     UserAttribute abstraction
+    ---
 
-    Serves typing purposes
+    Used to describe attributes for `User`s.
     """
 
     def __init__(self, user_attr: str):
-        #
-        if (type(user_attr) == list and len(user_attr) == 1) or type(user_attr) not in [
-            str,
-            list,
-        ]:
-            raise TypeError
-        elif type(user_attr) == list:
-            self.user_attr = user_attr[0]
-        else:
-            self.user_attr = user_attr
-
-    # self.user_attr = user_attr
+        self.user_attr = user_attr
 
     def __str__(self) -> str:
         return self.user_attr
@@ -73,7 +68,7 @@ class UserAttribute(Attribute):
 
 def test_ngac_attribute():
     """
-    Test attribute class
+    Test attribute class.
     """
     attr = ObjectAttribute("SomeAttribute")
     assert attr.get_attribute() == "SomeAttribute"
@@ -86,7 +81,7 @@ def test_ngac_attribute():
 
 def test_attr_repr():
     """
-    Test attribute class
+    Test attribute class.
     """
     attr = ObjectAttribute("SomeAttribute")
     assert attr.__repr__() == "SomeAttribute"

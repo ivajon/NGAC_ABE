@@ -1,32 +1,29 @@
 """
 User abstraction
+---
 
-This class is used to implement users
+This file described a user abstraction, this user abstraction is intended to be used
+with the `NGAC` abstraction.
 """
 from typing import List
 
 from .ngac_object import NgacObject
-from .ngac_attribute import UserAttribute
+from .attribute import UserAttribute
+from .policy_element import PolicyElement
 
 
-class User(NgacObject):
+class User(NgacObject, PolicyElement):
     """
     User abstraction
+    ---
 
-    A user supports most of the list methods
-
-    Example:
-    ```python
-    for attribute in user:
-        print(attribute)
-    ```
+    Simple user abstraction. A user is a set of some attributes and a user specific id.
     """
 
     def __init__(self, id: str, attributes: List[UserAttribute] = None):
         """
-        Creates a new user
-        :param attributes: the user's attributes
-        :param id: the user's id, name or similar
+        Creates a new user.
+        ---
         """
 
         if attributes is None:
@@ -43,61 +40,79 @@ class User(NgacObject):
 
         # self.attributes = attributes
 
+    def pol_el_repr(self) -> str:
+        """
+        Returns the representation as a list of policy elements.
+        """
+        base_str = ""
+        for attr in self.attributes:
+            base_str += f"assign({self.id},{attr}),"
+        return f"""[object({self.id}),{base_str[:-1]}]"""
+
     def get_attributes(self) -> List[UserAttribute]:
         """
-        Returns the user's attributes
+        Returns the user's attributes.
         """
         return self.attributes
 
     def id(self) -> str:
         """
-        Returns the user id
+        Returns the user id.
         """
         return self.id
 
     def __iter__(self):
         """
-        Iterates over the user's attributes
+        Iterates over the user's attributes.
         """
         return iter(self.attributes)
 
     def append(self, attribute: UserAttribute):
         """
-        Appends an attribute to the user
+        Appends an attribute to the user.
         """
         self.attributes.append(attribute)
 
     def remove(self, attribute: UserAttribute):
         """
-        Removes an attribute from the user
+        Removes an attribute from the user.
         """
         self.attributes.remove(attribute)
 
     def pop(self, index: int) -> UserAttribute:
         """
-        Pops an attribute from the user
+        Pops an attribute from the user.
         """
         return self.attributes.pop(index)
 
     def push(self, attribute: UserAttribute):
         """
-        Pushes an attribute to the user
+        Pushes an attribute to the user.
         """
         self.attributes.append(attribute)
 
     def __len__(self) -> int:
+        """
+        Returns the number of attributes.
+        """
         return len(self.attributes)
 
     def __getitem__(self, index: int) -> UserAttribute:
+        """
+        Returns the attribute at the given index.
+        """
         return self.attributes[index]
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the user.
+        """
         return f"User: {self.id}, Attributes: {self.attributes}"
 
 
 def test_create_user():
     """
-    Test user creation
+    Test user creation.
     """
     user = User([], id="SomeUser")
     assert user.id == "SomeUser"
@@ -105,7 +120,7 @@ def test_create_user():
 
 def test_create_with_attributes():
     """
-    Test user creation with attributes
+    Test user creation with attributes.
     """
     attributes = [
         UserAttribute("value1"),
