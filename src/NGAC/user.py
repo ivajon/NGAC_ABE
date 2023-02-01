@@ -20,7 +20,7 @@ class User(NgacObject, PolicyElement):
     Simple user abstraction. A user is a set of some attributes and a user specific id.
     """
 
-    def __init__(self, id: str, attributes: List[UserAttribute] = None):
+    def __init__(self, attributes: List[UserAttribute], id: str = ""):
         """
         Creates a new user.
         ---
