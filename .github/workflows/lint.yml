@@ -16,5 +16,4 @@ jobs:
           pip install black
       - name: Lint with black
         run: |
-          black --check .
-          black --diff .
+          black --check --diff .
