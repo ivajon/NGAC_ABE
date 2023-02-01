@@ -124,7 +124,7 @@ def test_set_context():
     ]
 
     def check_requests(requests, expected):
-        for (request, excepted_value) in zip(requests, expected):
+        for request, excepted_value in zip(requests, expected):
             print(request, excepted_value)
             status = unwrap(ngac.validate(request))
             print(

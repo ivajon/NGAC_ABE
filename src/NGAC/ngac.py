@@ -371,7 +371,9 @@ class NGAC:
 
     def load_policy_from_str(
         self, pol: str
-    ) -> Result:  # This should be replaced a function that loads from some python policy representation
+    ) -> (
+        Result
+    ):  # This should be replaced a function that loads from some python policy representation
         """
         Loads a policy from a string representation
         """
