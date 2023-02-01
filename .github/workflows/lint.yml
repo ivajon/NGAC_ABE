@@ -33,4 +33,4 @@ jobs:
           git config --local user.name "{{ github.actor }}"
           git add .
           git commit -m "Format Python code with black"
-          git push
+          git push origin ${{ github.head_ref }}
