@@ -22,6 +22,7 @@ jobs:
       - name: Handle black errors
         if: ${{ failure() }} && github.event_name == 'pull_request'
         run: |
+          git remote set-branches --add origin ${{ github.head_ref }}
           git checkout ${{ github.head_ref }}
           echo "Black found errors. Formatting code..."
           black .
