@@ -19,19 +19,20 @@ jobs:
         run: black --check --diff .
         continue-on-error: true
 
-      - name: Format with black
-        if: ${{ failure() }}
-        run: black .
-
-      - name: Commit changes
+      - name: Handle black errors
         if: ${{ failure() }} && github.event_name == 'pull_request'
         run: |
+          git checkout ${{ github.head_ref }}
+          echo "Black found errors. Formatting code..."
+          black .
+          echo "Checking for black errors again..."
+          black --check --diff .
+          echo "Black formatted code. Committing changes..."
           git config --local user.email "{{ github.actor }}@users.noreply.github.com"
           git config --local user.name "{{ github.actor }}"
           git add .
           git commit -m "Format Python code with black"
           git push
-        continue-on-error: true
       - name: Fail if there are any errors
         if: ${{ failure() }} && github.event_name != 'pull_request'
         run: exit 1
