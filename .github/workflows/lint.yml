@@ -30,5 +30,8 @@ jobs:
           git config --local user.name "{{ github.actor }}"
           git add .
           git commit -m "Format Python code with black"
-          git push origin ${{ github.head_ref }}
+          git push
         continue-on-error: true
+      - name: Fail if there are any errors
+        if: ${{ failure() }} && github.event_name != 'pull_request'
+        run: exit 1
