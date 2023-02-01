@@ -1,5 +1,6 @@
 import re
 from typing import List
+from json import dumps
 
 # # Use NGAC to read the policy from the server
 # from NGAC import NGAC
@@ -15,6 +16,7 @@ def parse(text: List[str]):
         "user_attribute": {},
         "object_attribute": {},
         "connector": [],
+        "associate": {},
     }
 
     def user(args):
@@ -43,12 +45,31 @@ def parse(text: List[str]):
         attribute = args[1]
         policy["object_attribute"][attribute] = []
 
+    def associate(args):
+        args: str = args[1]
+        associate_list = args.split(",")
+        rights = associate_list[1:-1]
+
+        for i in range(0, len(rights)):
+            rights[i] = rights[i].replace("[", "")
+            rights[i] = rights[i].replace("]", "")
+
+        # print(associate_list)
+        # print(dumps(policy["associate"]))
+        associations = policy["associate"]
+        if associate_list[0] in associations.keys():
+            attribute_association = associations[associate_list[0]]
+            attribute_association[associate_list[-1]] = rights
+        else:
+            associations[associate_list[0]] = {associate_list[-1]: rights}
+
     policy_builder = {
         "user": user,
         "object": object,
         "assign": assign,
         "user_attribute": user_attribute,
         "object_attribute": object_attribute,
+        "associate": associate,
     }
 
     for line in text:
@@ -67,17 +88,19 @@ def parse(text: List[str]):
     return policy
 
 
-def get_user_attributes(user, policy) -> List[str]:
+def get_user_attributes(user, policy, preparsed=False) -> List[str]:
     """
-    Gets all of the attributes assigned to a user
+    Gets all of the attributes assigned to an user
     """
     # # Create admin NGAC instance, the static admin key is bad.
     # # Replace with a dynamic key when in production
     # ngac = NGAC(key="admin_key")
     # # Read the current policy
     # pol = parse(ngac.read())
-    pol = parse(policy)
-    print(pol)
+    if preparsed == True:
+        pol = policy
+    else:
+        pol = parse(policy)
     if user not in pol["user"].keys():
         return []
     attributes = pol["user"][user]
@@ -100,11 +123,71 @@ def get_user_attributes(user, policy) -> List[str]:
     return attributes
 
 
+def get_objects_attributes(object, policy, preparsed=False) -> List[str]:
+    """
+    Gets all of the attributes assigned to an object
+    """
+
+    if preparsed == True:
+        pol = policy
+    else:
+        pol = parse(policy)
+    # print(dumps(pol, indent=4))
+    # print(pol["associate"]["GroupA"])
+    if object not in pol["object"].keys():
+        return []
+    attributes = pol["object"][object]
+    no_new_attributes = False
+
+    # Insert all the attributes that are assigned to the attributes
+    while not no_new_attributes:
+
+        # Go over all attributes
+        for attribute in attributes:
+
+            # If the attribute is assigned to another attribute
+            # Add the assigned attribute to the list of attributes
+            if attribute in pol["object_attribute"].keys():
+
+                attributes.extend(pol["object_attribute"][attribute])
+                # We now have a new attribute, so we need to check again
+                no_new_attributes = True
+
+    return attributes
+
+
+def get_connection(user_id, object_id, access_mode, policy):  # access_mode r or w
+    parsed = parse(policy)  # parse policy
+    # Write a small function to get the attributes parsed["user_attributes"]["u1"]
+    user_attr = get_user_attributes(user_id, parsed, preparsed=True)
+    # Write a small function to get the attributes parsed["object_attributes"]["o1"]
+    object_attr = get_objects_attributes(object_id, parsed, preparsed=True)
+    # Write a small function to get the associations parsed["associations"]
+    assoc = get_assocs(parsed)
+
+    for ua in user_attr:
+        if ua in assoc.keys():
+            for oa in object_attr:
+                if oa in assoc[ua].keys():
+                    if access_mode in assoc[ua][oa]:
+                        return ua, oa
+    return None
+
+
+def get_assocs(parsed):
+    associations = parsed["associate"]
+    return associations
+
+
 if __name__ == "__main__":
     text = ""
 
-    with open("./policy1.pl", "r") as f:
+    with open("./src/NGAC/policy1.pl", "r") as f:
         text = f.read()
 
     lines = text.split("\n")
-    print(get_user_attributes("u1", lines))
+    # print(dumps(parse(lines), indent=4))
+    # print(get_user_attributes("u1", lines))
+    # (get_objects_attributes("o1", lines))
+    print(get_connection("u1", "o1", "w", lines))  # test policy1.pl
+    # print(get_connection("u3", "o3", "w", lines))   # test policy4.pl
