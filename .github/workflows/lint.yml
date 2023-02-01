@@ -9,4 +9,4 @@ jobs:
       - name: Black Code Format Check
         uses: lgeiger/black-action@master
         with:
-          args: ". --check --fast --diff"
+          args: ". --check --diff"
