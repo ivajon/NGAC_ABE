@@ -14,16 +14,36 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install black
-      - name: Format with black
-        run: black .
 
       - name: Check for black errors
         run: black --check --diff .
+        continue-on-error: true
+
+      - name: Format with black
+        if: ${{ failure() }}
+        run: black .
+
+      - name: Format with black
+        run: black .
       # Only push if we are doing a pull request
-      - name: Push to GitHub
-        if: github.event_name == 'pull_request'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          directory: .
+      # The following code yields
+      # ! [remote rejected] HEAD -> refs/pull/40/merge (deny updating a hidden ref)
+      # error: failed to push some refs to '
+      # - name: Push to GitHub
+      #   if: github.event_name == 'pull_request'
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: ${{ github.ref }}
+      #     directory: .
+
+      # We need to use the following code instead
+
+      - name: Commit changes
+        if: ${{ failure() }} && github.event_name == 'pull_request'
+        run: |
+          git config --local user.email "
+          git config --local user.name "
+          git add .
+          git commit -m "Format Python code with black"
+          git push
