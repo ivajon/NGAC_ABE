@@ -22,8 +22,9 @@ jobs:
       - name: Handle black errors
         if: ${{ failure() }} && github.event_name == 'pull_request'
         run: |
-          git remote set-branches --add origin ${{ github.head_ref }}
-          git checkout ${{ github.head_ref }}
+          git remote add github ${{ github.event.pull_request.head.repo.clone_url }}
+          git fetch github ${{ github.head_ref }}
+          git checkout origin/${{ github.head_ref }}
           echo "Black found errors. Formatting code..."
           black .
           echo "Checking for black errors again..."
@@ -33,7 +34,7 @@ jobs:
           git config --local user.name "{{ github.actor }}"
           git add .
           git commit -m "Format Python code with black"
-          git push
+          git push github ${{ github.head_ref }}
       - name: Fail if there are any errors
         if: ${{ failure() }} && github.event_name != 'pull_request'
         run: exit 1
