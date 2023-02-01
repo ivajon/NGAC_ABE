@@ -1,5 +1,5 @@
 name: Lint
-on: [pull_request]
+on: [pull_request, push]
 jobs:
   black:
     name: Python Code Format Check
@@ -19,7 +19,9 @@ jobs:
 
       - name: Check for black errors
         run: black --check --diff .
+      # Only push if we are doing a pull request
       - name: Push to GitHub
+        if: github.event_name == 'pull_request'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
