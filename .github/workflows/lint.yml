@@ -25,25 +25,13 @@ jobs:
 
       - name: Format with black
         run: black .
-      # Only push if we are doing a pull request
-      # The following code yields
-      # ! [remote rejected] HEAD -> refs/pull/40/merge (deny updating a hidden ref)
-      # error: failed to push some refs to '
-      # - name: Push to GitHub
-      #   if: github.event_name == 'pull_request'
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: ${{ github.ref }}
-      #     directory: .
-
-      # We need to use the following code instead
 
       - name: Commit changes
         if: ${{ failure() }} && github.event_name == 'pull_request'
         run: |
-          git config --local user.email "
-          git config --local user.name "
+          git config --local user.email "{{ github.actor }}@users.noreply.github.com"
+          git config --local user.name "{{ github.actor }}"
+          git set upstream origin ${{ github.head_ref }}
           git add .
           git commit -m "Format Python code with black"
           git push
