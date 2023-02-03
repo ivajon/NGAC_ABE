@@ -88,6 +88,28 @@ def parse(text: List[str]):
     return policy
 
 
+def get_all_user_attributes(policy):
+    attributes = {}
+    pol = parse(policy)
+    users = list(pol["user"].keys())
+    # print(users)
+
+    for user in users:
+        attributes[user] = get_user_attributes(user, pol, True)
+    return attributes
+
+
+def get_all_object_attributes(policy):
+    attributes = {}
+    pol = parse(policy)
+    objects = list(pol["object"].keys())
+    # print(object)
+
+    for object in objects:
+        attributes[object] = get_objects_attributes(object, pol, True)
+    return attributes
+
+
 def get_user_attributes(user, policy, preparsed=False) -> List[str]:
     """
     Gets all of the attributes assigned to an user
@@ -156,6 +178,12 @@ def get_objects_attributes(object, policy, preparsed=False) -> List[str]:
     return attributes
 
 
+def get_assocs(parsed):
+    associations = parsed["associate"]
+    print(associations)
+    return associations
+
+
 def get_connection(user_id, object_id, access_mode, policy):  # access_mode r or w
     parsed = parse(policy)  # parse policy
     # Write a small function to get the attributes parsed["user_attributes"]["u1"]
@@ -171,23 +199,20 @@ def get_connection(user_id, object_id, access_mode, policy):  # access_mode r or
                 if oa in assoc[ua].keys():
                     if access_mode in assoc[ua][oa]:
                         return ua, oa
+
     return None
-
-
-def get_assocs(parsed):
-    associations = parsed["associate"]
-    return associations
 
 
 if __name__ == "__main__":
     text = ""
 
-    with open("./src/NGAC/policy1.pl", "r") as f:
+    with open("./src/NGAC/executables/EXAMPLES/policy1.pl", "r") as f:
         text = f.read()
 
     lines = text.split("\n")
     # print(dumps(parse(lines), indent=4))
     # print(get_user_attributes("u1", lines))
-    # (get_objects_attributes("o1", lines))
-    print(get_connection("u1", "o1", "w", lines))  # test policy1.pl
-    # print(get_connection("u3", "o3", "w", lines))   # test policy4.pl
+    # print(get_objects_attributes("o1", lines))
+    # print(get_connection("u1", "o1", "w", lines))
+    print(get_all_user_attributes(lines))
+    print(get_all_object_attributes(lines))
