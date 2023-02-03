@@ -14,6 +14,11 @@ import os
 import json
 
 
+# asdpojaspdokaspdok
+
+
+# aspdokaspodkasd
+
 from .endpoints import *
 from .info import *
 from .ngac_object import NgacObject as NgacType
@@ -366,7 +371,9 @@ class NGAC:
 
     def load_policy_from_str(
         self, pol: str
-    ) -> Result:  # This should be replaced a function that loads from some python policy representation
+    ) -> (
+        Result
+    ):  # This should be replaced a function that loads from some python policy representation
         """
         Loads a policy from a string representation
         """

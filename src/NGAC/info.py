@@ -135,7 +135,6 @@ def info(message_type: InfoTypes, message: str, channel: Channel = StdOut):
             file=sys.stdout,
         )
     elif channel.t() == StdErr:
-
         print(
             f"{message_type.get_start()}{name}:\n\t{message}{message_type.get_end()}",
             file=sys.stderr,
