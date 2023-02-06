@@ -1,7 +1,7 @@
+"""
+Defines the arguments used for the app
+"""
 import argparse
-from argparse import _ArgumentGroup
-import logging
-from typing import List
 import toml
 
 project = toml.load("pyproject.toml")
