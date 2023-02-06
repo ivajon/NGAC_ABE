@@ -1,12 +1,12 @@
 # Import external tools
 from logging.handlers import RotatingFileHandler
-from logging import basicConfig, Formatter, DEBUG
+from logging import Formatter, DEBUG
 from flask import Flask, request
 from json import loads
 from configparser import ConfigParser as CP
 import logging
-from typing import Tuple
-from require import fields, response
+from json import dumps
+from requests import post, Response
 # Import local tools
 from NgacApi.ngac import NGAC
 from result import Result, Ok, Error, unwrap, is_error
@@ -16,6 +16,7 @@ from NgacApi.user import User
 from NgacApi.resource import Resource
 from NgacApi.policy import Policy
 from result import to_error, Error
+from require import fields, response
 
 # Import local files
 from admin.admin import *
@@ -61,6 +62,16 @@ ngac = NGAC(token=admin_token, policy_server_url="http://130.240.200.92:8001")
 # ------------------------------
 
 
+# Setup ABE
+abe_url = cfg["ABE"]["url"]
+encrypt = "/encrypt_file"
+decrypt = "/decrypt_file"
+create_file = "/make_file"
+remove_file = "/delete_file"
+def abe(endpoint: str): return f"{abe_url}{endpoint}"
+# ------------------------------
+
+
 def error(value) -> Error:
     """
     Error
@@ -87,14 +98,20 @@ set_current_policy(policy_name)
 # ------------------------------
 
 
+def ok(response: Response) -> Result:
+    if response.status_code < 200 or response.status_code >= 300:
+        return Error(f"Server responded with {response.status_code}")
+
+    return Ok(response.text)
+
+
 def access(user_id, resource_id, access_mode) -> Result:
     """
-    Checks if a user has access to a resource
+    Checks if a user has access to a resource.
     """
     user = User([], id=user_id)
     resource = Resource([], id=resource_id)
     access_request: AccessRequest = (user, access_mode, resource)
-    print(access_request)
     ret = ngac.validate(access_request).match(
         ok=lambda x: Ok(x) if x else Error("Access denied"),
         error=lambda x: Error("NGAC server error"),
@@ -105,12 +122,21 @@ def access(user_id, resource_id, access_mode) -> Result:
 @app.route("/read", methods=["POST"])
 @fields(request)
 def read(user_id, resource_id):
+    """
+    Reads a file from the server if the user has access to it.
+    """
     def read_interal():
-        print("This should be replaced by a decrypt call")
-        return response("This is the file", code=200)
-    print(f"{user_id} is trying to read {resource_id}")
+        fields = dumps({
+            "user_id": user_id,
+            "attributes": "ua1",
+            "file_name": resource_id,
+        })
+        response = ok(post(abe(decrypt), data=fields))
+        return response.match(
+            ok=lambda x: (x, 200),
+            error=lambda x: ("Decryption Error", 400)
+        )
     res = access(user_id=user_id, resource_id=resource_id, access_mode="r")
-    print(res)
     return res.match(
         ok=lambda x: read_interal(),
         error=lambda x: (x, 403)
@@ -119,27 +145,52 @@ def read(user_id, resource_id):
 
 @app.route("/write", methods=["POST"])
 @fields(request)
-def write(user_id, resource_id, policy):
+def write(user_id, resource_id, policy, content):
+    """
+    Writes a file to the server if the user has access to it.
+    """
     logger.debug(f"{user_id} is trying to write to {resource_id}")
 
     result = access(user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(result):
         return response(result.value, code=403)
 
-    return "Time for ABE magic"
+    data = dumps(
+        {
+            "user_id": user_id,
+            "file_name": resource_id,
+            "policy": policy,
+            "content": content
+        }
+    )
+    return ok(post(abe(encrypt), data=data)).match(
+        ok=lambda x: ("Success", 200),
+        error=lambda x: (f"Error : {x}", 400)
+    )
 
 
 @app.route("/make_file", methods=["POST"])
 @fields(request)
 def make_file(user_id, resource_id, policy, object_attributes):
-    # Now parse the request data
+    """
+    Writes a file to the server if the user has access to that file.
+    """
     logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
     f = Resource(object_attributes, id=resource_id)
     status = ngac.add(f, current_policy)
-    ret = status.match(ok=lambda x: response("File was created"),
-                       error=lambda x: response(f"Could not create file: {x}", 400))
-    # Do some black magic to make the file on server
-    return ret
+    if is_error(status):
+        return "Could not create the file", 400
+
+    data = dumps({
+        "user_id": user_id,
+        "file_name": resource_id,
+    })
+
+    return ok(post(abe(create_file), data=data)).match(
+        ok=lambda _: "Created file successfully",
+        error=lambda x: (f"Error when creating file: {x}", 400)
+
+    )
 
 
 @app.route("/delete_file", methods=["POST"])
@@ -159,7 +210,6 @@ def delete_file(user_id, resource_id):
         [] if not "object_attributes" in data.keys() else data["object_attributes"],
         id=resource_id,
     )
-    u: User = User([], id=user_id)
     res: Result = access(
         user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(res):
@@ -167,8 +217,19 @@ def delete_file(user_id, resource_id):
 
     status = ngac.remove(f, target_policy=current_policy)
     # Now remove the file from the target storage
+
+    def remove_file_internal():
+        data = dumps({
+            "user_id": user_id,
+            "file_name": resource_id,
+        })
+        return ok(post(abe(remove_file), data=data)).match(
+            ok=lambda x: "file removed",
+            error=lambda x: (f"Error : {x}", 400)
+        )
+
     return status.match(
-        ok=lambda _: ("delete_file", 200), error=lambda x: (str(x), 403)
+        ok=lambda _: remove_file_internal(), error=lambda x: (str(x), 403)
     )
 
 

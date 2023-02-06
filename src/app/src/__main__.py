@@ -1,13 +1,14 @@
-from requests import post
-from logging import DEBUG, ERROR, getLogger, StreamHandler
-from __init__ import parser
-import json
 import sys
+from logging import DEBUG, ERROR, StreamHandler, getLogger
+from requests import post
+from __init__ import parser
 
 logger = getLogger(__name__)
-logger.addHandler(StreamHandler(
-    stream=sys.stdout
-))
+logger.addHandler(
+    StreamHandler(
+        stream=sys.stdout
+    )
+)
 # Error logger, log to file
 error_logger = getLogger("error")
 error_logger.addHandler(StreamHandler(
@@ -24,6 +25,12 @@ def url(path, args):
 
 
 def handle_read(args):
+    """
+    Handles reading data from the server
+    ---
+
+    Se documentation for [`NgacApi::validate`,`CryptographyService`,`INTERFACE_LAYER::READ`]
+    """
     logger.debug("Reading file: %s", args.file)
     response = post(
         url("/read", args),
@@ -41,6 +48,12 @@ def handle_read(args):
 
 
 def handle_write(args):
+    """
+    Handles writing data to the server
+    ---
+
+    Se documentation for [`NgacApi::validate`,`CryptographyService`,`INTERFACE_LAYER::WRITE`]
+    """
     logger.debug("Writing file: %s", args.file)
     # Assume file exists
     with open(args.input, "r") as f:
@@ -52,7 +65,7 @@ def handle_write(args):
             "resource_id": args.file,
             "object_attributes": ["oa1"],
             "policy": "A & !B",
-            "data": data,
+            "content": data,
         }
     )
     if response.status_code == 200:
@@ -69,8 +82,8 @@ def handle_delete(args):
     response = post(
         url("/delete_file", args),
         json={
-            "user_id": "u1",
-            "resource_id": "o1",
+            "user_id": args.username,
+            "resource_id": args.file,
             "object_attributes": ["oa1"],
             "policy": "A & !B",
         }
@@ -84,26 +97,141 @@ def handle_delete(args):
         exit(-1)
 
 
+def handle_create(args):
+    logger.debug("Deleting file: %s", args.file)
+    response = post(
+        url("/make_file", args),
+        json={
+            "user_id": args.username,
+            "resource_id": args.file,
+            "object_attributes": ["oa1"],
+            "policy": "A & !B",
+        }
+    )
+    if response.status_code == 200:
+        logger.debug("File created successfully.")
+        print(f"File created successfully: {args.file}")
+    else:
+        logger.error("Error while creating file: %s", response.text)
+        error_logger.error("Error while creating file: %s", response.text)
+        exit(-1)
+
+
+"""
+        Admin routes
+"""
+
+
+def handle_assign(args):
+
+    [path, json] = (
+        "/admin/user/assign",
+        {
+            "user_id": args.user,
+            "attribute": args.attribute
+        }
+    )if args.user else (
+        "/admin/object/assign",
+        {
+            "object_id": args.object,
+            "attribute": args.attribute
+        }
+    )
+    response = post(
+        url(path, args),
+        json=json,
+        headers={"token": args.token}
+    )
+
+    if response.status_code != 200:
+        error_logger.error("Error when assigning attribute")
+        logger.error(
+            "Error when assigning attribute")
+        exit(-1)
+    print("Attribute assigned successfully")
+
+
+def handle_remove_assign(args):
+    [path, json] = (
+        "/admin/user/unassign",
+        {
+            "user_id": args.user,
+            "attribute": args.attribute
+        }
+    )if args.user else (
+        "/admin/object/unassign",
+        {
+            "object_id": args.object,
+            "attribute": args.attribute
+        }
+    )
+    response = post(
+        url(path, args),
+        json=json,
+        headers={"token": args.token}
+    )
+
+    if response.status_code != 200:
+        error_logger.error("Error when removing attribute assignment")
+        logger.error(
+            "Error when removing attribute assignment")
+        exit(-1)
+    print("Remove attribute assignment successfully")
+
+
+def handle_readpol(args):
+    logger.debug("Reading policy from server")
+    response = post(
+        url("/admin/read_policy", args),
+        headers={
+            "token": args.token
+        }
+    )
+    if response.status_code != 200:
+        error_logger.error("Error while reading policy")
+        logger.error("Error while reading policy")
+        exit(-1)
+    print(response.text)
+
+
+def handle_loadi(args):
+    logger.debug("Loading new policy from file: %s", args.input_file)
+    with open(args.input_file, 'r') as f:
+        pol = f.read()
+    polname = args.input_file.split('.')[0].split("/")[-1]
+    response = post(
+        url("/admin/load_policy", args),
+        json={
+            "policy": pol,
+            "policy_name": polname
+        },
+        headers={
+            "token": args.token
+        }
+    )
+    if response.status_code == 200:
+        logger.debug("Loaded policy.")
+        print(f"Loaded policy successfully: {polname}")
+    else:
+        logger.error("Error while loading policy: %s", args.input_file)
+        error_logger.error("Error while loading policy: %s", args.input_file)
+        exit(-1)
+
+
+def handle_admin(args):
+    logger.debug("Admin request to %s", args.admin_command)
+    cmd = args.admin_command
+    eval(f"handle_{cmd}(args)")
+    exit(0)
+
+
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.debug:
         logger.setLevel(DEBUG)
-
-    # Get the value of the subcommand
-    read = parser.parse_args(["read"])
-    write = parser.parse_args(["write"])
-    delete = parser.parse_args(["delete"])
-
-    if args.command == "read":
-        logger.debug("Read command")
-        logger.debug("Reading file: %s", args.file)
-        handle_read(args)
-        exit()
-    elif args.command == "write":
-        logger.debug("Write command")
-        handle_write(args)
-        exit()
-    elif args.command == "delete":
-        logger.debug("Delete command")
-        handle_delete(args)
-        exit()
+    # This is bad practice but we know that all of the
+    # Function names are defined, and if they are not
+    # we will get an error that the function called
+    # does not exist which is fine.
+    eval(f"handle_{args.command}(args)")
+    exit(0)

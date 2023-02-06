@@ -32,7 +32,7 @@ def make_resource(object_id, attribute):
     )
 
 
-@resource.route("assign", methods=["POST"])
+@resource.route("/assign", methods=["POST"])
 @fields(request)
 def object_assign(object_id, attribute):
     """
@@ -50,7 +50,7 @@ def object_assign(object_id, attribute):
     )
 
 
-@resource.route("unassign", methods=["POST"])
+@resource.route("/unassign", methods=["POST"])
 @fields(request)
 def object_unassign(object_id, attribute):
     """

@@ -35,19 +35,21 @@ def load_policy(policy, policy_name):
     Loads a policy from plaintext submitted by the admin
     ---
     """
-    if "token" not in request.headers.keys():
-        return "No admin token provided"
+    if "Token" not in request.headers.keys():
+        return "No admin token provided",404
     global url
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
 
-    if ngac.load_policy_from_str(policy).is_err():
+    if is_error(ngac.load_policy_from_str(policy)):
         return response("Invalid policy", code=400)
 
     def save_policy():
         global current_policy
         current_policy = policy_name
-        return Ok("Policy loaded")
-    return ngac.change_policy(Policy(name=policy_name)).match(
+        return "Policy loaded",200
+
+    ret = ngac.change_policy(Policy(name=policy_name))
+    return ret.match(
         lambda x: save_policy(),
         lambda x: response(f"Error {x.value}", code=400)
     )

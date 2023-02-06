@@ -39,7 +39,7 @@ def make_user(user_id, attribute):
     )
 
 
-@user.route("assign", methods=["POST"])
+@user.route("/assign", methods=["POST"])
 @fields(request)
 def assign(user_id, attribute):
     """
@@ -57,7 +57,7 @@ def assign(user_id, attribute):
     )
 
 
-@user.route("unassign", methods=["POST"])
+@user.route("/unassign", methods=["POST"])
 @fields(request)
 def unassign(user_id, attribute):
     """
