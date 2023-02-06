@@ -38,8 +38,6 @@ class User(NgacObject, PolicyElement):
         else:
             self.id = id
 
-        # self.attributes = attributes
-
     def pol_el_repr(self) -> str:
         """
         Returns the representation as a list of policy elements.
