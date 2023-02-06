@@ -25,8 +25,18 @@ class User(NgacObject, PolicyElement):
         Creates a new user.
         ---
         """
-        self.id = id
-        self.attributes = attributes
+
+        if attributes is None:
+            self.attributes = []
+        else:
+            self.attributes = attributes
+
+        if (type(id) == list and len(id) == 1) or type(id) not in [str, list]:
+            raise TypeError
+        elif type(id) == list:
+            self.id = id[0]
+        else:
+            self.id = id
 
     def pol_el_repr(self) -> str:
         """
