@@ -1,0 +1,1 @@
+python src -u u1  write --file o1 -i pyproject.toml
