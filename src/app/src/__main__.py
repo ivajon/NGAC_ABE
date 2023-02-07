@@ -205,7 +205,7 @@ def handle_remove_assign(args):
         json=json,
         headers={"token": args.token}
     )
-
+    print(response.text)
     if response.status_code != 200:
         error_logger.error("Error when removing attribute assignment")
         logger.error(

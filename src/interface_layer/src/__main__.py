@@ -22,7 +22,7 @@ from NgacApi.attribute import ObjectAttribute
 
 # Import local files
 from admin.admin import *
-from admin import set_current_policy
+from admin import set_current_policy, get_policy
 
 
 # Set up logging
@@ -95,7 +95,6 @@ logger.debug(f"Loading {current_policy.name}...")
 unwrap(ngac.change_policy(current_policy))
 logger.debug(f"Loaded the policy")
 pol = Policy(name=policy_name)
-print(ngac.read(pol))
 set_current_policy(policy_name)
 # ------------------------------
 
@@ -129,7 +128,7 @@ def read(user_id, resource_id):
     """
     def read_interal():
 
-        result = ngac.read(Policy(name=current_policy))
+        result = ngac.read(Policy(name=get_policy()))
         if is_error(result):
             return "There is no access policy loaded", 400
         pol = unwrap(result).split("\n")
@@ -164,7 +163,7 @@ def write(user_id, resource_id, content):
     result = access(user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(result):
         return response(result.value, code=403)
-    pol = ngac.read(current_policy)
+    pol = ngac.read(Policy(name=get_policy()))
     if is_error(pol):
         return "Error when reading the policy from server", 400
     pol = unwrap(pol).split("\n")
@@ -196,7 +195,7 @@ def write(user_id, resource_id, content):
 def make_file(user_id, resource_id, policy, object_attributes):
     logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
     f = Resource(object_attributes, id=resource_id)
-    status = ngac.add(f, current_policy)
+    status = ngac.add(f, get_policy())
     if is_error(status):
         logger.error(
             "User tried to create a file that it does not have access to")
@@ -227,7 +226,7 @@ def delete_file(user_id, resource_id):
     """
     logger.debug(f"{user_id} is trying to delete a file with id {resource_id}")
 
-    result = ngac.read(Policy(name=current_policy))
+    result = ngac.read(Policy(name=get_policy()))
     if is_error(result):
         return "There is no access policy loaded", 400
     pol = unwrap(result).split("\n")
@@ -245,7 +244,7 @@ def delete_file(user_id, resource_id):
     if is_error(res):
         return response(res.value, code=403)
 
-    status = ngac.remove(f, target_policy=current_policy)
+    status = ngac.remove(f, target_policy=get_policy())
     # Now remove the file from the target storage
 
     def remove_file_internal():
@@ -267,4 +266,4 @@ if __name__ == "__main__":
 
     logger.info("Starting server")
     app.run()
-    logger.info("Server started")
+    logger.info("Server stopped")

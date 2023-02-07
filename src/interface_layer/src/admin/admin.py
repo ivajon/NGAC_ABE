@@ -10,7 +10,7 @@ from NgacApi.ngac import NGAC
 from NgacApi.policy import Policy
 from .user import user
 from .object import resource
-from . import url,current_policy
+from . import url, set_current_policy, get_policy
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
 admin.register_blueprint(user)
@@ -26,15 +26,13 @@ def load_policy(policy, policy_name):
     """
     if "Token" not in request.headers.keys():
         return "No admin token provided", 404
-    global url
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
 
     if is_error(ngac.load_policy_from_str(policy)):
         return response("Invalid policy", code=400)
 
     def save_policy():
-        global current_policy
-        current_policy = policy_name
+        set_current_policy(policy_name)
         return "Policy loaded", 200
 
     ret = ngac.change_policy(Policy(name=policy_name))
@@ -46,9 +44,8 @@ def load_policy(policy, policy_name):
 
 @admin.route("/read_policy", methods=["POST"])
 def read_policy():
-    global url, current_policy
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
-    pol = Policy(name=current_policy)
+    pol = Policy(name=get_policy())
     ret = ngac.read(policy=pol)
     return ret.match(
         ok=lambda x: (x, 200),

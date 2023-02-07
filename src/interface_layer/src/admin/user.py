@@ -11,7 +11,7 @@ from NgacApi.ngac import NGAC
 from NgacApi.user import User
 from NgacApi.parser import parse
 from NgacApi.policy import Policy
-from . import url, current_policy
+from . import url, get_policy
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -23,7 +23,6 @@ def make_user(user_id, attribute):
     Creates a new user
     ---
     """
-    global url
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
     user = User([UserAttribute(attribute)], id=user_id)
     return ngac.add_user(user).match(
@@ -35,10 +34,8 @@ def make_user(user_id, attribute):
 @user.route("/attributes", methods=["post"])
 @fields(request)
 def attributes(user_id):
-    global url
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
-    global current_policy
-    pol = ngac.read(Policy(name=current_policy))
+    pol = ngac.read(Policy(name=get_policy()))
     if is_error(pol):
         return "Could not read policy from server", 400
     pol = unwrap(pol).split("\n")
@@ -56,12 +53,10 @@ def assign(user_id, attribute):
     Assign attributes to users and resources
     ---
     """
-    global url
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
     attr = UserAttribute(attribute)
     user = User([attr], id=user_id)
-    global current_policy
-    return ngac.assign(user, attr, target_policy=current_policy).match(
+    return ngac.assign(user, attr, target_policy=get_policy()).match(
         lambda x: "Attribute assigned",
         lambda x: (f"Error {x.value}", 400)
     )
@@ -78,10 +73,10 @@ def unassign(user_id, attribute):
     ngac = NGAC(token=request.headers["token"], policy_server_url=url)
     attr = UserAttribute(attribute)
     user = User([attr], id=user_id)
-    global current_policy
-
-    status = ngac.remove_assignment(user, attr, target_policy=current_policy)
+    status = ngac.remove_assignment(user, attr, target_policy=get_policy())
+    print(attr, user)
+    print(get_policy())
     return status.match(
         ok=lambda x: "Attribute unassigned",
-        error=lambda x: ("Error", 400)
+        error=lambda x: ("Could not remove assignment", 400)
     )
