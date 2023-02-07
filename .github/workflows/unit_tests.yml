@@ -27,12 +27,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cd src/NgacApi/executables
-          echo "Ensuring that log folder exists"
-          mkdir -p LOG
-          bash better_start_ngac.sh
-          cd .. 
-          sleep 5
-          echo "Run the tests"
           # Running the tests
+          cd src/NgacApi/NgacApi
           pytest test.py
