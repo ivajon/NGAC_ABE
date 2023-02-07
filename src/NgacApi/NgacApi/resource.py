@@ -32,8 +32,10 @@ class Resource(NgacObject, PolicyElement):
     def pol_el_repr(self) -> str:
         base_str = ""
         for attr in self.attributes:
-            base_str += f"assign({self.id},{attr.get_attribute() if isinstance(attr, ObjectAttribute) else attr});"
-        return f"""[object({self.id}),{base_str[:-1]}]"""
+            base_str += f"assign({self.id},{attr.get_attribute() if isinstance(attr, ObjectAttribute) else attr}),"
+        ret = f"""[object({self.id}),{base_str[:-1]}]"""
+        print(ret)
+        return ret
 
     def get_resource(self) -> str:
         """

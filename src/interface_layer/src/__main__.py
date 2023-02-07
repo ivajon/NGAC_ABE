@@ -172,13 +172,13 @@ def write(user_id, resource_id, policy, content):
 @app.route("/make_file", methods=["POST"])
 @fields(request)
 def make_file(user_id, resource_id, policy, object_attributes):
-    """
-    Writes a file to the server if the user has access to that file.
-    """
     logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
     f = Resource(object_attributes, id=resource_id)
     status = ngac.add(f, current_policy)
     if is_error(status):
+        logger.error(
+            "User tried to create a file that it does not have access to")
+        print(status.value)
         return "Could not create the file", 400
 
     data = dumps({

@@ -77,6 +77,12 @@ def handle_write(args):
         exit(-1)
 
 
+def listify(attr):
+    if not isinstance(attr, list):
+        attr = [attr]
+    return attr
+
+
 def handle_delete(args):
     logger.debug("Deleting file: %s", args.file)
     response = post(
@@ -104,7 +110,7 @@ def handle_create(args):
         json={
             "user_id": args.username,
             "resource_id": args.file,
-            "object_attributes": ["oa1"],
+            "object_attributes": listify(args.object_attributes),
             "policy": "A & !B",
         }
     )
