@@ -78,7 +78,7 @@ def handle_write(args):
 
 
 def listify(attr):
-    if isinstance(attr,str):
+    if isinstance(attr, str):
         attr = attr.split(",")
     if not isinstance(attr, list):
         attr = [attr]
@@ -128,6 +128,33 @@ def handle_create(args):
 """
         Admin routes
 """
+
+
+def handle_info(args):
+    [path, json] = (
+        "/admin/user/attributes",
+        {
+            "user_id": args.user,
+        }
+    )if args.user else (
+        "/admin/resource/attributes",
+        {
+            "object_id": args.object,
+        }
+    )
+
+    response = post(
+        url(path, args),
+        json=json,
+        headers={"token": args.token}
+    )
+
+    if response.status_code != 200:
+        error_logger.error("That user or object could not be found")
+        logger.error(
+            "That user or object could not be found")
+        exit(-1)
+    print(response.text)
 
 
 def handle_assign(args):

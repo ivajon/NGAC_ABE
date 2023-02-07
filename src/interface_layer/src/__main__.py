@@ -15,15 +15,14 @@ from NgacApi.access_request import AccessRequest
 from NgacApi.user import User
 from NgacApi.resource import Resource
 from NgacApi.policy import Policy
-from NgacApi.parser import parse, get_user_attributes, get_objects_attributes
+from NgacApi.parser import parse, get_user_attributes, get_objects_attributes, get_connection
 from result import to_error, Error
 from require import fields, response
 from NgacApi.attribute import ObjectAttribute
 
 # Import local files
 from admin.admin import *
-from admin.admin import set_current_policy
-from admin.admin import current_policy as ngac_pol
+from admin import set_current_policy
 
 
 # Set up logging
@@ -134,10 +133,7 @@ def read(user_id, resource_id):
         if is_error(result):
             return "There is no access policy loaded", 400
         pol = unwrap(result).split("\n")
-        print(pol)
         attributes = get_user_attributes(user_id, pol)
-        print(pol)
-        print(attributes)
         if not attributes:
             attributes = []
         fields = dumps({
@@ -159,7 +155,7 @@ def read(user_id, resource_id):
 
 @app.route("/write", methods=["POST"])
 @fields(request)
-def write(user_id, resource_id, policy, content):
+def write(user_id, resource_id, content):
     """
     Writes a file to the server if the user has access to it.
     """
@@ -168,6 +164,18 @@ def write(user_id, resource_id, policy, content):
     result = access(user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(result):
         return response(result.value, code=403)
+    pol = ngac.read(current_policy)
+    if is_error(pol):
+        return "Error when reading the policy from server", 400
+    pol = unwrap(pol).split("\n")
+
+    conn: tuple[str, str] = get_connection(user_id, resource_id, "w", pol)
+
+    # We know that there is some connection since the user
+    # has access to that resource
+    policy = conn[0]
+    logger.debug(
+        f"Found shortest access policy of {policy} since there exists a write association {conn}")
 
     data = dumps(
         {

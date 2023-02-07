@@ -9,16 +9,9 @@ from require import fields, response
 from NgacApi.attribute import UserAttribute
 from NgacApi.ngac import NGAC
 from NgacApi.user import User
-from configparser import ConfigParser
-from . import url
-
-current_policy = None
-
-
-def set_current_policy(policy):
-    global current_policy
-    current_policy = policy
-
+from NgacApi.parser import parse
+from NgacApi.policy import Policy
+from . import url, current_policy
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -37,6 +30,23 @@ def make_user(user_id, attribute):
         lambda x: response("User created"),
         lambda x: response(f"Error {x.value}", code=400)
     )
+
+
+@user.route("/attributes", methods=["post"])
+@fields(request)
+def attributes(user_id):
+    global url
+    ngac = NGAC(token=request.headers["token"], policy_server_url=url)
+    global current_policy
+    pol = ngac.read(Policy(name=current_policy))
+    if is_error(pol):
+        return "Could not read policy from server", 400
+    pol = unwrap(pol).split("\n")
+    ret = parse(pol)
+    ret = ret["user"][user_id]
+    if ret:
+        return str(ret)
+    return "No such user", 400
 
 
 @user.route("/assign", methods=["POST"])

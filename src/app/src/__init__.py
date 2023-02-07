@@ -14,11 +14,13 @@ parser = argparse.ArgumentParser(
     epilog="This is a command line interface for attribute based access control and encryption. It is a part of the NGAC-ABE project.",
     add_help=True
 )
+
 parser.add_argument(
     "-v", "--version",
     action="version",
     version=f"%(prog)s {__version__}"
 )
+
 parser.add_argument(
     "-d", "--debug",
     action="store_true",
@@ -49,14 +51,10 @@ parser.add_argument(
     type=int, default=None,
     metavar="NGAC_SERVER_PORT",
 )
+
 parser.add_argument(
     "-u", "--username",
     type=str,
-)
-parser.add_argument(
-    "-a", "--attributes",
-    type=str,
-    metavar="ATTRIBUTES",
 )
 
 # _________ COMMANDS _________
@@ -161,6 +159,7 @@ admin_parser.add_argument(
     loadi,
     assign,
     remove_assign,
+    info
 ] = [
     admin_sub.add_parser(
         x[0],
@@ -169,7 +168,8 @@ admin_parser.add_argument(
         ("readpol", "Reads the currently loaded policy from the NGAC server"),
         ("loadi", "Loads a policy from string"),
         ("assign", "Assign attribute to a user or object"),
-        ("remove_assign", "Remove attribute assignment from user or object")
+        ("remove_assign", "Remove attribute assignment from user or object"),
+        ("info", "Gets the users or objects attributes")
     ]
 ]
 
@@ -183,44 +183,48 @@ loadi.add_argument(
 
 ###########################
 
+
+def user_object(grp):
+    grp.add_argument(
+        "-u", "--user",
+        metavar="target_user"
+    )
+    grp.add_argument(
+        "-o", "--object",
+        metavar="target_object"
+    )
+
+
+def attr(parser):
+    parser.add_argument(
+        "-a", "--attribute",
+        type=str,
+        metavar="attribute", required=True
+    )
+
 # _________ assign ________
 
-assign.add_argument(
-    "-a", "--attribute",
-    type=str,
-    metavar="attribute", required=True
-)
+
+attr(assign)
 
 assign_grp = assign.add_mutually_exclusive_group(required=True)
-assign_grp.add_argument(
-    "-u", "--user",
-    metavar="target_user"
-)
-assign_grp.add_argument(
-    "-o", "--object",
-    metavar="target_object"
-)
-
+user_object(assign_grp)
 
 ###########################
 
 # ________ unassign _______
 
-remove_assign.add_argument(
-    "-a", "--attribute",
-    type=str,
-    metavar="attribute", required=True
-)
+
+attr(remove_assign)
 
 remove_assign_grp = remove_assign.add_mutually_exclusive_group(required=True)
-remove_assign_grp.add_argument(
-    "-u", "--user",
-    metavar="target_user"
-)
-remove_assign_grp.add_argument(
-    "-o", "--object",
-    metavar="target_object"
-)
+user_object(remove_assign_grp)
 
+###########################
+
+# _________ info __________
+
+info = info.add_mutually_exclusive_group(required=True)
+user_object(info)
 
 ###########################

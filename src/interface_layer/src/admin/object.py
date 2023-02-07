@@ -5,12 +5,13 @@ don't handle authentication yet.
 from flask import Blueprint, request
 
 from result import *
-from require import fields, response
+from require import fields
 from NgacApi.attribute import ObjectAttribute
 from NgacApi.ngac import NGAC
 from NgacApi.resource import Resource
-from configparser import ConfigParser
-from . import url
+from NgacApi.parser import parse
+from NgacApi.policy import Policy
+from . import url, current_policy
 
 
 resource = Blueprint("resource", __name__, url_prefix="/resource")
@@ -30,6 +31,23 @@ def make_resource(object_id, attribute):
         lambda x: ("Resource created"),
         lambda x: (f"Error {x.value}", 400)
     )
+
+
+@resource.route("/attributes", methods=["post"])
+@fields(request)
+def attributes(object_id):
+    global url, current_policy
+    ngac = NGAC(token=request.headers["token"], policy_server_url=url)
+    global current_policy
+    pol = ngac.read(Policy(name=current_policy))
+    if is_error(pol):
+        return "Could not read policy from server", 400
+    pol = unwrap(pol).split("\n")
+    ret = parse(pol)
+    ret = ret["object"][object_id]
+    if ret:
+        return str(ret)
+    return "No such object", 400
 
 
 @resource.route("/assign", methods=["POST"])

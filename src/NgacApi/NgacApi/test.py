@@ -8,8 +8,6 @@ Most of the tests are based on the examples provided in the tog NGAC repository.
 
 The unwrap function is used to throw an error if the result is an error, replacing the need for a lot of asserts.
 """
-
-import os
 from result import unwrap
 
 from .ngac import NGAC
