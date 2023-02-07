@@ -16,13 +16,14 @@ from .ngac import NGAC
 from .policy import Policy
 from .user import User
 from .resource import Resource
+policy_server_url = "http://130.240.200.92:8001"
 
 
 def test_combine_policies():
     """
     Test the combine policies method
     """
-    ngac = NGAC(token="admin_token")
+    ngac = NGAC(token="admin_token", policy_server_url=policy_server_url)
 
     # Load the policies
     policyA = Policy(
@@ -43,7 +44,7 @@ def test_load_immidiate():
     """
     Tests the loadi system
     """
-    ngac = NGAC(token="admin_token")
+    ngac = NGAC(token="admin_token", policy_server_url=policy_server_url)
     pol = """policy(ipolicy,access,[
 	user(u1),
 	user_attribute(ua1),
@@ -67,7 +68,7 @@ def test_add_remove_user():
     """
     Tests adding and removing a user
     """
-    ngac = NGAC(token="admin_token")
+    ngac = NGAC(token="admin_token", policy_server_url=policy_server_url)
     user = User(id="u123", attributes=["ua12"])
     pol = """policy(cpolicy,access,[
 	user(u1),
@@ -97,7 +98,7 @@ def test_set_context():
     """
     # There is some error in the setup of the epp server, we get Ok from server but
     # the context is not set
-    ngac = NGAC(token="admin_token")
+    ngac = NGAC(token="admin_token", policy_server_url=policy_server_url)
     pol = """policy(cpolicy,access,[
 	user(u1),
 	user_attribute(ua1),
@@ -146,7 +147,7 @@ def test_set_get_policy():
     Test the ability to set and get policies
     """
 
-    ngac = NGAC(token="admin_token")
+    ngac = NGAC(token="admin_token", policy_server_url=policy_server_url)
 
     unwrap(ngac.change_policy(Policy(name="Policy (b)")))
     assert unwrap(ngac.get_policy()).split("\n")[0] == "Policy (b)"
