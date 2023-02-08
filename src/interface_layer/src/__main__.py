@@ -122,7 +122,7 @@ def access(user_id, resource_id, access_mode) -> Result:
 
 @app.route("/read", methods=["POST"])
 @fields(request)
-def read(user_id, resource_id):
+def read(user_id:str, resource_id:str):
     """
     Reads a file from the server if the user has access to it.
     """
@@ -154,7 +154,7 @@ def read(user_id, resource_id):
 
 @app.route("/write", methods=["POST"])
 @fields(request)
-def write(user_id, resource_id, content):
+def write(user_id:str, resource_id:str, content:str):
     """
     Writes a file to the server if the user has access to it.
     """
@@ -192,7 +192,7 @@ def write(user_id, resource_id, content):
 
 @app.route("/make_file", methods=["POST"])
 @fields(request)
-def make_file(user_id, resource_id, policy, object_attributes):
+def make_file(user_id:str, resource_id:str, object_attributes:list[str]):
     logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
     f = Resource(object_attributes, id=resource_id)
     status = ngac.add(f, get_policy())
@@ -216,7 +216,7 @@ def make_file(user_id, resource_id, policy, object_attributes):
 
 @app.route("/delete_file", methods=["POST"])
 @fields(request)
-def delete_file(user_id, resource_id):
+def delete_file(user_id:str, resource_id:str):
     """
     Removes a file from the server
     ---
