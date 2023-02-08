@@ -172,7 +172,7 @@ def write(user_id:str, resource_id:str, content:str):
 
     # We know that there is some connection since the user
     # has access to that resource
-    policy = conn[0]
+    policy = f'("{conn[0]}")'
     logger.debug(
         f"Found shortest access policy of {policy} since there exists a write association {conn}")
 
