@@ -1,0 +1,5 @@
+[project]
+name = "API"
+version = "0.0.1"
+authors = [{ name = "Ivar Jönsson", email = "ivajns-9@student.ltu.se" }]
+description = "API construction helper"

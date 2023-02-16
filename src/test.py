@@ -1,19 +1,21 @@
 """
     Here we can test the entire application.
 """
+policy_server_url = "http://130.240.200.92:8001"
 # from NGAC.test_ngac import *
 
 
 def test_ngac_servers():
-    from NGAC.ngac import NGAC
-    from NGAC.result import unwrap
-    from NGAC.policy import Policy
-    from NGAC.user import User
+    from NgacApi.ngac import NGAC
+    from result import unwrap
+    from NgacApi.policy import Policy
+    from NgacApi.user import User
 
-    ngac = NGAC(token="admin_token")
+    ngac = NGAC(token="admin_token", policy_server_url=policy_server_url)
 
     # Load a test policy
-    pol = Policy(name="Signals Access Policy", path="EXAMPLES/policy_signals_access.pl")
+    pol = Policy(name="Signals Access Policy",
+                 path="EXAMPLES/policy_signals_access.pl")
     print(ngac.load_policy(pol))
 
     # Swap to the policy

@@ -57,8 +57,7 @@ def endpoint(name, endpoint, derived_from):
         name,
         (derived_from,),
         {
-            "__repr__": lambda self: str(derived_from()) + endpoint,
-            "__str__": lambda self: self.__repr__(),
+            "__str__": lambda _self: str(derived_from()) + endpoint,
             "name": name,
         },
     )
