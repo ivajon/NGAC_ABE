@@ -1,0 +1,32 @@
+on: [push]
+name: Unit Tests
+jobs:
+  test_ngac_standalone:
+    name: Test servers by calling them from bash
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SWI Prolog
+        run: sudo apt-get install swi-prolog
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.10.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+          pip install pytest
+          pip install pytest-cov
+          cd src/API
+          pip install .
+          cd ../NgacApi
+          pip install .
+          cd ../..
+          pip install git+https://github.com/ivario123/pyresult
+
+      - name: Run tests
+        run: |
+          # Running the tests
+          cd src/NgacApi/NgacApi
+          pytest test.py

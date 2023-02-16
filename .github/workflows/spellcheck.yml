@@ -1,6 +1,6 @@
 # Thanks to the Code Spell Checker team for the example workflow
 name: SpellCheck
-on: [push, pull_request]
+on: [push]
 jobs:
   SpellCheck:
     name: Check for spelling errors
@@ -10,3 +10,4 @@ jobs:
       - uses: codespell-project/actions-codespell@master
         with:
           check_filenames: true
+          skip: "*.svg,*git,*result*,*yml"
