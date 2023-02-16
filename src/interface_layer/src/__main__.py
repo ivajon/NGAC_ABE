@@ -8,17 +8,11 @@ import logging
 from json import dumps
 from requests import post, Response
 # Import local tools
-from NgacApi.ngac import NGAC
+from NgacApi import NGAC, AccessRequest, User, Resource, Policy, ObjectAttribute
 from result import Result, Ok, Error, unwrap, is_error
-from NgacApi import *
-from NgacApi.access_request import AccessRequest
-from NgacApi.user import User
-from NgacApi.resource import Resource
-from NgacApi.policy import Policy
-from NgacApi.parser import parse, get_user_attributes, get_objects_attributes, get_connection
+from NgacApi.parser import get_user_attributes, get_objects_attributes, get_connection
 from result import to_error, Error
 from require import fields, response
-from NgacApi.attribute import ObjectAttribute
 
 # Import local files
 from admin.admin import *
@@ -65,12 +59,12 @@ ngac = NGAC(token=admin_token, policy_server_url="http://130.240.200.92:8001")
 
 
 # Setup ABE
-abe_url = cfg["ABE"]["url"]
-encrypt = "/encrypt_file"
-decrypt = "/decrypt_file"
-create_file = "/make_file"
-remove_file = "/delete_file"
-def abe(endpoint: str): return f"{abe_url}{endpoint}"
+ABE_URL = cfg["ABE"]["url"]
+ENCRYPT = "/encrypt_file"
+DECRYPT = "/decrypt_file"
+CREATE_FILE = "/make_file"
+REMOVE_FILE = "/delete_file"
+def abe(endpoint: str): return f"{ABE_URL}{endpoint}"
 # ------------------------------
 
 
@@ -122,7 +116,7 @@ def access(user_id, resource_id, access_mode) -> Result:
 
 @app.route("/read", methods=["POST"])
 @fields(request)
-def read(user_id:str, resource_id:str):
+def read(user_id: str, resource_id: str):
     """
     Reads a file from the server if the user has access to it.
     """
@@ -140,7 +134,7 @@ def read(user_id:str, resource_id:str):
             "attributes": attributes,
             "file_name": resource_id,
         })
-        response = ok(post(abe(decrypt), data=fields))
+        response = ok(post(abe(DECRYPT), data=fields))
         return response.match(
             ok=lambda x: (x, 200),
             error=lambda x: ("Decryption Error", 400)
@@ -154,7 +148,7 @@ def read(user_id:str, resource_id:str):
 
 @app.route("/write", methods=["POST"])
 @fields(request)
-def write(user_id:str, resource_id:str, content:str):
+def write(user_id: str, resource_id: str, content: str):
     """
     Writes a file to the server if the user has access to it.
     """
@@ -184,7 +178,7 @@ def write(user_id:str, resource_id:str, content:str):
             "content": content
         }
     )
-    return ok(post(abe(encrypt), data=data)).match(
+    return ok(post(abe(ENCRYPT), data=data)).match(
         ok=lambda x: ("Success", 200),
         error=lambda x: (f"Error : {x}", 400)
     )
@@ -192,7 +186,7 @@ def write(user_id:str, resource_id:str, content:str):
 
 @app.route("/make_file", methods=["POST"])
 @fields(request)
-def make_file(user_id:str, resource_id:str, object_attributes:list[str]):
+def make_file(user_id: str, resource_id: str, object_attributes: list[str]):
     logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
     f = Resource(object_attributes, id=resource_id)
     status = ngac.add(f, get_policy())
@@ -207,7 +201,7 @@ def make_file(user_id:str, resource_id:str, object_attributes:list[str]):
         "file_name": resource_id,
     })
 
-    return ok(post(abe(create_file), data=data)).match(
+    return ok(post(abe(CREATE_FILE), data=data)).match(
         ok=lambda _: "Created file successfully",
         error=lambda x: (f"Error when creating file: {x}", 400)
 
@@ -216,7 +210,7 @@ def make_file(user_id:str, resource_id:str, object_attributes:list[str]):
 
 @app.route("/delete_file", methods=["POST"])
 @fields(request)
-def delete_file(user_id:str, resource_id:str):
+def delete_file(user_id: str, resource_id: str):
     """
     Removes a file from the server
     ---
@@ -252,7 +246,7 @@ def delete_file(user_id:str, resource_id:str):
             "user_id": user_id,
             "file_name": resource_id,
         })
-        return ok(post(abe(remove_file), data=data)).match(
+        return ok(post(abe(REMOVE_FILE), data=data)).match(
             ok=lambda x: "file removed",
             error=lambda x: (f"Error : {x}", 400)
         )

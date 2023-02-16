@@ -6,11 +6,8 @@ from flask import Blueprint, request
 
 from result import *
 from require import fields
-from NgacApi.attribute import ObjectAttribute
-from NgacApi.ngac import NGAC
-from NgacApi.resource import Resource
+from NgacApi import ObjectAttribute, NGAC, Resource, Policy
 from NgacApi.parser import parse
-from NgacApi.policy import Policy
 from . import url, get_policy
 
 

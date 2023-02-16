@@ -6,8 +6,7 @@ from flask import Blueprint, request
 
 from result import *
 from require import fields, response
-from NgacApi.ngac import NGAC
-from NgacApi.policy import Policy
+from NgacApi import NGAC, Policy
 from .user import user
 from .object import resource
 from . import url, set_current_policy, get_policy

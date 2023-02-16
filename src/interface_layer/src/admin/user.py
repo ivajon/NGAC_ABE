@@ -6,11 +6,8 @@ from flask import Blueprint, request
 
 from result import *
 from require import fields, response
-from NgacApi.attribute import UserAttribute
-from NgacApi.ngac import NGAC
-from NgacApi.user import User
+from NgacApi import UserAttribute, NGAC, User, Policy
 from NgacApi.parser import parse
-from NgacApi.policy import Policy
 from . import url, get_policy
 
 user = Blueprint("user", __name__, url_prefix="/user")
