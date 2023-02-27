@@ -7,6 +7,7 @@ from configparser import ConfigParser as CP
 import logging
 from json import dumps
 from requests import post, Response
+
 # Import local tools
 from NgacApi import NGAC, AccessRequest, User, Resource, Policy, ObjectAttribute
 from result import Result, Ok, Error, unwrap, is_error
@@ -64,7 +65,12 @@ ENCRYPT = "/encrypt_file"
 DECRYPT = "/decrypt_file"
 CREATE_FILE = "/make_file"
 REMOVE_FILE = "/delete_file"
-def abe(endpoint: str): return f"{ABE_URL}{endpoint}"
+
+
+def abe(endpoint: str):
+    return f"{ABE_URL}{endpoint}"
+
+
 # ------------------------------
 
 
@@ -120,6 +126,7 @@ def read(user_id: str, resource_id: str):
     """
     Reads a file from the server if the user has access to it.
     """
+
     def read_interal():
 
         result = ngac.read(Policy(name=get_policy()))
@@ -129,21 +136,20 @@ def read(user_id: str, resource_id: str):
         attributes = get_user_attributes(user_id, pol)
         if not attributes:
             attributes = []
-        fields = dumps({
-            "user_id": user_id,
-            "attributes": attributes,
-            "file_name": resource_id,
-        })
+        fields = dumps(
+            {
+                "user_id": user_id,
+                "attributes": attributes,
+                "file_name": resource_id,
+            }
+        )
         response = ok(post(abe(DECRYPT), data=fields))
         return response.match(
-            ok=lambda x: (x, 200),
-            error=lambda x: ("Decryption Error", 400)
+            ok=lambda x: (x, 200), error=lambda x: ("Decryption Error", 400)
         )
+
     res = access(user_id=user_id, resource_id=resource_id, access_mode="r")
-    return res.match(
-        ok=lambda x: read_interal(),
-        error=lambda x: (x, 403)
-    )
+    return res.match(ok=lambda x: read_interal(), error=lambda x: (x, 403))
 
 
 @app.route("/write", methods=["POST"])
@@ -163,48 +169,46 @@ def write(user_id: str, resource_id: str, content: str):
     pol = unwrap(pol).split("\n")
 
     conn: tuple[str, str] = get_connection(user_id, resource_id, "w", pol)
-
     # We know that there is some connection since the user
     # has access to that resource
     policy = f'("{conn[0]}")'
     logger.debug(
-        f"Found shortest access policy of {policy} since there exists a write association {conn}")
+        f"Found shortest access policy of {policy} since there exists a write association {conn}"
+    )
 
     data = dumps(
         {
             "user_id": user_id,
             "file_name": resource_id,
             "policy": policy,
-            "content": content
+            "content": content,
         }
     )
     return ok(post(abe(ENCRYPT), data=data)).match(
-        ok=lambda x: ("Success", 200),
-        error=lambda x: (f"Error : {x}", 400)
+        ok=lambda x: ("Success", 200), error=lambda x: (f"Error : {x}", 400)
     )
 
 
 @app.route("/make_file", methods=["POST"])
 @fields(request)
-def make_file(user_id: str, resource_id: str, object_attributes: list[str]):
+def make_file(user_id: str, resource_id: str, object_attributes: list):
     logger.debug(f"{user_id} is trying to make a file with id {resource_id}")
     f = Resource(object_attributes, id=resource_id)
     status = ngac.add(f, get_policy())
     if is_error(status):
-        logger.error(
-            "User tried to create a file that it does not have access to")
-        print(status.value)
+        logger.error("User tried to create a file that it does not have access to")
         return "Could not create the file", 400
 
-    data = dumps({
-        "user_id": user_id,
-        "file_name": resource_id,
-    })
+    data = dumps(
+        {
+            "user_id": user_id,
+            "file_name": resource_id,
+        }
+    )
 
     return ok(post(abe(CREATE_FILE), data=data)).match(
         ok=lambda _: "Created file successfully",
-        error=lambda x: (f"Error when creating file: {x}", 400)
-
+        error=lambda x: (f"Error when creating file: {x}", 400),
     )
 
 
@@ -233,8 +237,7 @@ def delete_file(user_id: str, resource_id: str):
         [ObjectAttribute(oa) for oa in attributes],
         id=resource_id,
     )
-    res: Result = access(
-        user_id=user_id, resource_id=resource_id, access_mode="w")
+    res: Result = access(user_id=user_id, resource_id=resource_id, access_mode="w")
     if is_error(res):
         return response(res.value, code=403)
 
@@ -242,13 +245,14 @@ def delete_file(user_id: str, resource_id: str):
     # Now remove the file from the target storage
 
     def remove_file_internal():
-        data = dumps({
-            "user_id": user_id,
-            "file_name": resource_id,
-        })
+        data = dumps(
+            {
+                "user_id": user_id,
+                "file_name": resource_id,
+            }
+        )
         return ok(post(abe(REMOVE_FILE), data=data)).match(
-            ok=lambda x: "file removed",
-            error=lambda x: (f"Error : {x}", 400)
+            ok=lambda x: "file removed", error=lambda x: (f"Error : {x}", 400)
         )
 
     return status.match(
