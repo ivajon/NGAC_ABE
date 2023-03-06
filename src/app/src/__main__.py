@@ -4,21 +4,15 @@ from requests import post
 from __init__ import parser
 
 logger = getLogger(__name__)
-logger.addHandler(
-    StreamHandler(
-        stream=sys.stdout
-    )
-)
+logger.addHandler(StreamHandler(stream=sys.stdout))
 # Error logger, log to file
 error_logger = getLogger("error")
-error_logger.addHandler(StreamHandler(
-    stream=open("error.log", "w+")
-))
+error_logger.addHandler(StreamHandler(stream=open("error.log", "w+")))
 error_logger.setLevel(ERROR)
 
 
 def url(path, args):
-    if args.url:
+    if args and args.url:
         return f"http://{args.url}:{args.port}{path}"
     else:
         return f"http://localhost:5000{path}"
@@ -33,10 +27,7 @@ def handle_read(args):
     """
     logger.debug("Reading file: %s", args.file)
     response = post(
-        url("/read", args),
-        json={
-            "user_id": args.username, "resource_id": args.file
-        }
+        url("/read", args), json={"user_id": args.username, "resource_id": args.file}
     )
     if response.status_code == 200:
         logger.debug("File read successfully.")
@@ -66,7 +57,7 @@ def handle_write(args):
             "object_attributes": ["oa1"],
             "policy": "A & !B",
             "content": data,
-        }
+        },
     )
     if response.status_code == 200:
         logger.debug("File written successfully.")
@@ -94,7 +85,7 @@ def handle_delete(args):
             "resource_id": args.file,
             "object_attributes": ["oa1"],
             "policy": "A & !B",
-        }
+        },
     )
     if response.status_code == 200:
         logger.debug("File deleted successfully.")
@@ -114,7 +105,7 @@ def handle_create(args):
             "resource_id": args.file,
             "object_attributes": listify(args.object_attributes),
             "policy": "A & !B",
-        }
+        },
     )
     if response.status_code == 200:
         logger.debug("File created successfully.")
@@ -125,6 +116,19 @@ def handle_create(args):
         exit(-1)
 
 
+def handle_reset(args):
+    logger.debug("Resetting the database")
+    response = post(url("/reset_database", None), json={})
+    print(response.text)
+    if response.status_code == 200:
+        logger.debug("Database reset.")
+        print(f"Database reset.")
+    else:
+        logger.error("Error when resetting the database")
+        error_logger.error("Error when resetting the database")
+        exit(-1)
+
+
 """
         Admin routes
 """
@@ -132,27 +136,26 @@ def handle_create(args):
 
 def handle_info(args):
     [path, json] = (
-        "/admin/user/attributes",
-        {
-            "user_id": args.user,
-        }
-    )if args.user else (
-        "/admin/resource/attributes",
-        {
-            "object_id": args.object,
-        }
+        (
+            "/admin/user/attributes",
+            {
+                "user_id": args.user,
+            },
+        )
+        if args.user
+        else (
+            "/admin/resource/attributes",
+            {
+                "object_id": args.object,
+            },
+        )
     )
 
-    response = post(
-        url(path, args),
-        json=json,
-        headers={"token": args.token}
-    )
+    response = post(url(path, args), json=json, headers={"token": args.token})
 
     if response.status_code != 200:
         error_logger.error("That user or object could not be found")
-        logger.error(
-            "That user or object could not be found")
+        logger.error("That user or object could not be found")
         exit(-1)
     print(response.text)
 
@@ -160,68 +163,43 @@ def handle_info(args):
 def handle_assign(args):
 
     [path, json] = (
-        "/admin/user/assign",
-        {
-            "user_id": args.user,
-            "attribute": args.attribute
-        }
-    )if args.user else (
-        "/admin/object/assign",
-        {
-            "object_id": args.object,
-            "attribute": args.attribute
-        }
+        ("/admin/user/assign", {"user_id": args.user, "attribute": args.attribute})
+        if args.user
+        else (
+            "/admin/object/assign",
+            {"object_id": args.object, "attribute": args.attribute},
+        )
     )
-    response = post(
-        url(path, args),
-        json=json,
-        headers={"token": args.token}
-    )
+    response = post(url(path, args), json=json, headers={"token": args.token})
 
     if response.status_code != 200:
         error_logger.error("Error when assigning attribute")
-        logger.error(
-            "Error when assigning attribute")
+        logger.error("Error when assigning attribute")
         exit(-1)
     print("Attribute assigned successfully")
 
 
 def handle_remove_assign(args):
     [path, json] = (
-        "/admin/user/unassign",
-        {
-            "user_id": args.user,
-            "attribute": args.attribute
-        }
-    )if args.user else (
-        "/admin/object/unassign",
-        {
-            "object_id": args.object,
-            "attribute": args.attribute
-        }
+        ("/admin/user/unassign", {"user_id": args.user, "attribute": args.attribute})
+        if args.user
+        else (
+            "/admin/object/unassign",
+            {"object_id": args.object, "attribute": args.attribute},
+        )
     )
-    response = post(
-        url(path, args),
-        json=json,
-        headers={"token": args.token}
-    )
+    response = post(url(path, args), json=json, headers={"token": args.token})
     print(response.text)
     if response.status_code != 200:
         error_logger.error("Error when removing attribute assignment")
-        logger.error(
-            "Error when removing attribute assignment")
+        logger.error("Error when removing attribute assignment")
         exit(-1)
     print("Remove attribute assignment successfully")
 
 
 def handle_readpol(args):
     logger.debug("Reading policy from server")
-    response = post(
-        url("/admin/read_policy", args),
-        headers={
-            "token": args.token
-        }
-    )
+    response = post(url("/admin/read_policy", args), headers={"token": args.token})
     if response.status_code != 200:
         error_logger.error("Error while reading policy")
         logger.error("Error while reading policy")
@@ -231,18 +209,13 @@ def handle_readpol(args):
 
 def handle_loadi(args):
     logger.debug("Loading new policy from file: %s", args.input_file)
-    with open(args.input_file, 'r') as f:
+    with open(args.input_file, "r") as f:
         pol = f.read()
-    polname = args.input_file.split('.')[0].split("/")[-1]
+    polname = args.input_file.split(".")[0].split("/")[-1]
     response = post(
         url("/admin/load_policy", args),
-        json={
-            "policy": pol,
-            "policy_name": polname
-        },
-        headers={
-            "token": args.token
-        }
+        json={"policy": pol, "policy_name": polname},
+        headers={"token": args.token},
     )
     if response.status_code == 200:
         logger.debug("Loaded policy.")

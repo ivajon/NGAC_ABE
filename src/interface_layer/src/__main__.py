@@ -68,6 +68,7 @@ ngac = NGAC(token=admin_token, policy_server_url="http://130.240.200.92:8001")
 ABE_URL = cfg["ABE"]["url"]
 ENCRYPT = "/encrypt_file"
 DECRYPT = "/decrypt_file"
+RESET = "/reset_files"
 CREATE_FILE = "/make_file"
 REMOVE_FILE = "/delete_file"
 
@@ -127,6 +128,16 @@ def access(user_id, resource_id, access_mode) -> Result:
     return ret
 
 
+@app.route("/reset_database", methods=["POST"])
+def reset_database():
+    response = post(abe(RESET), data=None)
+    return (
+        "RESET"
+        if response.status_code == 200
+        else ("Error when resetting the database", 400)
+    )
+
+
 @app.route("/read", methods=["POST"])
 @fields(request)
 def read(user_id: str, resource_id: str):
@@ -141,16 +152,18 @@ def read(user_id: str, resource_id: str):
             return "There is no access policy loaded", 400
         pol = unwrap(result).split("\n")
         attributes = get_user_attributes(user_id, pol)
+        conn: tuple[str, str] = get_connection(user_id, resource_id, "r", pol)
         if not attributes:
             attributes = []
         fields = dumps(
             {
                 "user_id": user_id,
                 "attributes": attributes,
-                "policy": "",
+                "policy": f'("{conn[1]}")',
                 "file_name": resource_id,
             }
         )
+        print(f"{abe(DECRYPT)} post {fields=}")
         response = ok(post(abe(DECRYPT), data=fields))
         return response.match(
             ok=lambda x: (x, 200), error=lambda x: ("Decryption Error", 400)
@@ -184,18 +197,20 @@ def write(user_id: str, resource_id: str, content: str):
     logger.info(
         f"Found shortest access policy of {policy} since there exists a write association {conn}"
     )
-
+    obj_attr = get_objects_attributes(resource_id, pol)
     data = dumps(
         {
             "user_id": user_id,
             "file_name": resource_id,
             "content": content,
-            "attributes": [""],
+            "attributes": obj_attr,
             "policy": policy,
         }
     )
-    return ok(post(abe(ENCRYPT), data=data)).match(
-        ok=lambda x: ("Success", 200), error=lambda x: (f"Error : {x}", 400)
+    return (
+        ("Success", 200)
+        if post(abe(ENCRYPT), data=data).status_code == 200
+        else (f"Error when writing", 400)
     )
 
 
