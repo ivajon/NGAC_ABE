@@ -119,7 +119,6 @@ def handle_create(args):
 def handle_reset(args):
     logger.debug("Resetting the database")
     response = post(url("/reset_database", None), json={})
-    print(response.text)
     if response.status_code == 200:
         logger.debug("Database reset.")
         print(f"Database reset.")

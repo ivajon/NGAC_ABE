@@ -207,9 +207,11 @@ def write(user_id: str, resource_id: str, content: str):
             "policy": policy,
         }
     )
+    ret = post(abe(ENCRYPT), data=data)
+    print(f"{abe(ENCRYPT)} post {data=} => {ret.text=}")
     return (
         ("Success", 200)
-        if post(abe(ENCRYPT), data=data).status_code == 200
+        if ret.status_code == 200
         else (f"Error when writing", 400)
     )
 

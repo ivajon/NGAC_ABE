@@ -1,0 +1,8 @@
+# Server things
+flask
+flask-require
+
+# NGAC things 
+git+https://github.com/ivario123/pyresult
+./src/API
+./src/NgacApi
