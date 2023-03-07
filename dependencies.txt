@@ -1,8 +1,12 @@
 # Server things
 flask
 flask-require
+requests
+configparser2
 
 # NGAC things 
 git+https://github.com/ivario123/pyresult
+
+# Local tools
 ./src/API
 ./src/NgacApi

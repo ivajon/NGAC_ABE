@@ -60,15 +60,13 @@ Refer to [The CryptographyServer](https://github.com/Leohemmingsson/Cryptography
 
 ### Starting the interface layer
 
-1. Set up the cfg files 
-   1. [SERVER.ini](./src/interface_layer/data/SERVER.ini)
-   2. [ngac_admin.key](./src/interface_layer/secrets/ngac_admin.key)
+1. Run the setup tool `setup.py`
 2. Ensure that Crypto server and NGAC are running
 3. Start the server `python src` from interface_layer folder
 
 ## Using the app
 
-1. Set the correct urls in the `__main__.py` folder
+1. Set the correct urls in the `__main__.py` file
 2. Use the app
 To get all available commands, do
 

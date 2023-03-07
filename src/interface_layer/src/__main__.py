@@ -209,11 +209,7 @@ def write(user_id: str, resource_id: str, content: str):
     )
     ret = post(abe(ENCRYPT), data=data)
     print(f"{abe(ENCRYPT)} post {data=} => {ret.text=}")
-    return (
-        ("Success", 200)
-        if ret.status_code == 200
-        else (f"Error when writing", 400)
-    )
+    return ("Success", 200) if ret.status_code == 200 else (f"Error when writing", 400)
 
 
 @app.route("/make_file", methods=["POST"])
@@ -235,19 +231,6 @@ def make_file(user_id: str, resource_id: str, object_attributes: list):
         print(status.value)
         return "Could not create the file", 400
     return "Created file successfully"
-    """
-    data = dumps(
-        {
-            "user_id": user_id,
-            "file_name": resource_id,
-        }
-    )
-
-    return ok(post(abe(CREATE_FILE), data=data)).match(
-        ok=lambda _: ,
-        error=lambda x: (f"Error when creating file: {x}", 400),
-    )
-    """
 
 
 @app.route("/delete_file", methods=["POST"])
