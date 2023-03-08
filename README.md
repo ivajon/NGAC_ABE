@@ -1,8 +1,13 @@
 # Next Generation Access Control (NGAC) enabled by Attribute-Based Encryption (ABE)
 
-[![Unit Tests](https://github.com/ivario123/NGAC_ABE/actions/workflows/unit_tests.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/unit_tests.yml) [![SpellCheck](https://github.com/ivario123/NGAC_ABE/actions/workflows/spellcheck.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/spellcheck.yml) [![Lint](https://github.com/ivario123/NGAC_ABE/actions/workflows/lint.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/lint.yml)
+[![Unit Tests](https://github.com/ivario123/NGAC_ABE/actions/workflows/unit_tests.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/unit_tests.yml) [![SpellCheck](https://github.com/ivario123/NGAC_ABE/actions/workflows/spellcheck.yml/badge.svg?branch=ngac_boilerplate)](https://github.com/ivario123/NGAC_ABE/actions/workflows/spellcheck.yml) 
 
 Here we should have some good filler text.
+
+## Setup
+
+Read the docs [readme](/docs/README.md)
+
 
 ## Prelude
 

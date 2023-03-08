@@ -2,6 +2,7 @@ function wait(){
     # Plucked from stackoverflow https://stackoverflow.com/questions/20845058/powershell-wait-for-keypress
     do{ Write-Output "Press Enter";$x = [System.Console]::ReadKey() } while( $x.Key -ne "Enter" )
 }
+python src reset 
 
 Write-Output "`n `nLoad ipolicy.pl so we know where we are starting"
 python src admin -t admin_token loadi -i ipolicy.pl

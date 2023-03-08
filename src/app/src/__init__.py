@@ -12,88 +12,76 @@ parser = argparse.ArgumentParser(
     usage="ngac-cli [options] [command] [command options]",
     description="A command line interface for attribute based access control and encryption.",
     epilog="This is a command line interface for attribute based access control and encryption. It is a part of the NGAC-ABE project.",
-    add_help=True
+    add_help=True,
 )
 
 parser.add_argument(
-    "-v", "--version",
-    action="version",
-    version=f"%(prog)s {__version__}"
+    "-v", "--version", action="version", version=f"%(prog)s {__version__}"
 )
 
-parser.add_argument(
-    "-d", "--debug",
-    action="store_true",
-    help="Enable debug mode."
-)
+parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode.")
 
 
 parser.add_argument(
-    "-ip", "--url",
-    type=str, default="localhost",
+    "-ip",
+    "--url",
+    type=str,
+    default="localhost",
     metavar="SERVER_URL",
 )
 
 parser.add_argument(
-    "-p", "--port",
-    type=int, default=5000,
+    "-p",
+    "--port",
+    type=int,
+    default=5000,
     metavar="SERVER_PORT",
 )
 
 parser.add_argument(
-    "-nip", "--NGAC-IP",
-    type=str, default=None,
+    "-nip",
+    "--NGAC-IP",
+    type=str,
+    default=None,
     metavar="NGAC_SERVER_URL",
 )
 
 parser.add_argument(
-    "-np", "--NGAC-port",
-    type=int, default=None,
+    "-np",
+    "--NGAC-port",
+    type=int,
+    default=None,
     metavar="NGAC_SERVER_PORT",
 )
 
 parser.add_argument(
-    "-u", "--username",
+    "-u",
+    "--username",
     type=str,
 )
 
 # _________ COMMANDS _________
 
 sub = parser.add_subparsers(
-    description="The following commands are available:",
-    help="command",
-    dest="command"
+    description="The following commands are available:", help="command", dest="command"
 )
 
-read_parser = sub.add_parser(
-    "read",
-    help="Read a file from the server."
-)
+read_parser = sub.add_parser("read", help="Read a file from the server.")
 
-write_parser = sub.add_parser(
-    "write",
-    help="Write a file to the server."
-)
+write_parser = sub.add_parser("write", help="Write a file to the server.")
 
-delete_parser = sub.add_parser(
-    "delete",
-    help="Delete a file from the server."
-)
+rest_parser = sub.add_parser("reset", help="Resets the database.")
 
-create_parser = sub.add_parser(
-    "create",
-    help="Create a new file on the server."
-)
+delete_parser = sub.add_parser("delete", help="Delete a file from the server.")
 
-admin_parser = sub.add_parser(
-    "admin",
-    help="Admin commands."
-)
+create_parser = sub.add_parser("create", help="Create a new file on the server.")
+
+admin_parser = sub.add_parser("admin", help="Admin commands.")
 
 admin_sub = admin_parser.add_subparsers(
     description="The following admin commands are available:",
     help="admin command",
-    dest="admin_command"
+    dest="admin_command",
 )
 
 ##########################
@@ -101,8 +89,10 @@ admin_sub = admin_parser.add_subparsers(
 
 def file(parser):
     parser.add_argument(
-        "-f", "--file",
-        type=str, default=None,
+        "-f",
+        "--file",
+        type=str,
+        default=None,
         metavar="FILE",
     )
 
@@ -118,10 +108,12 @@ file(read_parser)
 file(write_parser)
 
 write_parser.add_argument(
-    "-i", "--input",
-    type=str, default=None,
+    "-i",
+    "--input",
+    type=str,
+    default=None,
     metavar="INPUT",
-    help="The input file to encrypt and upload."
+    help="The input file to encrypt and upload.",
 )
 
 ###########################
@@ -136,71 +128,45 @@ file(delete_parser)
 
 file(create_parser)
 
-create_parser.add_argument(
-    "-oa", "--object_attributes",
-    metavar="object_attributes"
-)
+create_parser.add_argument("-oa", "--object_attributes", metavar="object_attributes")
 
 ###########################
 
 
 # Admin commands
 
-admin_parser.add_argument(
-    "-t", "--token",
-    metavar="token",
-    required=True
-)
+admin_parser.add_argument("-t", "--token", metavar="token", required=True)
 
 ###########################
 
-[
-    readpol,
-    loadi,
-    assign,
-    remove_assign,
-    info
-] = [
-    admin_sub.add_parser(
-        x[0],
-        help=x[1]
-    ) for x in [
+[readpol, loadi, assign, remove_assign, info] = [
+    admin_sub.add_parser(x[0], help=x[1])
+    for x in [
         ("readpol", "Reads the currently loaded policy from the NGAC server"),
         ("loadi", "Loads a policy from string"),
         ("assign", "Assign attribute to a user or object"),
         ("remove_assign", "Remove attribute assignment from user or object"),
-        ("info", "Gets the users or objects attributes")
+        ("info", "Gets the users or objects attributes"),
     ]
 ]
 
 # _________ loadi _________
 
-loadi.add_argument(
-    "-i", "--input-file",
-    metavar="file",
-    required=True
-)
+loadi.add_argument("-i", "--input-file", metavar="file", required=True)
 
 ###########################
 
 
 def user_object(grp):
-    grp.add_argument(
-        "-u", "--user",
-        metavar="target_user"
-    )
-    grp.add_argument(
-        "-o", "--object",
-        metavar="target_object"
-    )
+    grp.add_argument("-u", "--user", metavar="target_user")
+    grp.add_argument("-o", "--object", metavar="target_object")
 
 
 def attr(parser):
     parser.add_argument(
-        "-a", "--attribute",
-        type=str,
-        metavar="attribute", required=True
+        "-a", "--attribute", type=str, metavar="attribute", required=True
     )
+
 
 # _________ assign ________
 

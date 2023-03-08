@@ -25,8 +25,7 @@ def make_resource(object_id, attribute):
     object = Resource([ObjectAttribute(attribute)], id=object_id)
 
     return ngac.add_resource(object).match(
-        lambda x: ("Resource created"),
-        lambda x: (f"Error {x.value}", 400)
+        lambda x: ("Resource created"), lambda x: (f"Error {x.value}", 400)
     )
 
 
@@ -61,8 +60,7 @@ def object_assign(object_id, attribute):
     object = Resource([attr], id=object_id)
 
     return ngac.assign(object, attr).match(
-        lambda x: ("Attribute assigned"),
-        lambda x: (f"Error {x.value}", 400)
+        lambda x: ("Attribute assigned"), lambda x: (f"Error {x.value}", 400)
     )
 
 
@@ -79,6 +77,5 @@ def object_unassign(object_id, attribute):
     object = Resource([attr], id=object_id)
 
     return ngac.remove_assignment(object, attr).match(
-        lambda x: ("Attribute unassigned"),
-        lambda x: (f"Error {x.value}", 400)
+        lambda x: ("Attribute unassigned"), lambda x: (f"Error {x.value}", 400)
     )
