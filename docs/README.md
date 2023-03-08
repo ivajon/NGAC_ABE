@@ -1,8 +1,14 @@
 # Setting up the system
 
+Firstly clone this repo:
+
+```bash
+git clone https://github.com/ivario123/NGAC_ABE.git
+```
+
 ## Building the NGAC servers
 
-Firstly you need to build the NGAC servers, this is not documented in the [NGAC](https://github.com/tog-rtd/tog-ngac-crosscpp) repository.
+Firstly you need to install `swi-prolog` on your system. After which the following commands clone and build the servers.
 
 ```bash
 # Remove NGAC folder if it already exists
@@ -21,10 +27,31 @@ cd PEP-RAP
 swipl -v -o pep_server -g pep_server -c pep.pl
 ```
 
-## Install dependencies
+## (optional) run the setup tool
+
+The setup tool installs all of the required dependencies and sets up the config files for you!
+
+(on windows)
+
+```ps1
+.\setup.ps1
+```
+
+(on linux or mac)
 
 ```bash
-pip install dependencies.txt
+chmod +x setup.bash
+./setup.bash
+```
+
+and fill in the required information
+
+## Install dependencies
+
+(not needed if using setup tool)
+
+```bash
+pip install -r dependencies.txt
 ```
 
 
@@ -61,8 +88,8 @@ Refer to [The CryptographyServer](https://github.com/Leohemmingsson/Cryptography
 ### Starting the interface layer
 
 1. Run the setup tool `setup.py`
-2. Ensure that Crypto server and NGAC are running
-3. Start the server `python src` from interface_layer folder
+2. Ensure that the Crypto server and NGAC are running
+3. Start the server `python src` from the interface_layer folder
 
 ## Using the app
 

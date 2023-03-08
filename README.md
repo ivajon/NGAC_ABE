@@ -4,6 +4,11 @@
 
 Here we should have some good filler text.
 
+## Setup
+
+Read the docs [readme](/docs/README.md)
+
+
 ## Prelude
 
 ### NGAC
