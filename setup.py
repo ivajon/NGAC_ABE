@@ -3,29 +3,10 @@ from functools import wraps
 import sys
 import os
 import re
+from sys import platform
 
 CURSOR_UP_ONE = "\x1b[1A"
 ERASE_LINE = "\x1b[2K"
-
-"""
-[logging]
-level = DEBUG
-folder = logs
-maxBytes = 10000000 
-
-[NGAC]
-policy = ipolicy.pl
-# This admin_token should not be admin_token 
-# in a production environment
-admin_token = secrets/ngac_admin.key
-url = http://130.240.200.92:8001
-
-[ABE]
-enabled = true      # enable ABE
-url = http://31.208.238.201:59931
-
-
-"""
 
 
 class Cfg:
@@ -80,7 +61,6 @@ def color(color_, text):
     Taken from https://stackabuse.com/how-to-print-colored-text-in-python/
     """
     num1 = str(color_)
-    num2 = str(color_).ljust(3, " ")
     return f"\033[38;5;{num1}m{text}\033[0;0m"
 
 
@@ -111,16 +91,24 @@ def query(text):
 
 
 def clear():
-    os.system("cls")
+    # Handle linux and windows differences
+    if platform == "linux" or platform == "linux2":
+        os.system("clear")
+    else:
+        os.system("cls")
+
+
+def remove_last_line():
+    print(
+        CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE,
+    )
+    sys.stdout.flush()
 
 
 def get_in(*set):
     y = input()
     while y not in set:
-        print(
-            CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE,
-        )
-        sys.stdout.flush()
+        remove_last_line()
         y = input()
     return y
 
@@ -129,10 +117,7 @@ def get_file(extension):
     y = input()
     while y and y.split()[-1] != extension:
         print("File needs to be of type : " + extension)
-        print(
-            CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE,
-        )
-        sys.stdout.flush()
+        remove_last_line()
         y = input()
     return y
 
@@ -241,10 +226,7 @@ def NGAC_URL(cfg):
 
     inp = valid_url(input("url = "))
     while not inp:
-        print(
-            CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE,
-        )
-        sys.stdout.flush()
+        remove_last_line()
         inp = valid_url(input("url = "))
     cfg.cfg["NGAC"]["url"] = inp
 
@@ -268,10 +250,7 @@ def ABE_URL(cfg):
 
     inp = valid_url(input("url = "))
     while not inp:
-        print(
-            CURSOR_UP_ONE + ERASE_LINE + CURSOR_UP_ONE,
-        )
-        sys.stdout.flush()
+        remove_last_line()
         inp = valid_url(input("url = "))
     cfg.cfg["ABE"]["url"] = inp
 
