@@ -93,7 +93,7 @@ Refer to [The CryptographyServer](https://github.com/Leohemmingsson/Cryptography
 
 ## Using the app
 
-1. Set the correct urls in the `__main__.py` file
+1. Set the correct url to the interface layer in the `__main__.py` file
 2. Use the app
 To get all available commands, do
 
