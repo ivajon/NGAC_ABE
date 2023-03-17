@@ -36,9 +36,19 @@ The repository is structured as follows:
 |  |- sota/                 # State of the art documents
 |  |- ISSUE_TEMPLATE        # Issue template
 |  |- PULL_REQUEST_TEMPLATE # Pull request template
+|- .github/                 # Github specific files
+|  |- workflows/            # Github workflows
 |- src/                     # Source code
-|  |- tests/                # Unit tests
-|  |- NGAC/                 # NGAC source code
-|  |  |- ngac_types/        # NGAC types
+|  |- API/                  # API helper library (installed as a package)
+|  |- NgacApi/              # NGAC API source code (installed as a package)
+|  |- interface_layer/      # Interface layer source code
+|  |- app/                  # App source code
 |- README.md                # This file
+|- .gitignore               # Git ignore file
+|- .gitmodules              # Git submodules
+|- dependencies.txt         # Dependencies file
+|- setup.bash               # Setup script ( for linux )
+|- setup.ps1                # Setup script ( for windows )
+|- setup.py                 # Setup tool ( ran by setup scripts )
+
 ```

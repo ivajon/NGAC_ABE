@@ -6,6 +6,10 @@ Firstly clone this repo:
 git clone https://github.com/ivario123/NGAC_ABE.git
 ```
 
+## Python version
+
+This project requires python 3.9 but should work with any python 3 version higher than 3.7
+
 ## Building the NGAC servers
 
 Firstly you need to install `swi-prolog` on your system. After which the following commands clone and build the servers.
