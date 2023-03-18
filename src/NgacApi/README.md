@@ -1,16 +1,25 @@
 # Next Generation Access Control (NGAC)
 
-This folder contains the source code for the python wrapper for the Next Generation Access Control (NGAC) system. The [system itself](./tog-ngac-croscpp) is written in prolog and can be compiled into executables. The python wrapper is used to interface with the system.
+This folder contains the source code for the python wrapper for the Next Generation Access Control (NGAC) system. The python wrapper is used to interface with the system.
 
 ## Repository Structure
 
 ```sh
-|- ngac_types/                # NGAC types
-|- executables/               # NGAC executables
-| access_request.py           # Access Request class
-| api.py                      # NGAC endpoints
-| ngac.py                     # NGAC python frontend
-| info.py                     # NGAC info
+|- NgacApi/                   # NGAC API source code (installed as a package)
+|  |- __init__.py             # Init file
+|  |- access_request.py       # Access request class
+|  |- attribute.py            # Attribute class ( resource and user attributes )
+|  |- endpoints.py            # Defines the endpoints for the API ( type level abstraction )
+|  |- errors.py               # Defines the errors for the API
+|  |- info.py                 # Defines some coloring and formatting for the API terminal output
+|  |- ngac_object.py          # Defines the base class for all NGAC objects ( all inherit from this )
+|  |- ngac.py                 # Defines the NGAC class ( the main class for the API )
+|  |- parser.py               # Defines the parser class ( used to parse ngac policies to python objects )
+|  |- policy_element.py       # Defines the policy element class ( used to represent policy elements )
+|  |- policy.py               # Defines the policy class ( used to represent policies )
+|  |- resource.py             # Defines the resource class ( used to represent resources )
+|  |- user.py                 # Defines the user class ( used to represent users )
+|  |- test.py                 # Defines some tests for the API
 ```
 
 ## NGAC Types
@@ -23,31 +32,3 @@ This folder contains the source code for the python wrapper for the Next Generat
 - [UserAttribute](./ngac_types/attribute.py)
 - [ResourceAttribute](./ngac_types/attribute.py)
 
-## Starting the NGAC system
-
-```sh
-# Run the executable
-cd executables
-./better_start_ngac.sh
-```
-
-## Interfacing with the NGAC system using python
-
-```python
-from ngac import NGAC
-from ngac_types.ngac_policy import Policy
-
-# Create the ngac API class
-ngac = NGAC()
-
-# Create a policy, we will load from a file on disk
-pol = Policy(
-        name="Vehicle Ownership Policy", path="EXAMPLES/policy_vehicle_ownership.pl"
-)
-
-# Switch to the policy
-ngac.switch_to(pol,token = "admin_token")
-
-# Ensure the policy is loaded
-print(ngac.get(Policy,token = "admin_token"))
-```

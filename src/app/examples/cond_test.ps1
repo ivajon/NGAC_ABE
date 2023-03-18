@@ -3,6 +3,9 @@ function wait(){
     do{ Write-Output "Press Enter";$x = [System.Console]::ReadKey() } while( $x.Key -ne "Enter" )
 }
 
+Write-Output "`n `nReseting the database"
+python src reset
+
 Write-Output "`n `nCreate a new file"
 python src -u u1 create --file o1 -oa oa1
 
