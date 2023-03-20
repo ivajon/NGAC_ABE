@@ -1,4 +1,4 @@
-on: [push]
+# on: [push] # This infrastructure is no longer being maintained
 name: Unit Tests
 jobs:
   test_ngac_standalone:
